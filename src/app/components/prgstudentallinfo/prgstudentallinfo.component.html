@@ -1,0 +1,651 @@
+<div class="row">
+    <!-- <div class="col-7"> -->
+    <div class="col-xl-8  col-7">
+    </div>
+    <!-- <div class="col-3"> -->
+    <div class="col-xl-2  col-3">
+        รหัสนักศึกษา
+      <app-student-selector
+        (onValueChanged)="studentcode = $event"
+        [disabled]="false"
+        [tmpstudentcode]="studentcode"
+      ></app-student-selector>
+    </div>
+    <!-- <div class="col-1">
+        <br />
+        <dx-button class="button" (onClick)="showSelector = true" icon="bulletlist" type="success" text="รายชื่อ" [width]="'100%'">
+        </dx-button>
+    </div> -->
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getStudentinfo()" icon="find" type="default" text="ค้นหา" [width]="'100%'">
+        </dx-button>
+    </div>
+</div>
+<!-- ข้อมูลนักศึกษา -->
+<div>
+    <br>
+    <dx-data-grid id="prgstudentinfo" [rowAlternationEnabled]="true" [columnAutoWidth]="true" [hoverStateEnabled]="true" [showBorders]="true" 
+    [dataSource]="studentinfo" rowTemplate="rowTemplateName" [scrolling]="'false'">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <dxi-column dataField="schoolid" caption="โรงเรียน/สถาบัน" cellTemplate="cellTemplate" [visible]="false">
+            <dxo-lookup [dataSource]="schoclist" valueExpr="schoolid" displayExpr="schoolshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <tbody class="dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }" *dxTemplate="let studentinfo of 'rowTemplateName'">
+            <tr class="main-row">
+                <!-- <td style="width: 28%;" class="text-wrap"> -->
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ชื่อ-นามสกุล : </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }} {{ studentinfo.data.studentsurname }}
+                    </label>
+                </td>
+                <td style="width: 28%;" class="text-wrap">
+                    <tr>
+                        <td><label style="color: #1b4461"><b>รับเข้า :
+                          </b>{{ studentinfo.data.admitsemester }}/{{ studentinfo.data.admitacadyear }}</label>
+                        </td>
+                        <td><label style="color: #1b4461"><b>&nbsp; วันที่ : </b> </label> </td>
+                        <td><label style="color: #1b4461">{{ studentinfo.data.admitdateshow }}</label></td>
+                    </tr>
+                </td>
+
+                <td style="width: 30%;" class="text-wrap">
+                    <tr>
+                        <div *ngIf="studentinfo.data.studentstatus >= 40">
+                            <td><label style="color: #1b4461"><b>จบ/พ้นสภาพ :
+                </b>{{ studentinfo.data.endsemester}}/{{ studentinfo.data.endacadyear}}</label>
+                            </td>
+                        </div>
+
+                        <div *ngIf="studentinfo.data.studentstatus < 40">
+
+                            <td><label style="color: #1b4461"><b>จบ/พ้นสภาพ :
+                </b></label>
+                            </td>
+                        </div>
+                        <td><label style="color: #1b4461"><b>&nbsp; วันที่ : </b></label></td>
+                        <td><label style="color: #1b4461">{{ studentinfo.data.finishdateshow }}</label></td>
+                    </tr>
+                </td>
+                <!-- <td rowspan="7" style="width: 14%; align-self: flex-end; text-align: center ;"> -->
+                <td rowspan="7" style="width: 12%;text-align: center;vertical-align: middle;">
+                    <!-- <img class="img-crop" [src]="studentinfo.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" height="150px" width="120px" /> -->
+                    <img class="img-crop" [src]="studentinfo.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" width="100%" height="100%" />
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="">
+                    <label style="color: #1b4461"><b>ศูนย์/วิทยาเขต: </b>{{ studentinfo.data.campusname }}</label>
+                </td>
+                <td class="">
+                    <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                </td>
+                <td class="">
+                    <label style="color: #1b4461"><b>วิทยาลัย/คณะ/สถาบัน : </b>{{ studentinfo.data.facultyname }} </label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ภาค/สาขา : </b>{{ studentinfo.data.departmentname }}</label>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>สาขาวิชา : </b>{{ studentinfo.data.programname }}</label>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>กลุ่มนักศึกษา : </b>{{ studentinfo.data.studentgroupshow }}</label> &nbsp;&nbsp;
+                    <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }}
+          </label>
+                <!-- </td>
+                <td> -->
+            </tr>
+            <tr class="main-row" *ngIf="studentinfo.data.officerid || studentinfo.data.officerid2 || studentinfo.data.officerid3">
+                <!-- <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.officerid">
+                        <div *ngFor="let data of offlist1 let index = index">
+                            <label style="color: #1b4461"><b>ที่ปรึกษา {{index + 1}} : </b>{{data.prefixname}}{{ data.officershow }}</label>
+                        </div>
+                    </div>
+                </td> -->
+                <td class="text-wrap" *ngFor="let data of offlist1 let index = index">
+                    <label style="color: #1b4461"><b>ที่ปรึกษา {{index + 1}} : </b>{{ data.prefixname }}{{ data.officershow }}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.schoolid">
+                        <div *ngFor="let data of schoclist">
+                            <label style="color: #1b4461"><b>สถานศึกษาเดิม : </b>{{ data.schoolname }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.schoolid">
+                        <label style="color: #1b4461"><b>สถานศึกษาเดิม : </b>-</label> &nbsp;&nbsp;
+                    </div>
+                </td>
+                <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.entrydegree">
+                        <div *ngFor="let data of entdeglist">
+                            <label style="color: #1b4461"><b>วุฒิรับเข้า : </b>{{ data.entrydegreename }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.entrydegree">
+                        <label style="color: #1b4461"><b>วุฒิรับเข้า : </b>-</label>
+                    </div>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ตรวจสอบคุณวุฒิ : </b>{{ studentinfo.data.graduatecheckdes }}</label>&nbsp;
+                    <label style="color: #1b4461"><b>GPA เข้า :
+            </b>{{ studentinfo.data.entrygpax | number:'1.2-2'}}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td>
+                    <label><b>จำนวนหน่วยกิตลงทะเบียน : </b>{{ studentinfo.data.creditattempt }}</label>
+                </td>
+                <td>
+                    <label><b>จำนวนหน่วยกิตคะแนน : </b>{{ studentinfo.data.creditpoint }}</label>
+                </td>
+                <td>
+                    <label><b>จำนวนหน่วยกิตที่ได้รับ : </b>{{ studentinfo.data.creditsatisfy }}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td>
+                    <label><b>จำนวนคะแนน : </b>{{ studentinfo.data.gradepoint }}</label>&nbsp;&nbsp;
+                    <label><b>GPA : </b>{{ studentinfo.data.gpa | number:'1.2-2' }}</label>
+                </td>
+                <td>
+                    <div *ngIf="studentinfo.data.gradepro">
+                        <div *ngFor="let data of gradeprolist">
+                            <label style="color: #1b4461"><b>สถานะเกรด : </b>{{ data.bytecode }} : {{ data.bytedes }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.gradepro">
+                        <div *ngFor="let data of gradeprolist">
+                            <label style="color: #1b4461"><b>สถานะเกรด : </b>-</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="studentinfo.data.studentstatus">
+                        <div *ngFor="let data of stustatuslist">
+                            <label style="color: #1b4461"><b>สถานภาพ : </b>{{ data.bytecode }} : {{ data.bytedes }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.studentstatus">
+                        <div *ngFor="let data of stustatuslist">
+                            <label style="color: #1b4461"><b>สถานภาพ : </b>-</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลนักศึกษา</div>
+        </div>
+    </dx-data-grid>
+</div>
+<!-- สถานะภาพนักศึกษารายภาค -->
+<div class="row">
+    <div class="col-xl-5  col-12">
+        <div class="tablelabel">สถานภาพรายภาค</div>
+        <dx-data-grid id="prgstudentstatus" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" (onSelectionChanged)="selectionChanged($event)" [dataSource]="studentstatuslist" [showBorders]="true" (onRowPrepared)="onRowPrepared($event)" [height]="345">
+            <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false" > </dxo-pager>
+            <dxo-paging [pageSize]="0"></dxo-paging>
+            <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="semesterindex" sortOrder="desc" [visible]="false"></dxi-column>
+            <dxi-column dataField="acadyear" caption="ปี" [width]="40"></dxi-column>
+            <dxi-column dataField="semester" caption="ภาค" [width]="20"></dxi-column>
+            <dxi-column dataField="studentstatusshow" caption="สถานภาพ"></dxi-column>
+            <dxi-column dataField="gpax" caption="GPAX" [width]="60">
+                <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+            </dxi-column>
+            <dxi-column dataField="gpa" caption="GPA" [width]="20">
+                <dxo-format type="fixedPoint" [precision]="2">
+                </dxo-format>
+            </dxi-column>
+            <dxi-column dataField="sumcreditsatisfy" caption="CSX" [width]="30">
+                <dxo-format type="fixedPoint" [precision]="1"></dxo-format>
+            </dxi-column>
+            <dxi-column dataField="gradeproshow" caption="PRO"></dxi-column>
+            <dxi-column dataField="gradestatus" caption="GS" [width]="20"></dxi-column>
+        </dx-data-grid>
+    </div>
+    <div class="col-xl-7  col-12">
+        <br>
+        <dx-tab-panel #tabPanel [selectedIndex]="0" [animationEnabled]="false" [showNavButtons]="true" (onOptionChanged)="selectTab($event)">
+            <dxi-item title="ผลลงทะเบียน" icon="tableproperties">
+                <dx-data-grid id="gridContainer1" [dataSource]="enrollresult" [rowAlternationEnabled]="false" [showRowLines]="true" [hoverStateEnabled]="false" [showBorders]="true" [height]="300" (onRowPrepared)="onRowPrepared2($event)">
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    </dxo-editing>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="classid" caption="classid" [visible]="false">
+                    </dxi-column>
+                    <dxi-column dataField="transfershow" caption="ER" [width]="10+'%'" cellTemplate="cellTemplate">
+                    </dxi-column>
+                    <dxi-column dataField="coursecode" caption="รหัสวิชา" [visible]="false" sortOrder="asc"></dxi-column>
+                    <dxi-column dataField="coursename" caption="ชื่อวิชา" [visible]="false"></dxi-column>
+                    <dxi-column caption="วิชา" [calculateCellValue]="coursenameColumn_calculateCellValue" [width]="70+'%'">
+                    </dxi-column>
+                    <!-- headerCellTemplate="HeaderKeyTemplate" -->
+                    <dxi-column dataField="sectioncode" caption="กลุ่มเรียน" [width]="50" alignment="center"></dxi-column>
+                    <dxi-column dataField="grade" caption="เกรด" alignment="center" [width]="10+'%'" [cellTemplate]="cellTemplateGrade">
+                    </dxi-column>
+                    <dxi-column dataField="sumcreditattempt" caption="ลง" [width]="100" cellTemplate="sumcreditattempt">
+                      <div *dxTemplate="let data of 'sumcreditattempt'">
+                          {{data.data.creditattempt}}
+                      </div>
+                  </dxi-column>
+                    <!-- <dxi-column dataField="sumcreditsatisfy" caption="ผ่าน" [width]="10+'%'"  cellTemplate="sumcreditsatisfy" [visible]="false">
+                      <div *dxTemplate="let data of 'sumcreditsatisfy'">
+                        {{data.data.creditsatisfy}}
+                      </div>
+                    </dxi-column> -->
+                    <div *dxTemplate="let cell of 'cellTemplate'">
+                        <div style="color:blue">{{cell.text}}</div>
+                    </div>
+                    <!-- <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <b style="color:#800000">วิชา</b>
+          </div> -->
+                    <dxo-summary>
+                        <dxi-total-item column="sumcreditattempt" summaryType="max" [customizeText]="sumcreditattempt" >
+                        </dxi-total-item>
+                        <!-- <dxi-total-item column="sumcreditsatisfy" summaryType="max" showInColumn="sumcreditattempt" [customizeText]="sumcreditsatisfy">
+                        </dxi-total-item> -->
+                    </dxo-summary>
+                </dx-data-grid>
+            </dxi-item>
+            <dxi-item title="ตารางเรียน" icon="clock">
+                <dx-data-grid id="gridContainer1" [dataSource]="classtimeesult" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [height]="300" (onRowPrepared)="onRowPrepared3($event)">
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    </dxo-editing>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="weekday" caption="วัน" [width]="10+'%'" sortOrder="asc"></dxi-column>
+                    <dxi-column dataField="timeshowfrom" caption="จาก" [width]="15+'%'"></dxi-column>
+                    <dxi-column dataField="timeshowto" caption="ถึง" [width]="15+'%'"></dxi-column>
+                    <dxi-column dataField="coursecode" caption="รหัสวิชา" [width]="25+'%'"></dxi-column>
+                    <dxi-column dataField="roomcode" caption="ห้อง" [width]="25+'%'"></dxi-column>
+                </dx-data-grid>
+            </dxi-item>
+            <dxi-item title="ตารางสอบ" icon="clock">
+                <dx-data-grid id="gridContainer1" [dataSource]="classexamresult" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [height]="300" [showBorders]="true" (onRowPrepared)="onRowPrepared3($event)">
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    </dxo-editing>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="examcode" caption="ประเภท" [width]="10+'%'" sortOrder="asc"></dxi-column>
+                    <dxi-column dataField="examdate" caption="วันที่สอบ" [width]="20+'%'"></dxi-column>
+                    <dxi-column dataField="examtimefrom" caption="จาก" [width]="15+'%'"></dxi-column>
+                    <dxi-column dataField="examtimeto" caption="ถึง" [width]="15+'%'"></dxi-column>
+                    <dxi-column dataField="coursecode" caption="รหัสวิชา" [width]="25+'%'"></dxi-column>
+                    <dxi-column dataField="roomcode" caption="ห้อง" [width]="25+'%'"></dxi-column>
+                </dx-data-grid>
+            </dxi-item>
+            <dxi-item title="หนี้สิน" icon="warning">
+                <dx-data-grid id="gridContainer1" [dataSource]="enrollfeeresult" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [height]="300" [showBorders]="true" (onRowPrepared)="onRowPrepared3($event)">
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    </dxo-editing>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="feeid" caption="รหัส คชจ" [width]="15+'%'" sortOrder="asc"></dxi-column>
+                    <dxi-column dataField="feeidname" caption="ค่าธรรมเนียม" [width]="45+'%'"></dxi-column>
+                    <dxi-column dataField="amount" caption="จำนวน" [width]="20+'%'">
+                        <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                    </dxi-column>
+                    <dxi-column dataField="balance" caption="ค้างชำระ" [width]="20+'%'">
+                        <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                    </dxi-column>
+                    <dxo-summary>
+                        <dxi-total-item column="amount" summaryType="sum" [customizeText]="customizeTexta">
+                        </dxi-total-item>
+                        <dxi-total-item column="balance" summaryType="sum" [customizeText]="customizeTextb">
+                        </dxi-total-item>
+                    </dxo-summary>
+                </dx-data-grid>
+            </dxi-item>
+            <dxi-item title="ทุนการศึกษา" icon="money">
+                <dx-data-grid id="gridContainer1" [dataSource]="stuscholarresult" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [height]="300" [showBorders]="true" (onRowPrepared)="onRowPrepared3($event)">
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    </dxo-editing>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="scholarid" caption="รหัสทุน" [width]="15+'%'" sortOrder="asc"></dxi-column>
+                    <dxi-column dataField="scholarname" caption="ชื่อทุน" [width]="55+'%'"></dxi-column>
+                    <dxi-column dataField="receiveamount" caption="ได้รับ" [width]="20+'%'"></dxi-column>
+                    <dxi-column dataField="scholarstatus" caption="สถานะ" [width]="10+'%'"></dxi-column>
+                </dx-data-grid>
+            </dxi-item>
+        </dx-tab-panel>
+    </div>
+</div>
+<!-- ตารางประวัติอื่น ๆ  -->
+<br>
+<div class="row">
+    <div class="col-12">
+      <dx-tab-panel #tabPanel2 [selectedIndex]="0" [animationEnabled]="false" [showNavButtons]="true" (onOptionChanged)="selectTab1($event)">
+        <dxi-item title="1. ประวัติในมหาวิทยาลัย">
+          <dx-data-grid id="gridContainer21" [dataSource]="stureclist" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [height]="205" [showBorders]="true" (onRowPrepared)="onRowPrepared4($event)">
+              <!-- <dxo-paging [pageSize]="20"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[20, 30, 40]" [showInfo]="true"> </dxo-pager> -->
+              <!-- <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"
+      [useIcons]="true"> -->
+              <!-- </dxo-editing> -->
+          <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxi-column dataField="recorddate" caption="วันที่" [width]="20+'%'"></dxi-column>
+          <dxi-column dataField="description" caption="รายละเอียด" [width]="80+'%'"></dxi-column>
+          <dxi-column dataField="studentid" caption="สถานะ" [width]="10+'%'" [visible]="false"></dxi-column>
+        </dx-data-grid>
+      </dxi-item>
+      <dxi-item title="2. ข้อมูลส่วนบุคคล">
+          <table class="biodetail table">
+          <tbody  >
+            <ng-container *ngFor="let item of stuaddlist">
+              <tr>
+                <td >
+                  <label style="color: #1b4461"><b>บัตรประชาชน : </b>{{ item.citizenid }}</label>
+                </td>
+                <td >
+                  <label style="color: #1b4461"><b>วันเกิด : </b>{{ item.birthdateshow }} </label>
+                </td>
+                <td >
+                  <label style="color: #1b4461"><b>เพศ : </b>{{ item.studentsex}}</label>
+                </td>
+                <!-- <td >
+                  <label style="color: #1b4461"><b>เกิดที่ : </b>{{ item.birthprovinceid}}</label>
+                </td> -->
+                <td >
+                  <label style="color: #1b4461"><b>สัญชาติ : </b>{{ item.nationname}}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>ศาสนา : </b>{{ item.religionname }} </label>
+                </td>
+              </tr>
+              <tr  >
+                <td >
+                  <label style="color: #1b4461"><b>E-Mail Address :
+                    </b>{{ item.email }}</label>
+                </td>
+                <td >
+                  <label style="color: #1b4461"><b>โทรศัพท์มือถือ : </b>{{ item.mobilephone }} </label>
+                </td>
+                <td >
+                </td>
+                <td >
+                </td>
+              </tr>
+              <tr  >
+                <td colspan="2">
+                  <label style="color: #1b4461"><b>ชื่อบิดา :
+                    <!-- </b>{{ item.fatherprefixname }}{{ item.fathername }}&nbsp;{{ item.fathersurname }}</label> -->
+                    </b>{{ item.fathername }}</label>
+                </td>
+                <td colspan="2">
+                  <label style="color: #1b4461"><b>ชื่อมารดา :
+                    <!-- </b>{{ item.motherprefixname }}{{ item.mothername }}&nbsp;{{ item.mothersurname }}</label> -->
+                    </b>{{ item.mothername }}</label>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <label style="color: #5c2008"><b>ที่อยู่ตามสำเนาทะเบียนบ้าน : </b></label>
+                </td>
+              </tr>
+              <tr >
+                <td>
+                  <label style="color: #1b4461"><b>บ้านเลขที่ : </b>{{ item.homeadd }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>หมู่ : </b>{{ item.homemoo }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>ซอย : </b>{{ item.homesoi }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>ถนน : </b>{{ item.homestreet }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>แขวง/ตำบล : </b>{{ item.homesubdistrictname }}</label>
+                </td>
+              </tr>
+              <tr >
+                <td>
+                  <label style="color: #1b4461"><b>อำเภอ : </b>{{ item.homedistrictname }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>จังหวัด : </b>{{ item.homeprovincename }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>รหสไปรษณีย์ : </b>{{ item.homezipcode }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>โทร : </b>{{ item.homephoneno }}</label>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </dxi-item>
+      <dxi-item title="3. ที่อยู่ผู้ปกครอง">
+        <table class="biodetail table" >
+          <tbody >
+            <ng-container *ngFor="let item of stuaddlist">
+            <tr  >
+              <td >
+                <label style="color: #1b4461"><b>ชื่อผู้ปกครอง :
+                  <!-- </b>{{ item.parentprefixname }}{{ item.parentname }}&nbsp;{{ item.parentsurname }}</label> -->
+                  </b>{{ item.parentname }}</label>
+              </td>
+              <td >
+              </td>
+              <td >
+                <label style="color: #1b4461"><b>ความสัมพันธ์ : </b>{{ item.parentrelationname }} </label>
+              </td>
+              <td >
+              </td>
+              <td >
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <label style="color: #5c2008"><b>ที่อยู่ผู้ปกครอง : </b></label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label style="color: #1b4461"><b>บ้านเลขที่ : </b>{{ item.parentadd }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>หมู่ : </b>{{ item.parentmoo }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>ซอย : </b>{{ item.parentsoi }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>ถนน : </b>{{ item.parentstreet }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>แขวง/ตำบล : </b>{{ item.parentsubdistrictname }}</label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label style="color: #1b4461"><b>อำเภอ : </b>{{ item.parentdistrictname }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>จังหวัด : </b>{{ item.parentprovincename }}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>รหสไปรษณีย์ : </b>{{item.parentzipcode}}</label>
+              </td>
+              <td>
+                <label style="color: #1b4461"><b>โทร : </b>{{ item.parentmobileno }}</label>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      </dxi-item>
+      <dxi-item title="4. ที่อยู่ที่ติดต่อได้สะดวก">
+        <table class="biodetail table">
+          <tbody >
+            <ng-container *ngFor="let item of stuaddlist">
+                <tr>
+                  <td colspan="5">
+                    <label style="color: #5c2008"><b>ที่อยู่ปัจจุบัน : </b></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label style="color: #1b4461"><b>บ้านเลขที่ : </b>{{ item.currentadd }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>หมู่ : </b>{{ item.currentmoo }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>ซอย : </b>{{ item.currentsoi }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>ถนน : </b>{{ item.currentstreet }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>แขวง/ตำบล : </b>{{ item.currentsubdistrictname }}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label style="color: #1b4461"><b>อำเภอ : </b>{{ item.currentdistrictname }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>จังหวัด : </b>{{ item.currentprovincename }}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>รหสไปรษณีย์ : </b>{{item.currentzipcode}}</label>
+                  </td>
+                  <td>
+                    <label style="color: #1b4461"><b>โทร : </b>{{ item.currentphoneno }}</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5">
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+      </dxi-item>
+      <dxi-item title="5. ที่อยู่ที่ทำงาน">
+        <table class="biodetail table">
+          <tbody  >
+            <ng-container *ngFor="let item of stuaddlist">
+              <tr>
+                <td  colspan="2">
+                  <label style="color: #1b4461"><b>สถานะการทำงาน :
+                    </b>{{ item.workingstatusname }}</label>
+                </td>
+                <td  colspan="3">
+                  <label style="color: #1b4461"><b>ชื่อสถานที่ทำงาน : </b>{{ item.officename }} </label>
+                </td>
+              </tr>
+              <tr  >
+                <td colspan="2">
+                  <label style="color: #1b4461"><b>ตำแหน่ง : </b>{{ item.workingposition }}</label>
+                </td>
+                <td colspan="3">
+                  <label style="color: #1b4461"><b>เงินเดือน : </b>{{ item.workingsalary }}</label>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <label style="color: #5c2008"><b>ที่อยู่ที่ทำงาน : </b></label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label style="color: #1b4461"><b>บ้านเลขที่ : </b>{{ item.officeadd }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>หมู่ : </b>{{ item.officemoo }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>ซอย : </b>{{ item.officesoi }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>ถนน : </b>{{ item.officestreet }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>แขวง/ตำบล : </b>{{ item.officesubdistrictname }}</label>
+                </td>
+              </tr>
+              <tr >
+                <td>
+                  <label style="color: #1b4461"><b>อำเภอ : </b>{{ item.officedistrictname }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>จังหวัด : </b>{{ item.officeprovincename }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>รหสไปรษณีย์ : </b>{{item.officezipcode}}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>โทร : </b>{{ item.officephoneno }}</label>
+                </td>
+                <td>
+                  <label style="color: #1b4461"><b>โทรสาร : </b>{{ item.officefaxno }}</label>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </dxi-item>
+      <dxi-item title="6 สถานะการขอจบ">
+        <dx-data-grid id="gridContainer1" [dataSource]="stugralist" [rowAlternationEnabled]="true"
+          [hoverStateEnabled]="true" [height]="205" [showBorders]="true" (onRowPrepared)="onRowPrepared4($event)">
+          <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"
+            [useIcons]="true">
+          </dxo-editing>
+          <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+          <dxo-selection mode="single"></dxo-selection>
+          <!-- <dxi-column dataField="approveyear" caption="ปี" [width]="15+'%'" sortOrder="asc"></dxi-column>
+          <dxi-column dataField="approvesemester" caption="ภาค" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="approvesequence" caption="ครั้งที่" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="graduatestatusshow" caption="สถานะอนุมัติ" [width]="20+'%'"></dxi-column>
+          <dxi-column dataField="approvedate" caption="วันที่นำเสนอ" [width]="15+'%'"></dxi-column>
+          <dxi-column dataField="parinyanumbershow" caption="เลขที่ปริญญา" [width]="20+'%'"></dxi-column>
+          <dxi-column dataField="honor" caption="เกียรตินิยม" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="finishdate" caption="วันที่อนุมัติจบ" [width]="15+'%'"></dxi-column>
+          <dxi-column dataField="approveid" caption="สถานะ" [width]="10+'%'" [visible]="false"></dxi-column>
+          <dxi-column dataField="studentid" caption="สถานะ" [width]="10+'%'" [visible]="false"></dxi-column> -->
+          <dxi-column dataField="acadyear" caption="ปี" [width]="15+'%'" sortOrder="asc"></dxi-column>
+          <dxi-column dataField="semester" caption="ภาค" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="sequence" caption="ครั้งที่" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="approvestatus" caption="สถานะอนุมัติ" [width]="20+'%'"></dxi-column>
+          <dxi-column dataField="graduatedate" caption="วันที่นำเสนอ" [width]="15+'%'"></dxi-column>
+          <dxi-column dataField="parinyanumbershow" caption="เลขที่ปริญญา" [width]="20+'%'"></dxi-column>
+          <dxi-column dataField="honor" caption="เกียรตินิยม" [width]="10+'%'"></dxi-column>
+          <dxi-column dataField="approvegraduate" caption="วันที่อนุมัติจบ" [width]="15+'%'"></dxi-column>
+          <!-- <dxi-column dataField="approveid" caption="สถานะ" [width]="10+'%'" [visible]="false"></dxi-column>
+          <dxi-column dataField="studentid" caption="สถานะ" [width]="10+'%'" [visible]="false"></dxi-column> -->
+        </dx-data-grid>
+      </dxi-item>
+      </dx-tab-panel>
+    </div>
+</div>
+<!-- <app-student-selector
+  [(visible)]="showSelector"
+  (studentSelected)="onStudentSelected($event)"
+></app-student-selector> -->

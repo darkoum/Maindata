@@ -1,0 +1,144 @@
+<div>
+
+    <dx-button stylingMode="contained" text="คัดลอกผังประเมินผล" icon="copy" type="default" [width]="200" (onClick)="oncopy()" [disabled]="!tmpacadid">
+    </dx-button>
+</div>
+<dx-popup [width]="30 + '%'" [height]="'auto'" [showTitle]="true" title="คัดลอกผังประเมินผล" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    คัดลอกผังประเมินผลจาก
+    <dx-select-box [dataSource]="acadlistcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="acadidfrom">
+    </dx-select-box>
+    <br>
+    <dx-button class="button" (onClick)="processcopy()" text="คัดลอก" icon="todo" type="success" stylingMode="outlined" [disabled]="!acadidfrom">
+    </dx-button>
+</dx-popup>
+<div id="data-grid-demo">
+    <dx-data-grid id="prgacad" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" (onSaving)="acadSave($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="acadlist">
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Acad Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="acadid" caption="*รหัส" sortOrder="asc">
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="description" caption="*คำอธิบาย"></dxi-column>
+        <dxi-column dataField="creditmin" caption="หน่วยลงทะเบียนต่ำสุด"></dxi-column>
+        <dxi-column dataField="creditmax" caption="หน่วยลงทะเบียนสูงสุด"></dxi-column>
+        <dxi-column dataField="rounding" caption="ทศนิยม"></dxi-column>
+        <dxi-column dataField="highprogpa" caption="GPA PRO"></dxi-column>
+        <dxi-column dataField="enforcegrademode" caption="บังคับระบบเกรด">
+            <dxo-lookup [dataSource]="grademodeforce" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentyeartype" caption="เลื่อนปี">
+            <dxo-lookup [dataSource]="studentyeartype" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+    </dx-data-grid>
+    <br />
+    <dx-tab-panel #tabPanel [selectedIndex]="0" [animationEnabled]="false" [showNavButtons]="true" (onOptionChanged)="selectTab($event)">
+        <dxi-item title="1. กำหนดเกรด">
+            <dx-data-grid id="prgacadsubgrademode" [columnAutoWidth]="true" (onInitNewRow)="getDefaultsubgrademode($event)" (onSaving)="GrademodeSave($event)" [dataSource]="grademodelist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                [allowColumnReordering]="true" [allowColumnResizing]="true" (onToolbarPreparing)="onToolbarPreparing2($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpacadid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+
+                <dxi-column dataField="grademode" caption="*ระบบเกรด" sortOrder="asc" [width]="20 + '%'">
+                    <dxo-lookup [dataSource]="grademode" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกระบบเกรด"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="grade" caption="*เกรด">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="gradepoint" caption="คะแนน">
+                    <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                </dxi-column>
+                <dxi-column dataField="description" caption="คำอธิบาย (ไทย)"></dxi-column>
+                <dxi-column dataField="descriptioneng" caption="คำอธิบาย (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="creditsatisfyflag" caption="*หน่วยกิต">
+                    <dxo-lookup [dataSource]="flag" valueExpr="key" displayExpr="value"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกหน่วยกิต"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="restudyallow" caption="*ให้เรียนซ้ำ">
+                    <dxo-lookup [dataSource]="flagyn" valueExpr="key" displayExpr="value"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูล"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="accumulateflag" caption="*คำนวนเกรด">
+                    <dxo-lookup [dataSource]="flagyn" valueExpr="key" displayExpr="value"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูล"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="accumulatesemflag" caption="*คำนวนรายภาค">
+                    <dxo-lookup [dataSource]="flagyn" valueExpr="key" displayExpr="value"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูล"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="passstatus" caption="*ผ่าน/ไม่ผ่าน">
+                    <dxo-lookup [dataSource]="flagyn" valueExpr="key" displayExpr="value"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูล"></dxi-validation-rule>
+                </dxi-column>
+            </dx-data-grid>
+        </dxi-item>
+        <dxi-item title="2. กำหนดค่าของระบบประเมินผล">
+            <dx-data-grid id="prgacadsubacadcon" [columnAutoWidth]="true" (onInitNewRow)="getDefaultsubacadcon($event)" (onSaving)="AcadconSave($event)" [dataSource]="acadconlist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [allowColumnReordering]="true"
+                [allowColumnResizing]="true" (onToolbarPreparing)="onToolbarPreparing3($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpacadid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="configcode" caption="*รหัส" sortOrder="asc">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="configvalue" caption="*เงื่อนไข">
+                    <dxi-validation-rule type="required" message="กรุณากรอเงื่อนไข"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="configvalueeng" caption="คำอธิบาย"></dxi-column>
+            </dx-data-grid>
+        </dxi-item>
+        <dxi-item title="3. กำหนดการพ้นสภาพ">
+            <dx-data-grid id="prgacadsubAcadpro" [columnAutoWidth]="true" (onInitNewRow)="getDefaultsubAcadpro($event)" (onSaving)="AcadproSave($event)" [dataSource]="acadprolist" [showBorders]="true" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+                (onToolbarPreparing)="onToolbarPreparing4($event)" [hoverStateEnabled]="true">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpacadid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="gpa" caption="*GPAX" dataType="number" format="0.00">
+                    <!-- <dxo-format type="fixedPoint" [precision]="2"></dxo-format> -->
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูล GPAX"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="gradepro" caption="*สถานภาพ" [width]="30 + '%'">
+                    <dxo-lookup [dataSource]="gradepro" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                    <dxi-validation-rule type="required" message="กรุณากรอกข้อมูลสถานภาพ"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="semestercount" caption="จำนวนภาคเรียน"></dxi-column>
+                <dxi-column dataField="semesterfrom" caption="เริ่มใช้ภาคการศึกษา"></dxi-column>
+                <dxi-column dataField="semesterto" caption="ใช้ถึงภาคการศึกษา"></dxi-column>
+            </dx-data-grid>
+        </dxi-item>
+    </dx-tab-panel>
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

@@ -1,0 +1,186 @@
+<div class="row">
+    <!-- <div class="col-1" style="vertical-align: middle;">
+        </div> -->
+
+    <div class="col-4">
+        กลุ่ม
+        <dx-select-box [dataSource]="quecodcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="quecodid" (onValueChanged)="getExpcombo()">
+
+        </dx-select-box>
+
+    </div>
+    <!-- <div class="col-1" style="vertical-align: middle;">
+        </div> -->
+    <div class="col-4">
+        รูปแบบ
+        <dx-select-box [dataSource]="sysexpcombo" displayExpr="sysexportqueryshow" searchMode="StartsWith" valueExpr="querycode" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="sysexpid">
+        </dx-select-box>
+    </div>
+
+
+
+    <div class="col-3">
+        <br>
+        <dx-button class="button" (onClick)="getFiltershow()" text="ทำรายการ" icon="preferences" type="success">
+
+        </dx-button>
+    </div>
+</div>
+
+
+
+<dx-popup [width]="30+'%'" height="Auto" [showTitle]="true" title="ค้นหา" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible" showCloseButton="true">
+    <dxo-position at="center" my="center" of="window"> </dxo-position>
+    <div class="row">
+        <div style="margin:0 auto;width:90%;">
+            <div class="widget-container" width="Auto">
+                <div class="row" *ngFor="let item of querylist1">
+                    <div class="col-12" *ngIf="item.FILTERNAME=='campusid'">
+                        ศูนย์/วิทยาเขต
+                        <dx-select-box [dataSource]="camcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="camcomboid"></dx-select-box>
+                    </div>
+
+                    <div class="col-12" *ngIf="item.FILTERNAME=='levelid'">
+                        ระดับ
+                        <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo()" [(ngModel)]="levcomboid">
+                        </dx-select-box>
+                    </div>
+
+                    <div class="col-12" *ngIf="item.FILTERNAME=='levelidfrom'">
+                        ระดับจาก
+                        <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo()" [(ngModel)]="levcomboidfrom">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='levelidto'">
+                        ระดับถึง
+                        <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo()" [(ngModel)]="levcomboidto">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='facultyid'">
+                        วิทยาลัย/คณะ/สถาบัน
+                        <dx-select-box [dataSource]="faccombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo();getdepartmentlist();getdepartmentsublist();" [(ngModel)]="faccomboid">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='programid'">
+                        <!-- รหัสสาขาวิชาเอก -->
+                        สาขาวิชา
+                        <dx-select-box [dataSource]="procombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="procomboid">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='departmentid'">
+                        ภาค/สาขา
+                        <dx-select-box [dataSource]="depcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getdepartmentsublist();" [(ngModel)]="depcomboid">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='departmentsubid'">
+                        สาขาวิชา
+                        <dx-select-box [dataSource]="depsubcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="depsubcomboid">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='documentdownloaddate'">
+                        วันที่ดาวน์โหลด
+                        <dx-date-box type="date" [(ngModel)]="documentdownloaddate" [showClearButton]="true">
+                        </dx-date-box>
+
+                    </div>
+                     <div class="col-12" *ngIf="item.FILTERNAME=='schoolid'">
+                        โรงเรียน/สถาบัน
+                        <dx-select-box [dataSource]="schoollist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="schoolid">
+                        </dx-select-box>
+                    </div>
+                     <div class="col-12" *ngIf="item.FILTERNAME=='studentstatus'">
+                        สถานะนักศึกษา
+                        <dx-select-box [dataSource]="studentstatuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentstatus">
+                        </dx-select-box>
+                    </div>
+                     <div class="col-12" *ngIf="item.FILTERNAME=='studentstatusfrom'">
+                        สถานะจาก
+                        <dx-select-box [dataSource]="studentstatuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentstatusfrom">
+                        </dx-select-box>
+                    </div>
+                     <div class="col-12" *ngIf="item.FILTERNAME=='studentstatusto'">
+                        สถานะถึง
+                        <dx-select-box [dataSource]="studentstatuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentstatusto">
+                        </dx-select-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='acadyear'">
+                        ปีการศึกษา
+                        <dx-number-box [(ngModel)]="acadyear" [showClearButton]="true" [showSpinButtons]="true" [min]="1" [max]="9999">
+                        </dx-number-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='semester'">
+                        ภาคที่
+                        <dx-number-box [(ngModel)]="semester" [showClearButton]="true" [showSpinButtons]="true" [min]="0" [max]="3">
+                        </dx-number-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='admitacadyear'">
+                        ปีการศึกษาที่เข้า
+                        <dx-number-box [(ngModel)]="admitacadyear" [showClearButton]="true" [showSpinButtons]="true" [min]="1" [max]="9999">
+                        </dx-number-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='admitacadyearfrom'">
+                        ปีที่เข้าจาก
+                        <dx-number-box [(ngModel)]="admitacadyearfrom" [showClearButton]="true" [showSpinButtons]="true" [min]="1" [max]="9999">
+                        </dx-number-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='admitacadyearto'">
+                        ปีที่เข้าถึง
+                        <dx-number-box [(ngModel)]="admitacadyearto" [showClearButton]="true" [showSpinButtons]="true" [min]="1" [max]="9999">
+                        </dx-number-box>
+                    </div>
+                    <div class="col-12" *ngIf="item.FILTERNAME=='admitsemester'">
+                        ภาคที่เข้า
+                        <dx-number-box [(ngModel)]="admitsemester" [showClearButton]="true" [showSpinButtons]="true" [min]="0" [max]="3">
+                        </dx-number-box>
+                    </div>
+
+                </div>
+                <div class="col-12" style="align-self: flex-end; text-align: right ;">
+                    <br>
+                    <dx-button class="button" (onClick)="onSearch()" text="ค้นหา" icon="find" type="default" [width]="150">
+                    </dx-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</dx-popup>
+
+<br>
+<div id="data-grid-demo">
+    <!-- (onExporting)="onExporting($event)" -->
+
+    <dx-data-grid (onExporting)="onExporting($event)" (onToolbarPreparing)="gridonToolbarPreparing($event)" [columnAutoWidth]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="querylist">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="false">
+        </dxo-editing>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+        <dxo-export [enabled]="true"></dxo-export>
+        <dxo-column-chooser [enabled]="true" mode="select"></dxo-column-chooser>
+
+         <!-- <dxo-export [enabled]="true" [allowExportSelectedData]="false" [excelWrapTextEnabled]="false"></dxo-export> -->
+        <div *dxTemplate="let data of 'heddershow'">
+
+            <dxi-item location="after" *ngIf="sysexpid == 'A01'">
+                <dx-button icon=" exporttext " text="Export to Text File " (onClick)="exportTXT($event) ">
+                </dx-button>
+            </dxi-item>
+
+        </div>
+    </dx-data-grid>
+</div>
+
+
+
+
+<!--  
+  <div id="data-grid-demo ">
+    <dx-data-grid id="gridContainer " [rowAlternationEnabled]="true " [hoverStateEnabled]="true " [showBorders]="true "
+      [dataSource]="querylist " [columnAutoWidth]="true " (onOptionChanged)="checkPageSize($event) ">
+      <dxo-paging [pageSize]="10 "></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true " [allowedPageSizes]="[10, 15, 20, 'All'] " [showInfo]="true "> </dxo-pager>
+      <dxo-column-chooser [enabled]="true " mode="select "></dxo-column-chooser>
+      <dxo-export [enabled]="true " [allowExportSelectedData]="false "></dxo-export>
+
+    </dx-data-grid>
+  </div> -->

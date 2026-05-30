@@ -1,0 +1,17 @@
+.biodetail tr td{
+  border: transparent;
+  padding: 5px;
+}
+
+label {
+  padding: 1px;
+}
+
+::ng-deep #prgstudentstatus tr.notes-row td {
+    padding: 5px;  
+    /* padding-bottom : 0px;   */
+
+}
+::ng-deep #prgstudentstatus tr.main-row td {
+  padding-bottom : 0px;  
+}

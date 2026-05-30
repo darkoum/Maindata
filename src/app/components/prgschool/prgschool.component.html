@@ -1,0 +1,84 @@
+<div id="data-grid-demo">
+    <dx-data-grid id="prgschool" [dataSource]="schoollist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" (onSaving)="dataSave($event)" (onToolbarPreparing)="onToolbarPreparing($event)" (onInitNewRow)="onInsertingstart($event)">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="บันทึกสถาบันเดิม" [showTitle]="true" [height]="'auto'">
+            </dxo-popup>
+            <dxo-form>
+                <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                    <dxi-item dataField="schoolcode" [label]="{ text: 'รหัส' }" [colSpan]="2" ></dxi-item>
+                    <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                    <dxi-item dataField="schoolname" [label]="{ text: 'ชื่อสถาบันเดิม (ไทย)' }" [colSpan]="4"></dxi-item>
+                    <dxi-item dataField="schoolnameeng" [label]="{ text: 'ชื่อสถาบันเดิม (อังกฤษ)' }" [colSpan]="4"></dxi-item>
+                    <dxi-item dataField="schooltype" [label]="{ text: 'ประเภท' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schoolhead" [label]="{ text: 'ตำแหน่ง' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schooladdress1" [label]="{ text: 'ที่อยู่บรรทัด 1' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schooladdress2" [label]="{ text: 'ที่อยู่บรรทัด 2' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schoolprovinceid" [label]="{ text: 'จังหวัด' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schooldistrict" [label]="{ text: 'อำเภอ' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schoolsubdistrict" [label]="{ text: 'ตำบล' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schoolzipcode" [label]="{ text: 'รหัสไปรษณีย์' }" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="schoolphoneno" [label]="{ text: 'โทรศัพท์' }" [colSpan]="1"></dxi-item>
+                    <dxi-item dataField="county" [label]="{ text: 'ประเทศ' }" [editorOptions]="{showClearButton: true ,searchMode: 'contains'}" [colSpan]="1"></dxi-item>
+                    <dxi-item dataField="schoolidmaster" [label]="{ text: 'ส่งตรวจสอบวุฒิร่วมกับสถาบัน' }" [editorOptions]="{showClearButton: true ,searchMode: 'contains'}" [colSpan]="2"></dxi-item>
+                </dxi-item>
+            </dxo-form>
+        </dxo-editing>
+
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+
+        <dxi-column dataField="schoolid" caption="schoolid" [visible]="false"> </dxi-column>
+        <dxi-column dataField="schoolcode" caption="*รหัส" sortOrder="asc" [allowEditing]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="schoolname" caption="*ชื่อสถาบันเดิม (ไทย)" [width]="15+'%'">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อสถาบันเดิม (ไทย)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="schoolnameeng" caption="ชื่อสถาบันเดิม (อังกฤษ)" [width]="15+'%'"></dxi-column>
+         <dxi-column [visible]="true" dataField="schooltype" caption="ประเภท" [setCellValue]="setSchooltypeValue">
+             <dxi-validation-rule type="required" message="กรุณากรอกประเภท"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="schooltypelist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="schoolhead" caption="ตำแหน่ง"> </dxi-column>
+        <dxi-column dataField="schooladdress1" caption="ที่อยู่บรรทัด 1" [visible]="false"></dxi-column>
+        <dxi-column dataField="schooladdress2" caption="ที่อยู่บรรทัด 2" [visible]="false"></dxi-column>
+        <dxi-column dataField="schoolsubdistrict" caption="ตำบล" [setCellValue]="setSubdistrictValue" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredSubDistrict" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+          <!-- <div *dxTemplate="let cellInfo of 'schoolsubdistrict'">
+                <dx-select-box [dataSource]="getFilteredSubDistrict" [items]="cellInfo.data.comboid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [showClearButton]="true" (onValueChanged)="updatedatafrom($event, cellInfo)"> </dx-select-box>
+          </div> -->
+
+        <dxi-column dataField="schooldistrict" caption="อำเภอ" [setCellValue]="setDistrictValue" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredDistrict" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+          <!-- <div *dxTemplate="let cellInfo of 'schooldistrict'">
+                <dx-select-box [dataSource]="getFilteredDistrict" [items]="cellInfo.data.comboid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [showClearButton]="true" (onValueChanged)="updatedatafrom($event, cellInfo)"> </dx-select-box>
+          </div> -->
+
+        <dxi-column dataField="schoolprovinceid" caption="*จังหวัด" [setCellValue]="setProvinceValue">
+            <dxi-validation-rule type="required" message="กรุณากรอกจังหวัด"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="provincelist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="schoolzipcode" caption="รหัสไปรษณีย์" [visible]="false"></dxi-column>
+        <dxi-column dataField="schoolphoneno" caption="โทรศัพท์"></dxi-column>
+         <dxi-column [visible]="false" dataField="schoolidmaster" caption="ส่งตรวจสอบวุฒิร่วมกับสถาบัน">
+            <dxo-lookup [dataSource]="schoolidmasterlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="county" caption="ประเทศ" [visible]="false">
+            <dxo-lookup [dataSource]="combocounty" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="quotatype" caption="quotatype"></dxi-column>
+        <div *dxTemplate="let data of 'tableName'">
+            <div class="tablelabel">
+                <span>สถาบันเดิม</span>
+            </div>
+        </div>
+    </dx-data-grid>
+</div>

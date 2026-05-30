@@ -1,0 +1,152 @@
+<div class="row">
+    <div class="col-12">
+        <div id="data-grid-demo">
+            <dx-data-grid id="prgfaculty" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" 
+            (onSaving)="facSave($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+                [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="facultylist">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true"> </dxo-pager>
+                <!-- <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                    <dxo-popup title="Faculty Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing> -->
+                <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                    <dxo-popup title="บันทึกวิทยาลัย/คณะ/สถาบัน" [showTitle]="true" [height]="'auto'">
+                    </dxo-popup>
+                    <dxo-form>
+                        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="facultyid" [label]="{ text: 'รหัส' }"></dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                            <dxi-item dataField="facultyname" [colSpan]="2" [label]="{ text: 'ชื่อวิทยาลัย/คณะ/สถาบัน (ไทย)' }"></dxi-item>
+                            <dxi-item dataField="facultynameeng" [colSpan]="2" [label]="{ text: 'ชื่อวิทยาลัย/คณะ/สถาบัน (อังกฤษ)' }"></dxi-item>
+                            <dxi-item dataField="facultyabb" [colSpan]="2" [label]="{ text: 'ชื่อย่อ (ไทย)' }"></dxi-item>
+                            <dxi-item dataField="facultyabbeng" [colSpan]="2" [label]="{ text: 'ชื่อย่อ (อังกฤษ)' }"></dxi-item>
+                            <dxi-item dataField="dean" [label]="{ text: 'คณบดี (ไทย)' }"></dxi-item>
+                            <dxi-item dataField="deaneng" [label]="{ text: 'คณบดี(อังกฤษ)' }"></dxi-item>
+                            <dxi-item dataField="facultytype" [label]="{ text: 'ประเภท' }"></dxi-item>
+                            <dxi-item dataField="statusflag" [label]="{ text: 'สถานะใช้งาน' }"></dxi-item>
+                            <dxi-item dataField="deanposition" [label]="{ text: 'ตําแหน่งผู้ขานนาม (ไทย)' }" ></dxi-item>
+                            <dxi-item dataField="deanpositioneng" [label]="{ text: 'ตำแหน่งผู้ขานนาม (อังกฤษ)' }" ></dxi-item>
+                        </dxi-item>
+                    </dxo-form>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="facultyid" caption="รหัส" sortOrder="asc" [width]="100" [fixed]="true" cellTemplate="showfacultyid">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                    <div *dxTemplate="let data of 'showfacultyid'" style="text-align: right;">
+                        {{data.data.facultyid}}
+                    </div>
+                </dxi-column>
+                <dxi-column dataField="facultyname" caption="*ชื่อวิทยาลัย/คณะ/สถาบัน (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อวิทยาลัย/คณะ/สถาบัน (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="facultynameeng" caption="ชื่อวิทยาลัย/คณะ/สถาบัน (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="facultyabb" caption="ชื่อย่อ (ไทย)"></dxi-column>
+                <dxi-column dataField="facultyabbeng" caption="ชื่อย่อ (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="dean" caption="คณบดี (ไทย)"></dxi-column>
+                <dxi-column dataField="deaneng" caption="คณบดี (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="facultytype" caption="ประเภท">
+                    <dxo-lookup [dataSource]="facultytype" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="statusflag" caption="สถานะใช้งาน" [width]="100">
+                    <dxi-validation-rule type="required" message="กรุณากรอกสถานะใช้งาน"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="statusflaglist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="deanposition" caption="ตำแหน่งผู้ขานนาม (ไทย)" [visible]="false"></dxi-column>
+                <dxi-column dataField="deanpositioneng" caption="ตำแหน่งผู้ขานนาม (อังกฤษ)" [visible]="false"></dxi-column>
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+        <div id="data-grid-demo">
+            <dx-data-grid id="prgfacultysubdetail" [columnAutoWidth]="true" (onInitNewRow)="getDefaultdep($event)" (onToolbarPreparing)="onToolbarPreparing2($event)" (onSaving)="depSave($event)" (onSelectionChanged)="selectionChanged2($event)" [dataSource]="departmentlist"
+                [showBorders]="true" [hoverStateEnabled]="true" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpfacultyid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+
+                <dxi-column dataField="departmentid" caption="*รหัส" sortOrder="asc" [width]="100" [fixed]="true" cellTemplate="showdepartmentid">
+                    <div *dxTemplate="let data of 'showdepartmentid'" style="text-align: right;">
+                        {{data.data.departmentid}}
+                    </div>
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="departmentname" caption="*ชื่อภาค/สาขา (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อภาค/สาขา (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="departmentnameeng" caption="ชื่อภาค/สาขา (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="departmentabb" caption="ชื่อย่อ (ไทย)"></dxi-column>
+                <dxi-column dataField="departmentabbeng" caption="ชื่อย่อ (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="facultyid" [visible]="false" caption="*รหัส"></dxi-column>
+
+                <dxi-column dataField="statusflag" caption="สถานะใช้งาน" [width]="100">
+                    <dxi-validation-rule type="required" message="กรุณากรอกสถานะใช้งาน"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="statusflaglist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <div *dxTemplate="let data of 'heddershow'">
+                    <div class="tableremark">
+                        <span class="name">*ภาค/สาขาในวิทยาลัย/คณะ/สถาบัน ใช้ 0 สำหรับหน่วยงานกลาง </span>
+                    </div>
+                </div>
+
+            </dx-data-grid>
+        </div>
+    </div>
+    <div class="row">
+    <div class="col-12">
+        <div id="data-grid-demo">
+            <dx-data-grid id="prgdepartmentoffsub" [columnAutoWidth]="true" (onInitNewRow)="getDefaultdepsub($event)" (onToolbarPreparing)="onToolbarPreparing3($event)" (onSaving)="depsuboffSave($event)" [dataSource]="departmentsubofflist" [showBorders]="true" [hoverStateEnabled]="true"
+                [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpdepartmentid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+
+                <dxi-column dataField="sequence" caption="*ลำดับ" sortOrder="asc" [width]="100" [fixed]="true" cellTemplate="sequence">
+                    <div *dxTemplate="let data of 'sequence'" style="text-align: right;">
+                        {{data.data.sequence}}
+                    </div>
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                
+               
+                <dxi-column dataField="departmentid" [visible]="false" caption="*รหัส"></dxi-column>
+                <dxi-column dataField="facultyid" [visible]="false" caption="*รหัส"></dxi-column>
+                <dxi-column dataField="officerid" caption="ชื่อบุคลากร">
+                    <dxo-lookup [dataSource]="officerid" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>    
+               
+                <dxi-column dataField="positionid" caption="ตำแหน่ง">
+                    <dxo-lookup [dataSource]="positionid" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>    
+                
+
+
+                <div *dxTemplate="let data of 'heddershow'">
+                    <div class="tableremark">
+                        <span class="name">อาจารย์ประจำภาค/สาขา</span>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </div>
+
+    </div>
+    </div>
+</div>

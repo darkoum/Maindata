@@ -1,0 +1,155 @@
+<div class="row">
+    <div style="margin:0 auto;min-width:500px;width:40%;">
+        <div class="widget-container">
+            <div class="card">
+                <div class="card-header" translate>{{ repname }}</div>
+                <div class="card-body">
+                    <!-- <form> -->
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">ศูนย์/วิทยาเขต</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="lstCampus" displayExpr="campusname" searchMode="StartsWith" valueExpr="campusid" [searchEnabled]="true" [showClearButton]="true" [value]="lstCampus[0]?.campusid" (onValueChanged)="getcriteria()" [(ngModel)]="campusid">
+                                <div *dxTemplate="let data of 'item'" class="custom-item">
+                                    {{ data.campusid }}: {{ data.campusname }}
+                                </div>
+                                <dx-validator>
+                                    <dxi-validation-rule type="required" message="กรุณาระบุศูนย์/วิทยาเขต"></dxi-validation-rule>
+                                </dx-validator>
+                            </dx-select-box>
+                        </div>
+                    </div>
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">ประเภทนักศึกษา</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="lstDivisioncode" displayExpr="divisioncodename" searchMode="StartsWith" valueExpr="divisioncode" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="HandleEventDivChangeValue($event)" [(ngModel)]="divisioncode">
+                                <div *dxTemplate="let data of 'item'" class="custom-item">
+                                    {{ data.divisioncode }}: {{ data.divisioncodename }}
+                                </div>
+                            </dx-select-box>
+                        </div>
+                    </div>
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">ระดับ</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="lstLev" displayExpr="levelname" searchMode="StartsWith" valueExpr="levelid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="HandleEventValue($event)" [(ngModel)]="levelid">
+                                <div *dxTemplate="let data of 'item'" class="custom-item">
+                                    {{ data.levelid }}: {{ data.levelname }}
+                                </div>
+                            </dx-select-box>
+                        </div>
+                    </div>
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">วิทยาลัย/คณะ/สถาบัน</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="lstFac" displayExpr="facultyname" searchMode="StartsWith" valueExpr="facultyid" [value]="lstFac[0]?.facultyid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="HandleEventValue($event)" [(ngModel)]="facultyid"></dx-select-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">สาขาวิชา</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="lstProgram" displayExpr="programshow" searchMode="StartsWith" valueExpr="programid" [value]="lstProgram[0]?.programid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcriteria()" [(ngModel)]="programid"></dx-select-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">สถานะจาก</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="status" displayExpr="bytedes" searchMode="StartsWith" valueExpr="bytecode" [value]="status[0]?.bytecode" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcriteria()" [(ngModel)]="statusfrom"></dx-select-box>
+                        </div>
+                    </div>
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">สถานะถึง</label>
+                        </div>
+                        <div class="col-md-9">
+                            <dx-select-box [dataSource]="status" displayExpr="bytedes" searchMode="StartsWith" valueExpr="bytecode" [value]="status[0]?.bytecode" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcriteria()" [(ngModel)]="statusto"></dx-select-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">รุ่น</label>
+                        </div>
+                        <div class="col-md-2">
+                            <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="HandleEventValue($event)"></dx-text-box>
+                        </div>
+                        <div class="col-md-1">กลุ่ม</div>
+                        <div class="col-md-6">
+                            <dx-select-box [dataSource]="lstStdGroup" displayExpr="stdgroupname" searchMode="StartsWith" valueExpr="studentgroup" [value]="lstStdGroup[0]?.studentgroup" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcriteria()" [(ngModel)]="studentgroup"
+                                [dropDownOptions]="500"></dx-select-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">รหัสนักศึกษา</label>
+                        </div>
+                        <div class="col-md-4">
+                            <dx-text-box [(ngModel)]="studentcodefrom" (onValueChanged)="HandleEventStucodeChanageValue()"></dx-text-box>
+                        </div>
+                        <div>-</div>
+                        <div class="col-md-4">
+                            <dx-text-box [(ngModel)]="studentcodeto" (onValueChanged)="getcriteria()"></dx-text-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">จากวันที่</label>
+                        </div>
+                        <div class="col-md-3">
+                            <dx-date-box [(ngModel)]="datefrom" [showClearButton]="true" [useMaskBehavior]="true" displayFormat="shortdate" (onValueChanged)="getcriteria()">
+                            </dx-date-box>
+                        </div>
+                        <div>-</div>
+                        <div class="col-md-3">
+                            <dx-date-box [(ngModel)]="dateto" [showClearButton]="true" [useMaskBehavior]="true" displayFormat="shortdate" (onValueChanged)="getcriteria()">
+                            </dx-date-box>
+                        </div>
+                    </div>
+
+                    <div class="row text-left mb-1">
+                        <div class="col-md-3">
+                            <label for="exampleInputEmail1">ปีการศึกษา</label>
+                        </div>
+                        <div class="col-md-2">
+                            <dx-text-box [(ngModel)]="acadyear" (onValueChanged)="getcriteria()"></dx-text-box>
+                        </div>
+                        <div>-</div>
+                        <div class="col-md-1">
+                            <dx-text-box [(ngModel)]="semester" (onValueChanged)="getcriteria()"></dx-text-box>
+                        </div>
+                    </div>
+                    <div class="row text-left">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9 ml-10">
+                            <form method="POST " action="http://192.168.99.242/E-RegReportReg/ReportGenerator.aspx " target="_blank " id="reportfrm" name="reportfrm " #reportfrm>
+                                <input type="hidden" name="repfilename" value="{{repfilename}}" />
+                                <input type="hidden" name="repname" value="{{repname }}" />
+                                <!-- <input type="hidden" name="repwhere" value="studentcode={{ studentcode }} AND facultyid={{ facid }}" /> -->
+                                <input type="hidden" name="repwhere" value="{{ criteria }}" />
+                                <input type="hidden" name="repsystemname" value="{{systemname}}" />
+                                <input type="hidden" name="systemname" value="{{systemnameeng}}" />
+                                <dx-button class="button" (click)="reportfrm.submit()" text="PROCESS" icon="preferences" type="success" [width]="140">
+                                </dx-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+::ng-deep .content {
+    text-align: justify;
+    margin-top: 10px;
+    margin-left: 10px;
+}

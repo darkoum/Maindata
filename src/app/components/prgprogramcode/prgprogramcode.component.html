@@ -1,0 +1,37 @@
+<div id="data-grid-demo">
+
+    <dx-data-grid id="gridContainer" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onSaving)="dataSave($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [dataSource]="programcodelits"
+        [showBorders]="true">
+        <!-- (onSelectionChanged)="selectionChanged($event) (onSaved)="ProCodSave($event)" -->
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Faculty Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="programcode" caption="*รหัส" sortOrder="asc" [width]="20+'%'">
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="programcodename" caption="*ชื่อกลุ่มสาขา (ไทย)"></dxi-column>
+        <dxi-validation-rule type="required" message="กรุณากรอกชื่อกลุ่มสาขา (ไทย)"></dxi-validation-rule>
+        <dxi-column dataField="programcodenameeng" caption="ชื่อกลุ่มสาขา (อังกฤษ)"></dxi-column>
+        <dxi-column dataField="programcodestatus" caption="*สถานะ">
+            <dxi-validation-rule type="required" message="กรุณากรอกสถานะ"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="programstatuslist" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+        </dxi-column>
+
+        <!-- <dxi-column dataField="facultytype" caption="ประเภท">
+            <dxo-lookup [dataSource]="" valueExpr="bytecode" displayExpr="bytedes">
+            </dxo-lookup>
+        </dxi-column> -->
+
+    </dx-data-grid>
+
+
+
+</div>

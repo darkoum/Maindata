@@ -1,0 +1,333 @@
+<div>
+    <div class="row">
+        <div class="col-12 col-xs-12 col-md-12 col-xl-12 col-lg-12" style="text-align: right;">
+            <dx-button stylingMode="contained" text="ตรวจสอบการโอนย้าย" type="default"
+                (click)="popupVisible = true;">
+            </dx-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-6 col-md-6 col-12">
+            <span
+                style="padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">ข้อมูลนักศึกษาที่ต้องการย้าย</span>
+            <div class="card" style="margin: 5px;padding: 15px;height: 90%;">
+                <div class="row">
+                    <div class="col-xl-4 col-md-12 col-12">
+                        <span>รหัสนักศึกษาเดิม</span>
+                        <dx-text-box [(ngModel)]="studentcodeold" (onValueChanged)="getstudent()"></dx-text-box>
+                    </div>
+                    <div class="col-xl-8 col-md-12 col-12" *ngIf="studentlist">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6 col-6" style="align-self: flex-end;">
+                                <dx-button stylingMode="contained" text="Link รหัส" type="default"
+                                    [disabled]="!studentcodenew" (click)="updatestudentid()">
+                                </dx-button>
+                            </div>
+                            <div class="col-xl-6 col-md-6 col-6">
+                                <span>รหัสนักศึกษาใหม่</span>
+                                <dx-text-box [(ngModel)]="studentcodenew"
+                                    (onValueChanged)="getnewstudent()"></dx-text-box>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="padding: 10px;margin: 10px; ">
+
+                    <div class="row" style="padding: 5px 5px 5px 0px; ">
+                        <div class="col-12 ">
+                            <span style="color: #8d99ae;">ชื่อ-นามสกุล : </span>
+                            <span *ngIf="studentlist">{{studentlist.prefixname}}{{ studentlist.studentname }}
+                                {{studentlist.studentsurname}}</span>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 5px 5px 5px 0px; ">
+                        <div class="col-12 ">
+                            <span style="color: #8d99ae;">รุ่น : </span>
+                            <span style="color: #8d99ae;">กลุ่มนักศึกษา : </span>
+                            <span *ngIf="studentlist">{{studentlist.groupyear}} {{studentlist.studentgroupabb}} {{studentlist.programname}}</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" style="padding: 5px 5px 5px 0px; ">
+                    <div class="col-12 ">
+                        <span>เปลี่ยนเป็นสถานะหลังโอน</span>
+                        <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith"
+                            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                            [(ngModel)]="studentstatus">
+                        </dx-select-box>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-md-6 col-12">
+
+            <span style="padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6; ">กรุณาเลือกข้อมูล
+                สาขาที่ต้องการย้ายไป</span>
+            <div class="card " style="margin: 5px;padding: 15px;height: 90%; ">
+                <div class="row" style="padding-top: 5px;">
+                    <div class="col-6">
+                        <span>ศูนย์/วิทยาเขต</span>
+                        <dx-select-box [dataSource]="campuslist" displayExpr="comboshow" searchMode="StartsWith"
+                            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="campusid"
+                            (onValueChanged)="getstudentgroup()"></dx-select-box>
+                    </div>
+                    <div class="col-6">
+                        <span>วิทยาลัย/คณะ/สถาบัน</span>
+                        <dx-select-box [dataSource]="facultylist" displayExpr="comboshow" searchMode="StartsWith"
+                            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="facultyid"
+                            (onValueChanged)="getstudentgroup()"></dx-select-box>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 5px;">
+                    <div class="col-xl-12 col-md-12 col-12">
+                        ระดับ
+                        <dx-select-box [dataSource]="levellist" displayExpr="comboshow" searchMode="StartsWith"
+                            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="levelid"
+                            (onValueChanged)="getstudentgroup()"></dx-select-box>
+                    </div>
+
+                </div>
+
+
+                <div class="row" style="padding-top: 5px;">
+
+                    <div class="col-xl-2 col-md-2 col-12">
+                        <span>รุ่น</span>
+                        <dx-text-box style="width: 100px;" [(ngModel)]="groupyear" (onValueChanged)="getstudentgroup()">
+                        </dx-text-box>
+                    </div>
+
+                    <div class="col-xl-10 col-md-7 col-12" style="align-content: flex-end;">
+                        กลุ่มนักศึกษา
+                        <dx-select-box [dataSource]="studentgrouplist" displayExpr="comboshow" searchMode="StartsWith"
+                            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                            [(ngModel)]="studentgroup" (onValueChanged)="getstudentcode()"></dx-select-box>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 5px;">
+                    <div class="col-xl-3 col-md-6 col-12">
+                        <span>ระบุรหัสนักศึกษาใหม่</span>
+                        <dx-text-box [(ngModel)]="studentcode" [disabled]="true"></dx-text-box>
+                    </div>
+                    <!-- <div class="col-xl-3 col-md-6 col-12"> -->
+                        <!-- <span>ปีที่อนุมัติ-ภาค</span>
+                        <div class="row">
+                            <div class="col-8">
+                                <dx-text-box [(ngModel)]="appacadyear"
+                                    style="background-color: rgb(248, 238, 238);"></dx-text-box>
+                            </div>
+                            <div class="col-4">
+                                <dx-text-box [(ngModel)]="appsemester"
+                                    style="background-color: rgb(248, 238, 238);"></dx-text-box>
+                            </div>
+                        </div> -->
+                    <!-- </div> -->
+                    <!-- <div class="col-xl-2 col-md-6 col-12"> -->
+                        <!-- <span>วันที่อนุมัติโอนย้าย</span>
+                        <dx-date-box-custom [date]="appdate" (onValueChanged)="appdate = $event.value"
+                            [showClearButton]="true" style="background-color: rgb(248, 238, 238);"></dx-date-box-custom> -->
+                    <!-- </div> -->
+                    <div class="col-xl-9 col-md-6 col-12" style="align-self: flex-end;text-align: left;">
+                        <!-- <dx-button stylingMode="contained" text="สร้างรหัสนักศึกษาใหม่" icon="plus"
+                            type="default" [width]="180"
+                            [disabled]="chkbutton || !appacadyear || !appsemester || !appdate || !oldstudentid"
+                            (click)="gennewstudent()">
+                        </dx-button> -->
+                        <!-- <dx-button stylingMode="contained" text="สร้างรหัสนักศึกษาใหม่" icon="plus" -->
+                        <dx-button stylingMode="contained" text="สร้างรหัสนักศึกษาใหม่" icon="plus"
+                            type="default"
+                            [disabled]="chkbutton || !oldstudentid"
+                            (click)="gennewstudent()">
+                        </dx-button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row mt-3" *ngIf="!student || !chkbutton">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td class="text-center">ไม่พบข้อมูลการโอนย้าย</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="student">
+        <div class="col-12">
+            <div class="card" style="padding: 10px;margin-top: 10px;">
+                <div class="row">
+                    <div class="col-xl-1 col-md-3 col-3"><span style="color: #8d99ae;">คำนำหน้า</span>
+                        {{student.prefixname}}
+                    </div>
+                    <div class="col-xl-2 col-md-5 col-5"><span style="color: #8d99ae;">ชื่อ</span>
+                        {{student.studentname}}</div>
+                    <div class="col-xl-2 col-md-4 col-4"><span style="color: #8d99ae;">นามสกุล</span>
+                        {{student.studentsurname}}
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-6"><span style="color: #8d99ae;">ชื่อ (อังกฤษ)</span>
+                        {{student.studentnameeng}}
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-6"><span style="color: #8d99ae;">นามสกุล (อังกฤษ)</span>
+                        {{student.studentsurnameeng}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-1 col-md-6 col-6"><span style="color: #8d99ae;">ปีที่เข้า</span>
+                        {{student.admitsemester}}/{{student.admitacadyear}}
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-6"><span style="color: #8d99ae;">วันที่รับเข้า</span>
+                        {{student.admitdate}}
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-6"><span style="color: #8d99ae;">ศูนย์/วิทยาเขต</span>
+                        {{student.campusname}}
+                    </div>
+                    <div class="col-xl-4 col-md-6 col-6"><span style="color: #8d99ae;">รุ่น/กลุ่มนักศึกษา</span>
+                        {{student.groupyear}}/{{student.studentgroupabb}} : {{student.programname}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding-top: 10px;">
+        <!-- <div class="col-6" *ngIf="chkbutton">
+            <span style="padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">ผลการเรียนเดิม</span>
+            <div class="card widget-container">
+                <dx-list #list [dataSource]="tasks" [height]="400" [showSelectionControls]="true"
+                    [selectedItemKeys]="[]">
+                    <div *dxTemplate="let item of 'item'">
+                        <div class="row" (dblclick)="delCourseid(item);" >
+                            <div class="col-xl-1 col-md-2 col-12">{{item.semester}}/{{item.acadyear}}</div>
+                            <div class="col-xl-8 col-md-10 col-12">{{item.coursecode}}-{{item.revisioncode}} :
+                                {{item.coursename}}
+                            </div>
+                            <div class="col-xl-2 col-md-6 col-12">{{item.courseunit}}</div>
+                            <div class="col-xl-1 col-md-6 col-12">{{item.grade}}</div>
+                        </div>
+                    </div>
+                </dx-list>
+            </div>
+        </div> -->
+
+        <div class="col-6" *ngIf="chkbutton">
+            <div class="row justify-content-between">
+                <span style="width: fit-content;padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">ผลการเรียนเดิม</span>
+                <span style="width: fit-content;padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">จำนวนผลการเรียนเดิม : {{amountoldcourse}}</span>
+            </div>
+            <div class="card widget-container">
+                <dx-list #list [dataSource]="tasks" [height]="400" [showSelectionControls]="true" [selectedItemKeys]=[]>
+                    <div *dxTemplate="let item of 'item'">
+                        <!-- <div class="row" (dblclick)="CopyCourseid(item);"> -->
+                        <div class="row">
+                            <div class="col-xl-1 col-md-2 col-12">{{item.semester}}/{{item.acadyear}}</div>
+                            <div class="col-xl-8 col-md-10 col-12">{{item.coursecode}}-{{item.revisioncode}} :
+                                {{item.coursename}}
+                            </div>
+                            <div class="col-xl-2 col-md-6 col-12">{{item.courseunit}}</div>
+                            <div class="col-xl-1 col-md-6 col-12">{{item.grade}}</div>
+                        </div>
+                    </div>
+                </dx-list>
+            </div>
+
+        </div>
+
+        <div class="col-6" *ngIf="chkbutton">
+            <div class="row justify-content-between">
+                <span style="width:fit-content;padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">รายวิชาโอนย้าย</span>
+                <span style="width:fit-content;padding-top: 5px;padding-left: 5px;font-weight: bold;color: #c5c3c6;">จำนวนวิชาที่ทำการโอนย้าย : {{amounttransfercourse}}</span>
+            </div>
+            <div class="card widget-container">
+                <dx-list #listnew [dataSource]="newcourse" [height]="400" [showSelectionControls]="true"
+                    [selectedItemKeys]="[]">
+                    <div *dxTemplate="let item of 'item'">
+                        <div class="row">
+                            <div class="col-xl-1 col-md-2 col-12">{{item.semester}}/{{item.acadyear}}</div>
+                            <div class="col-xl-8 col-md-10 col-12">{{item.coursecode}}-{{item.revisioncode}} :
+                                {{item.coursename}}
+                            </div>
+                            <div class="col-xl-2 col-md-6 col-12">{{item.courseunit}}</div>
+                            <div class="col-xl-1 col-md-6 col-12">{{item.grade}}</div>
+                        </div>
+                    </div>
+                </dx-list>
+                <!-- <div class="selected-data">
+                    <span class="caption">Selected IDs:{{classlist}}</span>
+                    <span>{{list.selectedItemKeys.join(", ")}}</span> 
+                </div> -->
+            </div>
+
+        </div>
+    </div>
+    <div class="row justify-content-between" style="padding: 10px;" *ngIf="amountoldcourse > 0 && chkbutton">
+        <div class="col-4">
+            <dx-button stylingMode="contained" text="ปรับปรุงข้อมูลเกรด" icon="contains" type="default" [width]="180"
+                [disabled]="!chkbutton" (click)="updatecourse()">
+            </dx-button>
+        </div>
+        <div class="col-4 text-center">
+            <dx-button stylingMode="contained" text="คัดลอกรายวิชา" icon="copy" type="default" [width]="180"
+                [disabled]="!chkbutton" (click)="copycourse()">
+            </dx-button>
+        </div>
+        <div class="col-4" style="align-self: right;text-align: right;">
+            <dx-button stylingMode="contained" text="ลบรายวิชา" icon="deletetable" type="danger" [width]="180"
+                [disabled]="!chkbutton" (click)="deletecourse()">
+            </dx-button>
+        </div>
+    </div>
+</div>
+<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="ตรวจสอบการโอนย้าย" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-1">
+                <div class="col-8"></div>
+                <div class="col-2">
+                    <span>รหัสนักศึกษา</span>
+                    <dx-text-box style="width: 250px;" [(ngModel)]="searchstudentcode"></dx-text-box>
+                </div>
+                <div class="col-2" style="text-align: right;">
+                    <br>
+                    <dx-button stylingMode="contained" text="ค้นหา" icon="search" type="primary" [width]="180"
+                    [disabled]="!searchstudentcode" (click)="gettransferedlist()">
+                </dx-button>
+            </div>
+            </div>
+            <div class="row" *ngIf="transferedlist?.studentinfo?.length > 0">
+                <div class="col-12" stlye="text-align: center;">
+                    {{transferedlist?.studentinfo[0]?.studentname}} - {{transferedlist?.studentinfo[0]?.programname}}
+                </div>
+            </div>
+            <div class="row">
+                <dx-data-grid [rowAlternationEnabled]="true" [columnAutoWidth]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="transferedlist?.transfereddata">
+                    <dxo-paging [pageSize]="1"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+                    <dxo-selection mode="single"></dxo-selection>
+                    <dxi-column dataField="campusname" caption="ศูนย์/วิทยาเขต"></dxi-column>
+                    <dxi-column dataField="levelabb" caption="ระดับ"></dxi-column>
+                    <dxi-column dataField="facultyname" caption="วิทยาลัย/คณะ/สถาบัน"></dxi-column>
+                    <!-- <dxi-column dataField="programname" caption="สาขาวิชา"></dxi-column> -->
+                    <dxi-column dataField="programname" caption="สาขาวิชา"></dxi-column>
+                    <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column>
+                    <dxi-column dataField="studentgroup" caption="กลุ่มนักศึกษา"></dxi-column>
+                    <dxi-column dataField="studentcode" caption="รหัสนักศึกษา"></dxi-column>
+                    <dxi-column dataField="studentstatus" caption="สถานะ">
+                        <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+                    </dxi-column>
+                </dx-data-grid>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="text-align: right;">
+            <!-- <dx-button class="button" (onClick)="popupVisible = false" text="ปิด" icon="close" type="danger" stylingMode="outlined"> -->
+            <dx-button class="button" (onClick)="popupVisible = false" text="ปิด" icon="close" type="danger">
+            </dx-button>
+        </div>
+    </div>
+</dx-popup>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>

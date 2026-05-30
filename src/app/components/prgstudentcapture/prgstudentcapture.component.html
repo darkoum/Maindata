@@ -1,0 +1,444 @@
+<div class="row">
+    <div class="col-8">
+    </div>
+    <div class="col-2">
+        รหัสนักศึกษา
+        <!-- <dx-text-box mode="number" [(ngModel)]="studentcode" [showClearButton]="true"> </dx-text-box> -->
+        <app-student-selector
+            (onValueChanged)="studentcode = $event"
+            [disabled]="false"
+            [tmpstudentcode]="studentcode"
+        ></app-student-selector>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getStudentinfo()" icon="find" type="default" text="ค้นหา" style="width: 100%;">
+        </dx-button>
+    </div>
+</div>
+<br />
+<!-- <div class="row">
+    <dx-data-grid id="prgstudentstatus" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true"
+        [dataSource]="studentinfo" rowTemplate="rowTemplateName">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true" [visible]="false"> </dxo-pager>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <tbody class="dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }"
+            *dxTemplate="let studentinfo of 'rowTemplateName'">
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>เลขประจำตัวนักศึกษา : </b>{{ studentinfo.data.studentcode
+                        }}</label>
+                </td>
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>ชื่อ-นามสกุล:
+                        </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }}
+                        {{ studentinfo.data.studentsurname }}
+                    </label>
+                </td>
+                <td style="width: 250px;">
+                    <label style="color: #1b4461"><b>วันที่รับเข้า :</b> {{studentinfo.data.admitdateshow}}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>วันที่จบ/พ้นสภาพ : </b>{{ studentinfo.data.finishdateshow
+                        }}</label>
+                </td>
+                <td rowspan="5" style="width: 160px;">
+                    <img class="img-crop" [src]="studentinfo.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" width="100%" height="100%" />
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>วิทยาเขต : </b>{{ studentinfo.data.campusname }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>คณะ : </b>{{ studentinfo.data.facultyname }} </label>
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ภาควิชา : </b>{{ studentinfo.data.departmentname }}</label>
+                </td>
+                <td colspan="2" class="text-wrap">
+                    <label style="color: #1b4461"><b>หลักสูตร : </b>{{ studentinfo.data.programname }}</label>
+                </td>
+                <td colspan="1" class="text-wrap">
+                    <label style="color: #1b4461"><b>บัญชี คชจ : </b>{{ studentinfo.data.feegroupid }}:
+                        {{ studentinfo.data.feegroupname }}
+                    </label>
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>กลุ่มเรียน : </b>{{ studentinfo.data.studentgroupabb }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ปีที่เข้า : </b>{{ studentinfo.data.admitacadyear }} </label>
+                    &nbsp; &nbsp;
+                    <label style="color: #1b4461"><b>ภาคที่ : </b>{{ studentinfo.data.admitsemester }} </label> &nbsp;
+                    &nbsp;
+                    <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>สถานภาพนักศึกษา : </b>{{ studentinfo.data.studentstatusshow }}
+                    </label>
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>ระบบวัดผล : </b>{{ studentinfo.data.acadid }}:
+                        {{ studentinfo.data.description }}
+                    </label>
+                </td>
+
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>สถานะการเงิน : </b>{{studentinfo.data.financestatusshow}} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>GPAX : </b>{{ studentinfo.data.gpa | number : "0.2-2" }} </label>
+                </td>
+            </tr>
+        </tbody>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลนักศึกษา</div>
+        </div>
+    </dx-data-grid>
+</div> -->
+<div class="row">
+    <br>
+    <dx-data-grid id="prgstudentinfo" [rowAlternationEnabled]="true" [columnAutoWidth]="true" [hoverStateEnabled]="true" [showBorders]="true" 
+    [dataSource]="studentinfo" rowTemplate="rowTemplateName" [scrolling]="'false'">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [showInfo]="false" [visible]="false"> </dxo-pager>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <dxi-column dataField="schoolid" caption="โรงเรียน/สถาบัน" cellTemplate="cellTemplate" [visible]="false">
+            <dxo-lookup [dataSource]="schoclist" valueExpr="schoolid" displayExpr="schoolshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <tbody class="biodetail dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }" *dxTemplate="let studentinfo of 'rowTemplateName'">
+            <tr class="main-row">
+                <!-- <td style="width: 28%;" class="text-wrap"> -->
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ชื่อ-นามสกุล : </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }} {{ studentinfo.data.studentsurname }}
+                    </label>
+                </td>
+                <td style="width: 28%;" class="text-wrap">
+                    <tr>
+                        <td><label style="color: #1b4461"><b>รับเข้า :
+                          </b>{{ studentinfo.data.admitsemester }}/{{ studentinfo.data.admitacadyear }}</label>
+                        </td>
+                        <td><label style="color: #1b4461"><b>&nbsp; วันที่ : </b> </label> </td>
+                        <td><label style="color: #1b4461">{{ studentinfo.data.admitdateshow }}</label></td>
+                    </tr>
+                </td>
+
+                <td style="width: 30%;" class="text-wrap">
+                    <tr>
+                        <div *ngIf="studentinfo.data.studentstatus >= 40">
+                            <td><label style="color: #1b4461"><b>จบ/พ้นสภาพ :
+                </b>{{ studentinfo.data.endsemester}}/{{ studentinfo.data.endacadyear}}</label>
+                            </td>
+                        </div>
+
+                        <div *ngIf="studentinfo.data.studentstatus < 40">
+
+                            <td><label style="color: #1b4461"><b>จบ/พ้นสภาพ :
+                </b></label>
+                            </td>
+                        </div>
+                        <td><label style="color: #1b4461"><b>&nbsp; วันที่ : </b></label></td>
+                        <td><label style="color: #1b4461">{{ studentinfo.data.finishdateshow }}</label></td>
+                    </tr>
+                </td>
+                <!-- <td rowspan="7" style="width: 14%; align-self: flex-end; text-align: center ;"> -->
+                <td rowspan="7" style="width: 12%;text-align: center;vertical-align: middle;">
+                    <!-- <img class="img-crop" [src]="studentinfo.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" height="150px" width="120px" /> -->
+                    <img class="img-crop" [src]="studentinfo.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" height="140px" width="120px" />
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="">
+                    <label style="color: #1b4461"><b>ศูนย์/วิทยาเขต: </b>{{ studentinfo.data.campusname }}</label>
+                </td>
+                <td class="">
+                    <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                </td>
+                <td class="">
+                    <label style="color: #1b4461"><b>วิทยาลัย/คณะ/สถาบัน : </b>{{ studentinfo.data.facultyname }} </label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ภาค/สาขา : </b>{{ studentinfo.data.departmentname }}</label>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>สาขาวิชา : </b>{{ studentinfo.data.programname }}</label>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>กลุ่มนักศึกษา : </b>{{ studentinfo.data.studentgroupshow }}</label> &nbsp;&nbsp;
+                    <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }}
+          </label>
+                <!-- </td>
+                <td> -->
+            </tr>
+            <tr class="main-row" *ngIf="studentinfo.data.officerid || studentinfo.data.officerid2 || studentinfo.data.officerid3">
+                <!-- <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.officerid">
+                        <div *ngFor="let data of offlist1 let index = index">
+                            <label style="color: #1b4461"><b>ที่ปรึกษา {{index + 1}} : </b>{{data.prefixname}}{{ data.officershow }}</label>
+                        </div>
+                    </div>
+                </td> -->
+                <td class="text-wrap" *ngFor="let data of offlist1 let index = index">
+                    <label style="color: #1b4461"><b>ที่ปรึกษา {{index + 1}} : </b>{{ data.prefixname }}{{ data.officershow }}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.schoolid">
+                        <div *ngFor="let data of schoclist">
+                            <label style="color: #1b4461"><b>สถานศึกษาเดิม : </b>{{ data.schoolname }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.schoolid">
+                        <label style="color: #1b4461"><b>สถานศึกษาเดิม : </b>-</label> &nbsp;&nbsp;
+                    </div>
+                </td>
+                <td class="text-wrap">
+                    <div *ngIf="studentinfo.data.entrydegree">
+                        <div *ngFor="let data of entdeglist">
+                            <label style="color: #1b4461"><b>วุฒิรับเข้า : </b>{{ data.entrydegreename }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.entrydegree">
+                        <label style="color: #1b4461"><b>วุฒิรับเข้า : </b>-</label>
+                    </div>
+                </td>
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ตรวจสอบคุณวุฒิ : </b>{{ studentinfo.data.graduatecheckdes }}</label>&nbsp;
+                    <label style="color: #1b4461"><b>GPA เข้า :
+            </b>{{ studentinfo.data.entrygpax | number:'1.2-2'}}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td>
+                    <label><b>จำนวนหน่วยกิตลงทะเบียน : </b>{{ studentinfo.data.creditattempt }}</label>
+                </td>
+                <td>
+                    <label><b>จำนวนหน่วยกิตคะแนน : </b>{{ studentinfo.data.creditpoint }}</label>
+                </td>
+                <td>
+                    <label><b>จำนวนหน่วยกิตที่ได้รับ : </b>{{ studentinfo.data.creditsatisfy }}</label>
+                </td>
+            </tr>
+            <tr class="main-row">
+                <td>
+                    <label><b>จำนวนคะแนน : </b>{{ studentinfo.data.gradepoint }}</label>&nbsp;&nbsp;
+                    <label><b>GPA : </b>{{ studentinfo.data.gpa | number:'1.2-2' }}</label>
+                </td>
+                <td>
+                    <div *ngIf="studentinfo.data.gradepro">
+                        <div *ngFor="let data of gradeprolist">
+                            <label style="color: #1b4461"><b>สถานะเกรด : </b>{{ data.bytecode }} : {{ data.bytedes }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.gradepro">
+                        <div *ngFor="let data of gradeprolist">
+                            <label style="color: #1b4461"><b>สถานะเกรด : </b>-</label>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="studentinfo.data.studentstatus">
+                        <div *ngFor="let data of stustatuslist">
+                            <label style="color: #1b4461"><b>สถานภาพ : </b>{{ data.bytecode }} : {{ data.bytedes }}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="!studentinfo.data.studentstatus">
+                        <div *ngFor="let data of stustatuslist">
+                            <label style="color: #1b4461"><b>สถานภาพ : </b>-</label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลนักศึกษา</div>
+        </div>
+    </dx-data-grid>
+</div>
+<br>
+<div class="row">
+    <dx-data-grid id="prgstudentcard" #studentcard
+    [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+    [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="cardhistory" (onSaving)="save($event)"
+    (onInitNewRow)="getDefault($event)" (onToolbarPreparing)="onToolbarPreparing($event)" 
+    (onExporting)="onExporting($event)"
+    >
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true" [visible]="true">
+        </dxo-pager>
+        <dxo-load-panel [enabled]="false">
+        </dxo-load-panel>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-editing mode="popup" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="true" [useIcons]="true">
+            <dxo-texts 
+                addRow="พิมพ์บัตรนักศึกษา" 
+                saveRowChanges="บันทึกข้อมูลและพิมพ์บัตรนักศึกษา"
+                cancelRowChanges="ยกเลิก"
+                >
+            </dxo-texts>
+            <dxo-popup [title]="formname" [showTitle]="true" [width]="'60%'" [height]="'auto'">
+            </dxo-popup>
+            <dxo-form [showValidationSummary]="false" labelLocation="top">
+                <dxi-item itemType="group">
+                    <dxi-item itemType="group" [colCount]="12" [colSpan]="12" cssClass="colorLabel">
+                        <dxi-item dataField="studentcode" [label]="{ text: 'รหัสนักศึกษา' }" [colSpan]="4"></dxi-item>
+                        <!-- <dxi-item dataField="prefixname" [label]="{ text: 'คํานําหน้า' }" [colSpan]="4"></dxi-item> -->
+                         <dxi-item [colSpan]="3">
+                            <ng-template dxTemplate="template">
+                                <div class="my-auto">
+                                    <br>
+                                    <dx-check-box
+                                        text="ชื่อยาว"
+                                        [value]="longname"
+                                        (onValueChanged)="onCheckboxChanged($event)">
+                                    </dx-check-box>
+                                </div>
+                            </ng-template>
+                        </dxi-item>
+                    </dxi-item>
+                    <dxi-item itemType="group" [colCount]="12" [colSpan]="5" cssClass="colorLabel">
+                        
+                        <dxi-item  [label]="{ text: 'ชื่อ-นามสกุล' }" [colSpan]="12">
+                            <ng-template dxTemplate="template">
+                                <dx-text-box [(ngModel)]="studentname" ></dx-text-box>
+                            </ng-template>
+                        </dxi-item>
+                        
+                        <!-- <dxi-item dataField="studentsurname" [label]="{ text: 'นามสกุล' }" [colSpan]="6"></dxi-item> -->
+                        <dxi-item  [label]="{ text: 'คณะ' }" [colSpan]="12">
+                            <ng-template dxTemplate="template">
+                                <dx-text-box [(ngModel)]="facultyid" ></dx-text-box>
+                            </ng-template>
+                        </dxi-item>
+                        <dxi-item [label]="{ text: 'สาขาวิชา' }" [colSpan]="12">
+                            <ng-template dxTemplate="template">
+                                <dx-text-box [(ngModel)]="departmentid" ></dx-text-box>
+                            </ng-template>   
+                        </dxi-item>
+                        <dxi-item dataField="sequence" [label]="{ text: 'ครั้งที่พิมพ์บัตร' }" [colSpan]="4"></dxi-item>
+                        <dxi-item dataField="acadyear" [label]="{ text: 'ปีการศึกษา' }" [colSpan]="4"></dxi-item>
+                        <dxi-item dataField="semester" [label]="{ text: 'ภาคการศึกษา' }" [colSpan]="4"></dxi-item>
+                        <dxi-item dataField="startdate" [label]="{ text: 'วันที่เข้า' }" [colSpan]="6"></dxi-item>
+                        <dxi-item dataField="expiredate" [label]="{ text: 'วันบัตรหมดอายุ' }" [colSpan]="6"></dxi-item>
+                        <dxi-item [colSpan]="6">
+                            <ng-template dxTemplate="template">
+                                <fieldset class="radio-group-box">
+                                    <legend>ภาษา</legend>
+                                    <div class="center-radio">
+                                        <dx-radio-group
+                                        [items]="languagelist"
+                                        [value]="cardlanguage"
+                                        layout="horizontal"
+                                        (onValueChanged)="onRadioLanguageChanged($event)">
+                                        </dx-radio-group>
+                                    </div>
+                                </fieldset>
+                            </ng-template>
+                        </dxi-item>
+                        <dxi-item [colSpan]="6">
+                            <ng-template dxTemplate="template">
+                                <fieldset class="radio-group-box">
+                                    <legend>วันที่หมดอายุ</legend>
+                                    <div class="center-radio">
+                                        <dx-radio-group
+                                        [items]="displaycardexpirelist"
+                                        [value]="displaycardexpire"
+                                        layout="horizontal"
+                                        (onValueChanged)="onRadioExpireChanged($event)">
+                                        </dx-radio-group>
+                                    </div>
+                                </fieldset>
+                            </ng-template>
+                        </dxi-item>
+                    </dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group">
+                    <dxi-item itemType="group" [colCount]="12" [colSpan]="4" cssClass="colorLabel">
+                        <dxi-item dataField="stuimg" [caption]="{ text: 'รูปนักศึกษา' }" [colSpan]="12"></dxi-item>
+                    </dxi-item>
+                </dxi-item>
+        </dxo-form>
+        </dxo-editing>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-export [enabled]="false"></dxo-export>
+        <!-- <dxi-column dataField="studentid" caption="รหัสนักศึกษา" [width]="100" [fixed]="true" [visible]="false"></dxi-column> -->
+        <dxi-column dataField="sequence" caption="ครั้งที่" [allowEditing]="false">
+            <dxi-validation-rule type="required" message="กรุณาระบุครั้งที่พิมพ์บัตร"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="acadyear" caption="ปีการศึกษา">
+            <dxi-validation-rule type="required" message="กรุณากรอกปีการศึกษา"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="semester" caption="ภาคการศึกษา">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาคการศึกษา"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="startdate" caption="วันที่ออกบัตร" dataType="date" [allowEditing]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกวันที่ออกบัตร"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="expiredate" caption="วันที่หมดอายุ" dataType="date">
+            <dxi-validation-rule type="required" message="กรุณากรอกวันที่หมดอายุ"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="createuserid" caption="พิมพ์บัตรโดย" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="createdatetime" dataType="date" caption="วันที่ทำรายการ" [allowEditing]="false">
+        </dxi-column>
+        <!-- not show in row mode -->
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" [visible]="false" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="prefixname" caption="คํานําหน้า" [visible]="false">
+            <dxo-lookup [dataSource]="lstprefixname" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentname" caption="ชื่อ" [visible]="false">
+        </dxi-column>
+        <dxi-column dataField="studentsurname" caption="นามสกุล" [visible]="false">
+        </dxi-column>
+        <dxi-column dataField="lastupdateuserid" caption="แก้ไขโดย" [visible]="false" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="lastupdatedatetime" caption="วันที่แก้ไขล่าสุด" [visible]="false" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="facultyid" caption="คณะ" [visible]="false">
+            <!-- <dxo-lookup [dataSource]="lstfaculty" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup> -->
+        </dxi-column>   
+        <dxi-column dataField="departmentid" caption="ภาควิชา" [visible]="false">
+            <!-- <dxo-lookup [dataSource]="lstdepartment" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup> -->
+        </dxi-column>
+        <dxi-column dataField="stuimg" caption="รูปภาพนักศึกษา" [editCellTemplate]="'stuimgTemplate'" [visible]="false">
+            <div *dxTemplate="let data of 'stuimgTemplate'">
+                <div class="row" style="height: 280px;">
+                    <div class="col-12 d-flex justify-content-center" style="text-align: center;">
+                        <img #previewImg class="img-crop" [src]="data.data.stuimg" onerror="this.src='assets/images/null.jpg'" alt="User Image" height="280px"/>
+                    </div>
+                    <div class="col-12">
+                        <input [(ngModel)]="test" accept=".jpg,image/jpeg" type="file" id="FileUpload" (change)="selectFolder($event, previewImg, data)"/>
+                    </div>
+                </div>
+            </div>
+        </dxi-column>
+        <!-- <dxi-column caption="ชื่อยาว">
+            <ng-template dxTemplate="cell">
+                <dx-check-box [value]="longname" (onValueChanged)="onCheckboxChanged($event)"></dx-check-box>
+            </ng-template>
+        </dxi-column> -->
+        <!-- <div *dxTemplate="let data of 'tableName'">
+            <div class="tablelabel">
+                <span class="name" style="color: #880a15;font-weight: bold;">DOUBLE Click ที่รายการเพื่อเลือกพิมพ์บัตรนักศึกษา</span>
+            </div>
+        </div> -->
+    </dx-data-grid>
+</div>

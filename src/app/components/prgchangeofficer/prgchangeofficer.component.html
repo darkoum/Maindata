@@ -1,0 +1,208 @@
+<div id="accordion" class="card" style="padding: 15px;">
+    <div class="row">
+        <div class="col-4">
+            ศูนย์/วิทยาเขต
+            <dx-select-box [dataSource]="camcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcombogroup()"
+                [(ngModel)]="camcomboid"></dx-select-box>
+
+        </div>
+
+        <div class="col-4">
+            ระดับ
+            <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith"
+                valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                (onValueChanged)="getcombogroup();getprocombo()" [(ngModel)]="levcomboid">
+            </dx-select-box>
+        </div>
+        <div class="col-4">
+            วิทยาลัย/คณะ/สถาบัน
+            <dx-select-box [dataSource]="faccombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true"
+                (onValueChanged)="getprocombo();getprobyfac()" [(ngModel)]="faccomboid">
+            </dx-select-box>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-4">
+            สาขาวิชา
+            <dx-select-box [dataSource]="procombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true"
+                [(ngModel)]="procomboid">
+            </dx-select-box>
+        </div>
+        <div class="col-1">
+            รุ่น
+            <dx-text-box [(ngModel)]="groupyear" [showClearButton]="true" (onValueChanged)="getcombogroup()">
+            </dx-text-box>
+        </div>
+        <div class="col-3">
+            กลุ่มนักศึกษา
+            <dx-select-box [dataSource]="lststudentgroup" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroupid"></dx-select-box>
+        </div>
+        <div class="col-2">
+            สถานะจาก
+            <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentstatusfrom"></dx-select-box>
+        </div>
+        <div class="col-2">
+            สถานะถึง
+            <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+                [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentstatusto"></dx-select-box>
+        </div>
+        <!-- <div class="col-2">
+            รหัส
+            <dx-text-box [(ngModel)]="studentcode" [showClearButton]="true">
+            </dx-text-box>
+        </div> -->
+    </div>
+    <div class="row">
+        <div class="col-2">
+            รหัสจาก
+            <dx-text-box [(ngModel)]="studentcodefrom" (onValueChanged)="studentcodeto = studentcodefrom" [showClearButton]="true">
+            </dx-text-box>
+        </div>
+        <div class="col-2" >
+            รหัสถึง
+            <dx-text-box [(ngModel)]="studentcodeto" [showClearButton]="true">
+            </dx-text-box>
+        </div>
+        <div class="col-2">
+            ปีที่เข้า
+            <dx-number-box [(ngModel)]="admitacadyear" [showClearButton]="true" [showSpinButtons]="true" [min]="1"
+                [max]="9999">
+            </dx-number-box>
+        </div>
+        <div class="col-2">
+            ภาคที่
+            <dx-number-box [(ngModel)]="admitsemester" [showClearButton]="true" [showSpinButtons]="true" [min]="0"
+                [max]="3">
+            </dx-number-box>
+        </div>
+        <div class="col-2" style="align-self: flex-end; text-align: right ;">
+            <dx-button class="button" (onClick)="onSearch()" text="ค้นหา" icon="find" type="default" [width]="'100%'">
+            </dx-button>
+        </div>
+        <div class="col-2" style="align-self: flex-end; text-align: left ">
+            <dx-button class="button" style=" margin-right: 10px;" (onClick)="popupVisible1 = true"
+                *ngIf="stulist.length > 0" text="Set ทั้งหมด" icon="selectall" type="default" [width]="'100%'">
+            </dx-button>
+            <!-- <dx-button class="button" style=" margin-right: 10px;" (onClick)="popupVisible2 = true"
+                *ngIf="stulist.length > 0" text="Set ทั้งหมด2" icon="selectall" type="default" [width]="150">
+            </dx-button>
+            <dx-button class="button" (onClick)="popupVisible3 = true" *ngIf="stulist.length > 0" text="Set ทั้งหมด3"
+                icon="selectall" type="default" [width]="150"> </dx-button> -->
+        </div>
+    </div>
+</div>
+
+
+<dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible1">
+    <div class="card">
+        <!-- <div class="card-header">
+            <div class="card-title">
+                ที่ปรึกษา
+            </div>
+        </div> -->
+        <div class="card-body">
+            <dx-select-box class="mb-1" [dataSource]="offNlist" displayExpr="comboshow" searchMode="contains" valueExpr="comboid"
+            [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="officerid1"></dx-select-box>
+            <dx-select-box [dataSource]="seqofficerlist" displayExpr="comboshow" valueExpr="comboid"
+            [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="officerseq">
+            </dx-select-box>
+            <dx-button class="button" style="margin-top: 10px;" (onClick)="onSet()" text="ตกลง" icon="todo" type="success"
+                stylingMode="outlined">
+            </dx-button>
+        </div>
+    </div>
+</dx-popup>
+
+<!-- <dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา2" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="popupVisible2">
+    ที่ปรึกษา
+    <dx-select-box [dataSource]="offNlist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+        [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="officerid2"></dx-select-box>
+    <dx-button class="button" style="margin-top: 10px;" (onClick)="onSet()" text="ตกลง" icon="todo" type="success"
+        stylingMode="outlined">
+    </dx-button>
+</dx-popup>
+
+<dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา3" [dragEnabled]="false"
+    [closeOnOutsideClick]="true" [(visible)]="popupVisible3">
+    ที่ปรึกษา
+    <dx-select-box [dataSource]="offNlist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+        [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="officerid3"></dx-select-box>
+    <dx-button class="button" style="margin-top: 10px;" (onClick)="onSet()" text="ตกลง" icon="todo" type="success"
+        stylingMode="outlined">
+    </dx-button>
+</dx-popup> -->
+
+<br>
+<div id="data-grid-demo">
+    <dx-data-grid id="prgchangeofficer1" (onInitNewRow)="getDefault($event)"
+        (onSelectionChanged)="selectionChanged($event)" (onSaving)="dataSave($event)"
+        (onEditingStart)="onEditstart($event)" (onEditCanceling)="onCancelEditmode()" [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="stulist" [columnAutoWidth]="false"
+        [wordWrapEnabled]="true">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+        </dxo-editing>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="studentid" caption="STUDENTID" [visible]="false"></dxi-column>
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" [allowEditing]="false" sortOrder="asc"
+            [width]="120">
+        </dxi-column>
+        <dxi-column dataField="prefixid" caption="คำนำหน้า" [allowEditing]="false" [width]="100">
+            <dxo-lookup [dataSource]="prelist" valueExpr="comboid" displayExpr="comboshow"
+                showClearButton="true"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentname" caption="ชื่อ" width="125" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="studentsurname" caption="นามสกุล" width="125" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentstatus" caption="สถานภาพ" [allowEditing]="false" [width]="120">
+            <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentgroup" caption="กลุ่มนักศึกษา" [allowEditing]="false">
+            <dxo-lookup [dataSource]="stusetlist" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="schedulegroupid" caption="ปฎิทินการศึกษา" [allowEditing]="false">
+            <dxo-lookup [dataSource]="schedulegrouplist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column> -->
+        <dxi-column dataField="officerid" caption="ที่ปรึกษา1" editCellTemplate="changeOfficer1">
+            <dxo-lookup [dataSource]="offNlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true" searchMode="contains">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid2" caption="ที่ปรึกษา2" editCellTemplate="changeOfficer1">
+            <dxo-lookup [dataSource]="offNlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true" searchMode="contains">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid3" caption="ที่ปรึกษา3" editCellTemplate="changeOfficer1">
+            <dxo-lookup [dataSource]="offNlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true" searchMode="contains">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid4" caption="ที่ปรึกษา4" editCellTemplate="changeOfficer1">
+            <dxo-lookup [dataSource]="offNlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true" searchMode="contains">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid5" caption="ที่ปรึกษา5" editCellTemplate="changeOfficer1">
+            <dxo-lookup [dataSource]="offNlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true" searchMode="contains">
+            </dxo-lookup>
+        </dxi-column>
+        <div *dxTemplate="let cellInfo of 'changeOfficer1'">
+            <dx-select-box [dataSource]="offNlist" [items]="cellInfo.data.officerid" [value]="cellInfo.value"
+                displayExpr="comboshow" searchMode="contains" valueExpr="comboid" [searchEnabled]="true"
+                [showClearButton]="true" (onValueChanged)="updateOfficer1($event, cellInfo)">
+            </dx-select-box>
+        </div>
+    </dx-data-grid>
+
+    <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true"
+        [shading]="true" [closeOnOutsideClick]="false">
+    </dx-load-panel>
+</div>

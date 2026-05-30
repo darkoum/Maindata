@@ -1,0 +1,271 @@
+<div class="row">
+    <div class="col-6">
+        <div class="options">
+            <div class="caption">ดึงรายชื่อนักศึกษา</div>
+            <div class="row">
+                <div class="col-6">
+                    ปีการศึกษา
+                    <dx-number-box [(ngModel)]="acadyear" [showClearButton]="false" [showSpinButtons]="true" [min]="1"
+                        [max]="9999">
+                    </dx-number-box>
+                </div>
+                <div class="col-6">
+                    ภาคที่
+                    <dx-number-box [(ngModel)]="semester" [showClearButton]="false" [showSpinButtons]="true" [min]="0"
+                        [max]="3">
+                    </dx-number-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    ศูนย์/วิทยาเขต
+                    <dx-select-box [dataSource]="camcombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                        [(ngModel)]="camcomboid"></dx-select-box>
+
+                </div>
+
+                <div class="col-6">
+                    วิทยาลัย/คณะ/สถาบัน
+                    <dx-select-box [dataSource]="faccombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="faccomboid">
+                    </dx-select-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    ระดับจาก
+                    <dx-select-box #levelfrom [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                        [(ngModel)]="levcombofromid">
+                    </dx-select-box>
+                </div>
+                <div class="col-6">
+                    ระดับถึง
+                    <dx-select-box #levelto [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="levcombotoid">
+                    </dx-select-box>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    รุ่น
+                    <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getstudentgroup()" [showClearButton]="true">
+                    </dx-text-box>
+
+                </div>
+
+                <div class="col-8">
+                    กลุ่มนักศึกษา
+                    <dx-select-box [dataSource]="stugroup" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+                    </dx-select-box>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-6">
+                    สถานภาพจาก
+                    <dx-select-box [dataSource]="stustanormalcombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="statusfrom">
+                    </dx-select-box>
+                </div>
+                <div class="col-6">
+                    สถานภาพถึง
+                    <dx-select-box [dataSource]="stustanormalcombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="statusto">
+                    </dx-select-box>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    ปีเข้าการศึกษา
+                    <dx-number-box [(ngModel)]="admitacadyear" [showClearButton]="false" [showSpinButtons]="true" [min]="1"
+                        [max]="9999">
+                    </dx-number-box>
+                </div>
+                <div class="col-6">
+                    ถึง
+                    <dx-number-box [(ngModel)]="admitacadyearto" [showClearButton]="false" [showSpinButtons]="true" [min]="1"
+                        [max]="9999">
+                    </dx-number-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12" style="align-self: flex-end; text-align: left ;">
+
+                            <dx-radio-group #eventRadioGroup id="radio-group-with-selection" [dataSource]="itemlists"
+                                displayExpr="name" valueExpr="id" [(ngModel)]="vselect">
+                            </dx-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12" *ngIf="vselect==1">
+                            เลือกสถานะพินิจ
+                            <dx-select-box [dataSource]="gprocombo" displayExpr="comboshow" searchMode="StartsWith"
+                                valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                                [(ngModel)]="gproid">
+                            </dx-select-box>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="vselect==3" class="d-none">
+                <div class="col-4" *ngIf="vselect==3">
+                    รุ่น
+                    <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getstudentgroup()" [showClearButton]="true">
+                    </dx-text-box>
+                </div>
+                <div class="col-8" *ngIf="vselect==3">
+                    กลุ่ม
+                    <dx-select-box [dataSource]="stugroup" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+                    </dx-select-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                </div>
+                <div class="col-4" style="align-self: flex-end; text-align: right ;">
+                    <dx-button class="button" (onClick)="onSearch($event)" text="ดึงรายชื่อ" icon="find" type="default">
+                    </dx-button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="options">
+            <!-- <div class="caption" *ngIf="vselect != 6">ปรับสถานภาพ</div>
+            <div class="caption" *ngIf="vselect == 6">บันทึกครั้งที่</div> -->
+            <div class="row">
+                <div class="col-12" *ngIf="vselect != 6">
+                    ปรับสถานภาพเป็น
+                    <dx-select-box [dataSource]="stustacombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true"
+                        [(ngModel)]="statustostatus">
+                    </dx-select-box>
+                </div>
+            </div>
+            <div class="row">
+                <!-- <div class="col-12" *ngIf="vselect != 6"> -->
+                <div class="col-8" *ngIf="statustostatus == 60 || (statustostatus >= 70 && statustostatus <= 79)">
+                    หมายเหตุพ้นสภาพ
+                    <dx-text-box [(ngModel)]="vremark"> </dx-text-box>
+                </div>
+            <!-- </div>
+            <div class="row"> -->
+                <!-- <div class="col-5" *ngIf="vselect != 6"> -->
+                <div class="col-4" *ngIf="statustostatus == 60 || (statustostatus >= 70 && statustostatus <= 79)">
+                    วันที่พ้นสภาพ
+                    <!-- <dx-date-box [(value)]="vdate" type="date" [showClearButton]="true" [(disabled)]="datechk"> -->
+                    <dx-date-box [(value)]="vdate" type="date" [showClearButton]="true">
+                    </dx-date-box>
+                </div>
+                <!-- <div class="col-7">
+                    <div class="row">
+                        <div *ngIf="vselect != 6">
+                            <br>
+                            <dx-check-box [(ngModel)]="datechk" class="checkBalance" text="วันที่ตามปฏิทิน"
+                                (onValueChanged)="checkBoxChanged($event)"></dx-check-box>
+                        </div>
+
+                        <div style="padding-left: 10px;">
+                            ครั้งที่
+                            <dx-number-box [(ngModel)]="vseq" [showClearButton]="true" [showSpinButtons]="true"
+                                [min]="1" width="100">
+                            </dx-number-box>
+                        </div>
+                    </div>
+                    <div class="col-4" style="align-self: flex-end; text-align: right ;">
+                <br>
+                <dx-button class="button" (onClick)="onSet($event)" text="ปรับสถานะทั้งหมด" icon="selectall" type="default">
+                </dx-button>
+
+
+                </div>
+                </div> -->
+            </div>
+            <div class="row">
+                <!-- <div class="col-7">
+                    <br>
+                    <dx-check-box *ngIf="vselect != 6" [(ngModel)]="ichk" class="checkBalance"
+                        text="คืนเงินค่าประกันทรัพย์สินเสียหาย"></dx-check-box>
+                </div> -->
+                <div class="col-12" style="align-self: flex-end; text-align: right ;">
+                    <br>
+                    <dx-button class="button" (onClick)="onSet($event)" text="ปรับสถานภาพ" icon="selectall"
+                        type="default">
+                    </dx-button>
+                    <!-- <dx-button class="button" *ngIf="vselect == 6" (onClick)="onSet($event)" text="บันทึกครั้งที่"
+                        icon="selectall" type="default">
+                    </dx-button> -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-6">
+        <div id="data-grid-demo">
+            <dx-data-grid #dataGridRef id="prgstudentstatusset" keyExpr="studentid"
+                (onToolbarPreparing)="gridonToolbarPreparing($event)" (onInitNewRow)="getDefault($event)"
+                (onSaving)="dataSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                [showBorders]="true" [dataSource]="stulist" [columnAutoWidth]="true" [wordWrapEnabled]="true"
+                (onExporting)="onExporting($event)">
+                <dxo-paging [pageSize]="15"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 30, 0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-export [enabled]="false"></dxo-export>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="true" [allowAdding]="true"
+                    [useIcons]="true">
+                </dxo-editing>
+                <dxo-selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always"></dxo-selection>
+                <dxi-column dataField="studentid" caption="STUDENTID" [visible]="false"></dxi-column>
+                <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" fixed="true" [allowEditing]="true"
+                    [width]="120"></dxi-column>
+
+                <dxi-column dataField="studentname" caption="ชื่อ-นามสกุล" width="350" [allowEditing]="false" fixed="true">
+                </dxi-column>
+
+                <!-- <dxi-column dataField="gpa" caption="GPA" [width]="60" [allowEditing]="false">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column> -->
+                <!-- <dxi-column dataField="gpax" caption="GPAX" [width]="60" [allowEditing]="false">
+                    <dxo-format type="fixedPoint" [precision]="2">
+                    </dxo-format>
+                </dxi-column> -->
+                <dxi-column dataField="studentstatus" caption="สถานภาพ" [allowEditing]="false"
+                    cellTemplate="cellTemplate" [width]="150"></dxi-column>
+                <!-- <dxi-column dataField="departmentsubabbeng" caption="สาขา" [allowEditing]="false">
+                </dxi-column> -->
+                <div *dxTemplate="let cell of 'cellTemplate'" style="text-align: center;">
+                    <div *ngIf="cell.value >= 40" style="color:#800000">{{ cell.data.studentstatus }}</div>
+                    <div *ngIf="cell.value < 40" style="color:#535353">{{ cell.data.studentstatus }}</div>
+                </div>
+
+
+                <div *dxTemplate="let data of 'heddershow'">
+
+                    <dxi-item location="before">
+                        <dx-button text="ลบรายการที่เลือก" (onClick)="deleteallselect($event) ">
+                        </dx-button>
+                    </dxi-item>
+
+                </div>
+
+            </dx-data-grid>
+        </div>
+
+    </div>
+
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>

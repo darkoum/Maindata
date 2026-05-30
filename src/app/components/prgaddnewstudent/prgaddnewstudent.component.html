@@ -1,0 +1,145 @@
+<div class="card" style="padding: 10px; margin-bottom: 5px">
+  <div class="row">
+    <div class="col-xl-2 col-md-6 col-12">
+      <span>ศูนย์/วิทยาเขต</span>
+
+      <dx-select-box [dataSource]="campuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="campusid">
+      </dx-select-box>
+    </div>
+    <div class="col-xl-2 col-md-2 col-4" >
+      <span>รุ่น</span>
+      <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getstudentgroup(campusid,groupyear)"></dx-text-box>
+    </div>
+    <div class="col-xl-4 col-md-6 col-12" >
+        <span>กลุ่มนักศึกษา</span>
+        <dx-select-box [(ngModel)]="studentgroup" [dataSource]="studentgrouplist" (onValueChanged)="setadmityear(studentgroup)"></dx-select-box>
+    </div>
+    <div class="col-xl-3 col-md-6 col-12" style="align-self: center; padding-right: 5px !important">
+      <div class="row">
+        <div class="col-7">
+          <span>ปีที่เข้า</span>
+          <dx-number-box style="width: 100%" [(ngModel)]="admitacadyear" [showSpinButtons]="true" [min]="1" [max]="9999" [disabled]="true">
+          </dx-number-box>
+        </div>
+        <div class="col-4" style="padding-right: 5px !important">
+          <span>ภาคที่</span>
+          <dx-number-box style="width: 100%" [(ngModel)]="admitsemester" [showSpinButtons]="true" [min]="0" [max]="3" [disabled]="true">
+          </dx-number-box>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-1 col-md-6 col-12" style="padding-left: 5px !important">
+      <br />
+      <dx-button style="width: 100%" class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา"></dx-button>
+    </div>
+  </div>
+</div>
+
+<div [ngClass]="{ disable: !studentgroup && !studentcode }">
+  <dx-data-grid #mainGrid [dataSource]="studentlist" (onSaving)="Save($event)" (onInitNewRow)="getDefault($event)" (onToolbarPreparing)="onToolbarPreparing($event)">
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-editing mode="row" [allowUpdating]="studentgroup != null" [allowDeleting]="studentgroup != null" [allowAdding]="studentgroup != null" [useIcons]="true">
+      <dxo-popup [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }"></dxo-popup>
+    </dxo-editing>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 0]" [showInfo]="true"></dxo-pager>
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+
+    <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" [width]="140" [fixed]="true"></dxi-column>
+
+    <dxi-column dataField="prefixid" caption="คำนำหน้า" [width]="100">
+      <dxi-validation-rule type="required" message="กรุณากรอกคำนำหน้า"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="prefixidlist" valueExpr="comboid" displayExpr="comboshow">
+      
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="studentname" caption="ชื่อ">
+      <dxi-validation-rule type="required" message="กรุณากรอกชื่อ"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="studentsurname" caption="นามสกุล">
+      <dxi-validation-rule type="required" message="กรุณากรอกนามสกุล"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="studentnameeng" caption="ชื่อ (อังกฤษ)"></dxi-column>
+    <dxi-column dataField="studentsurnameeng" caption="นามสกุล (อังกฤษ)"></dxi-column>
+    <dxi-column dataField="citizenid" caption="เลขประจำตัวประชาชน" [editorOptions]="citizeneditorOptions"></dxi-column>
+    <dxi-column dataField="studentstatus" caption="สถานะนักศึกษา" [allowEditing]="false">
+      <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="groupyear" caption="รุ่น" [visible]="false"></dxi-column>
+    <dxi-column dataField="studentgroup" caption="กลุ่มนักศึกษา" [visible]="false"></dxi-column>
+    <dxi-column dataField="admitdate" caption="วันที่รับเข้า" [visible]="false"></dxi-column>
+    <dxi-column dataField="studentid" caption="studentid" [visible]="false"></dxi-column>
+
+    <div *dxTemplate="let data of 'heddershow'">
+      <div style="display: flex;" [ngClass]="{ disable: searchtype }">
+        <!-- <div class="card" style="padding: 5px;">
+          <dx-radio-group [(ngModel)]="chkgencode" [items]="gencodelist" valueExpr="id" displayExpr="show" layout="horizontal"></dx-radio-group>
+        </div> -->
+        <div style="padding: 10px;">รหัสนักศึกษาเริ่มต้น</div>
+        <dx-number-box [(ngModel)]="startstudentcode" [disabled]="chkgencode == 2" (onValueChanged)="calchkdigit()"></dx-number-box>
+        
+        <!-- <dx-check-box [(ngModel)]="chkdigit" [disabled]="chkgencode == 2" (onValueChanged)="calchkdigit()" text="Check Digit" style="padding-left: 20px;"></dx-check-box> -->
+        
+        <!-- <dx-button class="button" [disabled]="chkgencode == 2" (onClick)="genstudentcode()" icon="preferences" type="default" text="สร้างรหัสอัตโนมัติ" style="padding: 0px;margin-left: 20px;"></dx-button> -->
+      </div>
+    </div>
+  </dx-data-grid>
+
+  <!-- ============================================================================================================================ -->
+
+  <dx-tab-panel >
+    <dxi-item title="นำเข้าจากไฟล์" value="0">
+      <div class="row" style="padding: 10px">
+        <div class="col-xl-2 col-md-4 col-6">
+          <span>วันที่รับเข้า</span>
+          <dx-date-box-custom [date]="admitdate" (onValueChanged)="admitdate = $event.value" [type]="'date'"></dx-date-box-custom>
+        </div>
+        <div class="col-xl-3 col-md-6 col-12">
+          <span>สถานะ</span>
+          <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+            [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="studentstatus"></dx-select-box>
+        </div>
+      </div>
+      <div style="padding: 5px 5px 5px 15px">
+        <input #fileinpiut type="file"
+          accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          id="importfile" class="form-group" (change)="onFileChange($event)" />
+      </div>
+      <div class="row">
+        <div class="col-xl-2 col-md-4 col-6">
+          <dx-button style="width: 100%;margin: 5px 5px 5px 15px" stylingMode="contained" text="Import" type="default" icon="download" 
+          [disabled]="!startstudentcode ||
+              !admitdate ||
+              !studentstatus ||
+              !studentgroup ||
+              dataimport.length == 0" (click)="importfile()">
+          </dx-button>
+        </div>
+        <div class="col-xl-2 col-md-4 col-6">
+          <dx-button class="button" text="ตัวอย่างไฟล์นำเข้า" style="width: 100%;margin: 5px 5px 5px 15px;"
+            type="default" icon="file" stylingMode="outlined" (click)="DownloadExam()">
+          </dx-button>
+        </div>
+      </div>
+    
+      <div *ngIf="tmpdberrorlist.length > 0" style="padding: 5px 10% 10px 10%;">
+        <div>รายการที่ไม่สามารถนำเข้าได้</div>
+        <dx-data-grid [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+          [showBorders]="true" [dataSource]="tmpdberrorlist">
+          <dxo-paging [pageSize]="5"></dxo-paging>
+          <dxo-editing mode="popup" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"
+            [useIcons]="false">
+          </dxo-editing>
+          <dxo-selection mode="single"></dxo-selection>
+          <dxi-column dataField="errorid" caption="บรรทัด" [width]="100"></dxi-column>
+          <dxi-column dataField="studentname" caption="ชื่อ-นามสกุล"></dxi-column>
+          <dxi-column dataField="errorstring" caption="หมายเหตุ/ข้อผิดพลาด"></dxi-column>
+        </dx-data-grid>
+      </div>
+    </dxi-item>
+  </dx-tab-panel> 
+</div>
+
+<div style="padding-top: 80px"></div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>

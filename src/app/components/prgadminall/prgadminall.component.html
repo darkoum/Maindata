@@ -1,0 +1,76 @@
+<div class="row">
+    <dx-tab-panel #tabPanel [width]="100 + '%'" [dataSource]="tabs" [selectedIndex]="0" [loop]="false" [animationEnabled]="true" [swipeEnabled]="true" (onSelectionChanged)="onSelectionChanged($event)">
+        <div *dxTemplate="let tabs of 'title'">
+            <span>{{ tabs.tabsname }}</span>
+        </div>
+        <div *dxTemplate="let tabs of 'item'">
+            <div class="content" *ngIf="tabs.type == 0">
+                <dx-data-grid id="prgorigin" [columnAutoWidth]="true" [dataSource]="tabslist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" (onInitNewRow)="onInsertingstart($event)" (onSaving)="dataSave($event)" (onToolbarPreparing)="onToolbarPreparing($event)">
+                    <dxo-paging [pageSize]="15"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+                    <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                        <dxo-popup title="Origin Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                        </dxo-popup>
+                    </dxo-editing>
+
+                    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                    <dxo-selection mode="single"></dxo-selection>
+
+                    <dxi-column dataField="bytecode" caption="*รหัส" [width]="10 + '%'" >
+                        <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column dataField="bytedes" caption="*ชื่อ{{tabs.tabsname}} (ไทย)">
+                        <dxi-validation-rule type="required" message="กรุณากรอกชื่อ{{tabs.tabsname}} (ไทย)"></dxi-validation-rule>
+                    </dxi-column>
+                    <dxi-column dataField="bytedeseng" caption="ชื่อ{{tabs.tabsname}} (อังกฤษ)"></dxi-column>
+                    <dxi-column dataField="bytedesabb" caption="ชื่อย่อ (ไทย)"></dxi-column>
+                    <dxi-column dataField="bytedesabbeng" caption="ชื่อย่อ (อังกฤษ)"></dxi-column>
+                    <div *dxTemplate="let data of 'tableName'">
+                        <div class="tablelabel">
+                            <span>{{tabs.tabsname}}</span>
+                        </div>
+                    </div>
+                </dx-data-grid>
+            </div>
+            <div class="content" *ngIf="tabs.type == 1">
+                <div *ngIf="tabs.index == 0; then ShowDatatemlate0"></div>
+                <ng-template #ShowDatatemlate0>
+                    <app-prgprefix></app-prgprefix>
+                </ng-template>
+                <div *ngIf="tabs.index == 2; then ShowDatatemlate2"></div>
+                <ng-template #ShowDatatemlate2>
+                    <app-prgnation></app-prgnation>
+                </ng-template>
+                <div *ngIf="tabs.index == 3; then ShowDatatemlate3"></div>
+                <ng-template #ShowDatatemlate3>
+                   <app-prgreligion></app-prgreligion>
+                </ng-template>
+                <div *ngIf="tabs.index == 4; then ShowDatatemlate4"></div>
+                <ng-template #ShowDatatemlate4>
+                    <app-prgschool></app-prgschool>
+                </ng-template>
+                <div *ngIf="tabs.index == 5; then ShowDatatemlate5"></div>
+                <ng-template #ShowDatatemlate5>
+                    <app-prgdivisioncode></app-prgdivisioncode>
+                </ng-template>
+                <div *ngIf="tabs.index == 6; then ShowDatatemlate6"></div>
+                <ng-template #ShowDatatemlate6>
+                    <app-prglevelcode></app-prglevelcode>
+                </ng-template>
+                <div *ngIf="tabs.index == 7; then ShowDatatemlate7"></div>
+                <ng-template #ShowDatatemlate7>
+                    <app-prgentrydegree></app-prgentrydegree>
+                </ng-template>
+                <div *ngIf="tabs.index == 8; then ShowDatatemlate8"></div>
+                <ng-template #ShowDatatemlate8>
+                    <app-prgprogramgroup></app-prgprogramgroup>
+                </ng-template>
+                <div *ngIf="tabs.index == 12; then ShowDatatemlate12"></div>
+                <ng-template #ShowDatatemlate12>
+                    <app-prgcountry></app-prgcountry>
+                </ng-template>
+            </div>
+        </div>
+    </dx-tab-panel>
+</div>

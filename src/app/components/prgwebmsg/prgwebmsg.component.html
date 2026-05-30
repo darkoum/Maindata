@@ -1,0 +1,267 @@
+<div class="row">
+
+
+    <div class="col-2">
+        วิธีส่ง
+        <dx-select-box [dataSource]="tgtypecombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+            [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="tgtypeid" (onItemClick)="gettarget()">
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        วันที่จาก
+        <!--  <dx-date-box [(value)]="vdfrom" type="date"> </dx-date-box> -->
+
+
+        <dx-date-box-custom [date]="vdfrom" (onValueChanged)="vdfrom = $event.value"></dx-date-box-custom>
+    </div>
+    <div class="col-2">
+        วันที่ถึง
+        <!--  <dx-date-box [(value)]="vdto" type="date"> </dx-date-box> -->
+        <dx-date-box-custom [date]="vdto" (onValueChanged)="vdto = $event.value"></dx-date-box-custom>
+    </div>
+
+    <div class="col-2">
+        <br />
+
+        <dx-button class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา" [width]="205">
+        </dx-button>
+    </div>
+
+</div>
+
+<br>
+<div class="row">
+    <div class="col-12">
+        <div id="data-grid-demo">
+            <dx-data-grid id="pegwebmsg" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onEditingStart)="onEditstart($event)"
+                (onSelectionChanged)="selectionChanged($event)" (onSaving)="dataSave($event)"
+                [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="webmlist">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true"
+                    [useIcons]="true">
+                    <dxo-popup title="บันทึกข่าวประกาศ" [showTitle]="true"> </dxo-popup>
+
+                    <dxo-form>
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+
+
+                            <dxi-item dataField="webtitle" [colSpan]="4" [label]="{ text: 'ชื่อเรื่อง (ไทย)' }"
+                                [editorOptions]="{ maxLength: 100}">
+                                <dxi-validation-rule type="required"
+                                    message="กรุณากรอกชื่อเรื่อง (ไทย)"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="webtitleeng" [colSpan]="4" [label]="{ text: 'ชื่อเรื่อง (อังกฤษ)' }"
+                                [editorOptions]="{ maxLength: 100}"></dxi-item>
+                            <dxi-item dataField="webmsg" [label]="{ text: 'ข้อความ (ไทย)' }" editorType="dxTextArea"
+                                [editorOptions]="{ height: 120 ,maxLength: 4000 }" [colSpan]="4">
+                                <dxi-validation-rule type="required"
+                                    message="กรุณากรอกข้อความ (ไทย)"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="webmsgeng" [label]="{ text: 'ข้อความ (อังกฤษ)' }"
+                                editorType="dxTextArea" [editorOptions]="{ height: 120 ,maxLength: 4000 }"
+                                [colSpan]="4">
+                            </dxi-item>
+                            <dxi-item dataField="sender" [colSpan]="2" [label]="{ text: 'ประกาศโดย (ไทย)' }"
+                                [editorOptions]="{ maxLength: 100}"></dxi-item>
+                            <dxi-item dataField="sendereng" [colSpan]="2" [label]="{ text: 'ประกาศโดย (อังกฤษ)' }"
+                                [editorOptions]="{ maxLength: 100}"></dxi-item>
+                            <dxi-item dataField="targettype" [colSpan]="2" [label]="{ text: 'วิธีส่ง' }">
+                                <dxi-validation-rule type="required" message="กรุณากรอกวิธีส่ง"></dxi-validation-rule>
+                            </dxi-item>
+                            <dxi-item dataField="priority" [colSpan]="2"
+                                [label]="{ text: 'ระดับความสำคัญ' }"></dxi-item>
+                            <dxi-validation-rule type="required"
+                                message="กรุณากรอกระดับความสำคัญ"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" [colCount]="8" [colSpan]="2">
+                            <!-- <dxi-item itemType="group" [colSpan]="4">
+                                <dxi-item [label]="{ text: 'แสดงรูป' }" [template]="'pictureTemplate'">
+                                </dxi-item>
+                            </dxi-item> -->
+                            <dxi-item itemType="group" [colSpan]="4">
+                                <dxi-item [label]="{ text: 'แสดงรูป' }" [template]="'imgTemplate'">
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colSpan]="2">
+                                <dxi-item dataField="imagefilename" [label]="{ text: 'อ่านภาพ' }"></dxi-item>
+
+                                <dxi-item dataField="stylecode" [label]="{ text: 'ตำแหน่งภาพ' }"></dxi-item>
+                                <dxi-item dataField="datefrom" [colSpan]="2"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colSpan]="2">
+                                <!-- <dxi-item [label]="{ text: '-' }"></dxi-item> -->
+                                <dxi-item>
+                                    <div>&nbsp;</div>&nbsp;
+                                </dxi-item>
+                                <dxi-item dataField="urllink" [label]="{ text: 'URLLINK' }"></dxi-item>
+                                <dxi-item dataField="dateto" [colSpan]="2"></dxi-item>
+
+                            </dxi-item>
+
+                        </dxi-item>
+
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2" *ngIf="tgtypexid =='S'">
+                            <dxi-item dataField="studentid" [colSpan]="2"></dxi-item>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2" *ngIf="tgtypexid =='T'">
+                            <dxi-item dataField="officerid" [colSpan]="2"></dxi-item>
+                        </dxi-item>
+
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+
+                            <dxi-item dataField="createdatetime" [editorOptions]="{ readOnly:true }"></dxi-item>
+                            <dxi-item dataField="createuserid" [editorOptions]="{readOnly:true }"></dxi-item>
+
+
+
+                        </dxi-item>
+
+
+                        <div *dxTemplate="let cellInfo of 'imgTemplate'">
+                            <img [src]="tmpimg" width="400" height="200">
+                        </div>
+                        <!-- <div *dxTemplate="let data of 'pictureTemplate'">
+
+                            <img [src]="cellInfo.data.webimg" width="120" height="120">
+                        </div> -->
+
+                    </dxo-form>
+                </dxo-editing>
+
+
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+
+                <dxo-selection mode="single"></dxo-selection>
+                <!-- <dxi-column dataField="roomtypecode" caption="รหัส" sortOrder="asc" [width]="20+'%'">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="roomtypename" caption="ประเภท" [width]="40+'%'">
+          <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="roomtypenameeng" caption="ประเภท(อังกฤษ)" [width]="40+'%'"></dxi-column> -->
+                <dxi-column dataField="webmsgid" caption="WEBMSGID" [visible]="false"></dxi-column>
+                <dxi-column dataField="datefrom" caption="*ประกาศวันที่" dataType="date" sortOrder="asc"
+                    [width]="10+'%'" editCellTemplate="editdatefrom">
+                    <dxi-validation-rule type="required" message="กรุณากรอกประกาศวันที่"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="dateto" caption="*ถึงวันที่" dataType="date" sortOrder="asc" [width]="10+'%'"
+                    editCellTemplate="editdateto">
+                    <dxi-validation-rule type="required" message="กรุณากรอกถึงวันที่"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="webmsg" caption="*ข้อความ (ไทย)" [visible]="false">
+
+                </dxi-column>
+                <dxi-column dataField="webimg" caption="" [visible]="false" editCellTemplate="imgTemplate">
+
+                </dxi-column>
+                <dxi-column dataField="webtitle" caption="*ชื่อเรื่อง (ไทย)" [width]="60+'%'">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อเรื่อง (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+
+                <dxi-column dataField="priority" caption="PRIORITY" [visible]="false">
+                    <dxo-lookup [dataSource]="priority" valueExpr="id" displayExpr="name" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="targettype" caption="TARGETTYPE" [visible]="false"
+                    editCellTemplate="targettypeTemplate">
+                    <dxo-lookup [dataSource]="tgtypecombo" valueExpr="comboid" displayExpr="comboshow"
+                        showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+
+
+                <dxi-column dataField="classid" caption="CLASSID" [visible]="false"></dxi-column>
+                <!-- <dxi-column dataField="studentid" caption="STUDENTID" [visible]="false"></dxi-column> -->
+                <dxi-column dataField="studentid" caption="ระบุรหัสนักศึกษา" editCellTemplate="studentidcombo" [width]="60+'%'" [visible]="false">
+                    <dxo-lookup [dataSource]="stulist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="officerid" caption="ระบุชื่ออาจารย์" editCellTemplate="officeridcombo" [width]="60+'%'" [visible]="false">
+                    <dxo-lookup [dataSource]="offlist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="createdatetime" caption="ทำรายการเมื่อ" [visible]="false" dataType="datetime">
+                </dxi-column>
+                <dxi-column dataField="createuserid" caption="โดย" [visible]="false"></dxi-column>
+                <dxi-column dataField="sender" caption="*ประกาศโดย (ไทย)" [width]="10+'%'">
+                    <dxi-validation-rule type="required" message="กรุณากรอกประกาศโดย"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="imagefilename" caption="IMAGEFILENAME" [visible]="false"
+                    editCellTemplate="filelistTemplate">
+                    <dxo-lookup [dataSource]="filelist" valueExpr="filename" displayExpr="filename"
+                        showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="stylecode" caption="STYLECODE" [visible]="false">
+                    <dxo-lookup [dataSource]="stycode" valueExpr="comboid" displayExpr="comboshow"
+                        showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="urllink" caption="URLLINK" [visible]="false"></dxi-column>
+                <dxi-column dataField="sendereng" caption="SENDERENG" [visible]="false"></dxi-column>
+                <dxi-column dataField="webtitleeng" caption="WEBTITLEENG" [visible]="false"></dxi-column>
+                <dxi-column dataField="webmsgeng" caption="WEBMSGENG" [visible]="false"></dxi-column>
+                <dxi-column dataField="createofficerid" caption="CREATEOFFICERID" [visible]="false"></dxi-column>
+                <dxi-column dataField="groupyear" caption="GROUPYEAR" [visible]="false"></dxi-column>
+                <dxi-column dataField="studentgroup" caption="STUDENTGROUP" [visible]="false"></dxi-column>
+                <dxi-column dataField="lastupdatedatetime" caption="LASTUPDATEDATETIME" [visible]="false"></dxi-column>
+                <dxi-column dataField="lastupdateuserid" caption="LASTUPDATEUSERID" [visible]="false"></dxi-column>
+                <dxi-column dataField="sendsmsflag" caption="SENDSMSFLAG" [visible]="false"></dxi-column>
+                <dxi-column dataField="attachfiles" caption="ATTACHFILES" [visible]="false"></dxi-column>
+                <dxi-column dataField="alumniid" caption="ALUMNIID" [visible]="false"></dxi-column>
+
+                <div *dxTemplate="let cellInfo of 'studentidcombo'">
+                    <dx-lookup [dataSource]="stulist" [items]="cellInfo.data.studentid" [value]="cellInfo.value"
+                        displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="3"
+                        [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="ระบุรหัสนักศึกษา"
+                        (onValueChanged)="updateStudent($event, cellInfo)"></dx-lookup>
+                </div>
+                <div *dxTemplate="let cellInfo of 'officeridcombo'">
+                    <dx-lookup [dataSource]="offlist" [items]="cellInfo.data.officerid" [value]="cellInfo.value"
+                        displayExpr="comboshow" valueExpr="comboid" 
+                        [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="ระบุชื่ออาจารย์"
+                        (onValueChanged)="updateStudent($event, cellInfo)"></dx-lookup>
+                </div>
+                <div *dxTemplate="let cellInfo of 'targettypeTemplate'">
+                    <dx-select-box [dataSource]="tgtypecombo" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="tgtypexid"
+                        (onValueChanged)="updatetargettype($event, cellInfo)">
+                    </dx-select-box>
+                </div>
+
+                <div *dxTemplate="let cellInfo of 'filelistTemplate'">
+                    <dx-select-box [dataSource]="filelist" displayExpr="filename" valueExpr="filename"
+                        [showClearButton]="true" [searchEnabled]="true" [(ngModel)]="tmpFile"
+                        (onValueChanged)="getImgftp($event, cellInfo)">
+                    </dx-select-box>
+                </div>
+
+                <div *dxTemplate="let cellInfo of 'editdatefrom'">
+                    <dx-date-box-custom [date]="cellInfo.value"
+                        (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+                </div>
+
+                <div *dxTemplate="let cellInfo of 'editdateto'">
+                    <dx-date-box-custom [date]="cellInfo.value"
+                        (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+                </div>
+
+                <!-- <div *dxTemplate="let cellInfo of 'imgTemplate'">
+                    <img [src]="getImg(cellInfo)" width="120" height="120">
+                </div> -->
+                <!-- getImg(cellInfo) <div *dxTemplate="let cell of 'cellTemplate'">
+              <img src="./../../../assets/images/critical.png">
+            </div> -->
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true"
+    [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

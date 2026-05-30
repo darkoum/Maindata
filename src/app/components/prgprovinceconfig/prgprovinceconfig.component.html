@@ -1,0 +1,101 @@
+<div id="data-grid-demo">
+    <div class="rows">
+        <div class="col-12">
+            <dx-data-grid id="gridContainerpro" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" (onSaving)="provSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true"
+                [dataSource]="provlist" [allowColumnReordering]="true" [allowColumnResizing]="true" (onToolbarPreparing)="onToolbarPreparingpro($event)" (onContentReady)="onContentReadyHandler($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="provinceid" caption="*รหัส" sortOrder="asc">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="provincename" caption="*ชื่อจังหวัด (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อจังหวัด (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="provincenameeng" caption="ชื่อจังหวัด (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="countryname" caption="ประเทศ (ไทย)"></dxi-column>
+                <dxi-column dataField="countrynameeng" caption="ประเทศ (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="zipcodeprefix" caption="เลขหน้ารหัสไปรษณีย์"></dxi-column>
+                <dxi-column dataField="region" caption="พื้นที่">
+                    <dxo-lookup [dataSource]="showre" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                    </dxo-lookup>
+                </dxi-column>
+
+                <div *dxTemplate="let data of 'tableName'">
+                    <div class="tablelabel">
+                        <span>ข้อมูลจังหวัด</span>
+                    </div>
+                </div>
+                <!-- color: #491988 -->
+            </dx-data-grid>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <dx-data-grid id="gridContainerdis" [columnAutoWidth]="true" (onInitNewRow)="getDefaultsubdis($event)" (onSelectionChanged)="disselectionChanged($event)" (onSaving)="disSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true"
+                [dataSource]="dislist" [allowColumnReordering]="true" [allowColumnResizing]="true" (onToolbarPreparing)="onToolbarPreparingdis($event)" (onContentReady)="disonContentReadyHandler($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpprovid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="districtid" caption="*รหัส" sortOrder="asc">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="districtname" caption="*ชื่ออำเภอ (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่ออำเภอ (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="districtnameeng" caption="ชื่ออำเภอ (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="provinceid" caption="PROVINCEID" [visible]="false"></dxi-column>
+                <div *dxTemplate="let data of 'tableName'">
+                    <div class="tablelabel">
+                        <span>ข้อมูลอำเภอ</span>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </div>
+        <div class="col-6">
+
+            <dx-data-grid id="gridContainersubdis" [columnAutoWidth]="true" (onInitNewRow)="getDefaultsubsubdis($event)" (onSelectionChanged)="subdisselectionChanged($event)" (onSaving)="subdisSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                [showBorders]="true" [dataSource]="subdislist" [allowColumnReordering]="true" [allowColumnResizing]="true" (onToolbarPreparing)="onToolbarPreparingsubdis($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpdisid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="sub_districtid" caption="*รหัส" sortOrder="asc">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="sub_districtname" caption="*ชื่อตำบล (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อตำบล (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="sub_districtnameeng" caption="ชื่อตำบล (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="provinceid" caption="PROVINCEID" [visible]="false"></dxi-column>
+                <dxi-column dataField="districtid" caption="DISTRICTID" [visible]="false"></dxi-column>
+                <dxi-column dataField="zipcode" caption="รหัสไปรษณีย์"></dxi-column>
+                <dxi-column dataField="remark" caption="หมายเหตุ"></dxi-column>
+                <div *dxTemplate="let data of 'tableName'">
+                    <div class="tablelabel">
+                        <span>ข้อมูลตำบล</span>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </div>
+
+    </div>
+
+
+</div>

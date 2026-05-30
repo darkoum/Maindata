@@ -1,0 +1,63 @@
+::ng-deep #prerequisiteGridcourse {
+    height: 320px;
+    background-color: #CCC;
+}
+
+::ng-deep #prerequisiteGridnull {
+    height: 272px;
+    background-color: #CCC;
+}
+
+::ng-deep #prerequisiteGrid {
+    height: 470px;
+}
+
+::ng-deep #datagrid {
+    padding-top: 5px;
+}
+
+::ng-deep .bggrid {
+    color: rgb(32, 32, 32);
+}
+
+::ng-deep .dx-row img {
+    height: 100px;
+}
+
+::ng-deep #gridContainer tr.main-row td:not(:first-child) {
+    height: 21px;
+}
+
+.courselabel {
+    color: #1b4461;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.courselabel2 {
+    color: #1b4461;
+    text-align: center;
+}
+
+.coursedetail {
+    padding: 5px;
+}
+
+::ng-deep #gridContainer td {
+    vertical-align: middle;
+}
+
+.cidtypeC {
+    color: #540b0e;
+    font-weight: bold;
+}
+
+.cidtypeL {
+    color: #335c67;
+    font-weight: bold;
+}
+
+.cidtypeP {
+    color: #e09f3e;
+    font-weight: bold;
+}

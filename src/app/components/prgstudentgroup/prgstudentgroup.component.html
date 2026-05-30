@@ -1,0 +1,160 @@
+<div class="row">
+    <div class="col-4">
+        ศูนย์/วิทยาเขต
+        <dx-select-box [dataSource]="campusdata" displayExpr="comboshow"
+            (onItemClick)="getFilteredstugroup();getgrouplistbygroupyear();" searchMode="StartsWith" valueExpr="comboid"
+            [(ngModel)]="campusid" [searchEnabled]="true" [showClearButton]="true">
+        </dx-select-box>
+    </div>
+    <div class="col-4">
+        ระดับ
+        <dx-select-box [dataSource]="lvldata" displayExpr="comboshow"
+            (onItemClick)="getFilteredstugroup();getgrouplistbygroupyear();" searchMode="StartsWith" valueExpr="comboid"
+            [(ngModel)]="levelid" [searchEnabled]="true" [showClearButton]="true">
+
+        </dx-select-box>
+    </div>
+    <div class="col-4">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="facdata" displayExpr="comboshow"
+            (onItemClick)="getFilteredstugroup();getgrouplistbygroupyear();" searchMode="StartsWith" valueExpr="comboid"
+            [(ngModel)]="facultyid" [searchEnabled]="true" [showClearButton]="true">
+        </dx-select-box>
+    </div>
+</div>
+<div class="row">
+    <div class="col-1">
+        รุ่น
+        <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getgrouplistbygroupyear()" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <!--
+    <div class="col-4">
+        กลุ่มนักศึกษา
+        <dx-select-box [dataSource]="stugroup" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="studentgroup" [searchEnabled]="true" [showClearButton]="true"></dx-select-box>
+    </div> -->
+    <!-- <div class="col-2">
+        ปีที่เข้า
+        <dx-number-box [(ngModel)]="admitacadyear" [showClearButton]="true" [showSpinButtons]="false" [min]="1" [max]="9999" (onValueChanged)="getgrouplistbygroupyear()">
+        </dx-number-box>
+    </div> -->
+    <div class="col-3">
+        กลุ่มนักศึกษา
+        <dx-select-box [dataSource]="grouplistbygroupyear" displayExpr="comboshow" searchMode="StartsWith"
+            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+
+        </dx-select-box>
+    </div>
+
+    <div class="col-2">
+        สถานภาพจาก
+        <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+            [(ngModel)]="studentstatus" [searchEnabled]="true" [showClearButton]="true"></dx-select-box>
+    </div>
+    <div class="col-2">
+        สถานภาพถึง
+        <dx-select-box [dataSource]="statuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+            [(ngModel)]="studentstatusto" [searchEnabled]="true" [showClearButton]="true"></dx-select-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <!-- <dx-button class="button" (onClick)="liststudent()" text="ดึงรายชื่อ" icon="find" type="default" [width]="150"> -->
+        <dx-button class="button" (onClick)="stulist()" text="ดึงรายชื่อ" icon="find" type="default" [width]="150">
+        </dx-button>
+    </div>
+</div>
+<br>
+<div class="tableremark">*Double Click ที่ชื่อกรณีย้ายเป็นรายคน</div>
+<div id="data-grid-demo" style="width: 100%">
+    <dx-data-grid #dataGridRef id="prgstudentgroup" keyExpr="studentid" [columnAutoWidth]="true" [rowAlternationEnabled]="true"
+        (onToolbarPreparing)="gridonToolbarPreparing($event)" [hoverStateEnabled]="true" [showBorders]="true"
+        [dataSource]="veiwstudentlist" (onRowDblClick)="stutransfer($event)" (onSaving)="dataSave($event)">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+            <dxo-popup title="Student Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <!-- <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel> -->
+        <!-- <dxo-selection mode="multiple" selectAllMode="allPages" showCheckBoxesMode="always"></dxo-selection> -->
+        <dxi-column dataField="studentid" caption="" [visible]="false"></dxi-column>
+
+
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentname" caption="ชื่อ-นามสกุล" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="creditattempt" caption="หน่วยกิตลงทะเบียน" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="creditsatisfy" caption="หน่วยกิตผ่าน" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="gpa" caption="GPA" format="0.00" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentsex" caption="เพศ" [allowEditing]="false">
+            <dxo-lookup [dataSource]="stuentsexlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentstatus" caption="สถานภาพ" [allowEditing]="false">
+            <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column> -->
+        <dxi-column dataField="studentgroupabb" caption="กลุ่มนักศึกษา" [allowEditing]="false"></dxi-column>
+        <!-- <dxi-column dataField="actiontype" caption="ทำรายการ" [allowEditing]="true">
+            <dxo-lookup [dataSource]="actiontypelst" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column> -->
+
+        <!-- <dxi-column dataField="entrydegree" caption="วุฒิเดิม">
+      <dxo-lookup [dataSource]="lstEntryDegree" valueExpr="entrydegreecode" displayExpr="entrydegreename"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="entrygpax" caption="GPA เข้า" format="0.##"></dxi-column>
+    <dxi-column dataField="entrytype" caption="วิธีรับเข้า">
+      <dxo-lookup [dataSource]="lstEntryType" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column> -->
+
+        <div *dxTemplate="let data of 'heddershow'">
+
+            <dxi-item location="before">
+         
+                <dx-button  text="ลบรายการที่เลือก" (onClick)="deleteallselect($event) ">
+                </dx-button>
+               
+            </dxi-item>
+
+        </div>
+
+    </dx-data-grid>
+</div>
+<div class="row">
+    <!-- <div class="col-4">
+        ศูนย์/วิทยาเขต
+        <dx-select-box [dataSource]="campusdata" displayExpr="comboshow" (onValueChanged)="getFilteredstugroup2()" searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="campusidto" [searchEnabled]="true" [showClearButton]="true">
+        </dx-select-box>
+    </div> -->
+    <div class="col-2">
+        เป็นรุ่น
+        <dx-text-box [(ngModel)]="groupyearto" (onValueChanged)="getgrouplistbygroupyearto()" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <!--
+  <div class="col-4">
+    เป็นกลุ่มนักศึกษา
+    <dx-select-box [dataSource]="stugroupto" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+      [(ngModel)]="studentgroupto" [searchEnabled]="true" [showClearButton]="true"></dx-select-box>
+
+  </div> -->
+    <!-- <div class="col-2">
+        รุ่น
+        <dx-number-box [(ngModel)]="admitacadyearto" [showClearButton]="true" [showSpinButtons]="false" [min]="1" [max]="9999" (onValueChanged)="getgrouplistbygroupyearto()">
+        </dx-number-box>
+    </div> -->
+    <div class="col-4">
+        กลุ่มนักศึกษา
+        <dx-select-box [dataSource]="grouplistbygroupyearto" displayExpr="comboshow" searchMode="StartsWith"
+            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroupto"
+            (onValueChanged)="getgrouplisttox($event)">
+
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="executedat()" text="ทำรายการ" icon="preferences" type="success"
+            [width]="150">
+        </dx-button>
+    </div>
+</div>

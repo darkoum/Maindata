@@ -1,0 +1,329 @@
+<div class="row">
+    <div class="col-4">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="facultylist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="facid"></dx-select-box>
+    </div> 
+    <div class="col-2">
+        รหัสวิชา
+        <dx-text-box [(ngModel)]="couid" [inputAttr]="{ 'style':  'text-transform: uppercase'}" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *"></dx-text-box>
+    </div>
+    <div class="col-2">
+        ชื่อวิชา
+        <dx-text-box [(ngModel)]="coursename" [inputAttr]="{ 'style':  'text-transform: uppercase'}" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *"></dx-text-box>
+    </div>
+
+    <div class="col-2">
+        <br /> 
+        <dx-button class="button" (onClick)="onSearch();" icon="find" type="default" text="ค้นหา"
+        [width]="'100%'">
+        </dx-button>
+    </div>
+
+  </div>
+
+  <div>
+    <dx-data-grid id="prgcourse" #course  
+      (onSelectionChanged)="selectionChange($event)" [allowColumnReordering]="true" [allowColumnResizing]="true"
+      [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="coulist" >
+      <dxo-paging [pageSize]="5"></dxo-paging>
+      <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15, 20,0]" [showInfo]="true" [visible]="true">
+      </dxo-pager>
+      <dxo-load-panel [enabled]="false">
+      </dxo-load-panel>
+      <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+      <dxo-selection mode="single"></dxo-selection>
+      <dxi-column dataField="courseid" caption="COURSEID" [visible]="false"></dxi-column>
+      <dxi-column dataField="coursecode" caption="*รหัสวิชา" [width]="120" alignment="center">
+        <dxi-validation-rule type="required" message="กรุณากรอกรหัสวิชา"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column dataField="revisioncode" caption="*Version" [width]="80" alignment="center">
+        <dxi-validation-rule type="required" message="กรุณากรอก Version"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column dataField="coursename" caption="*ชื่อวิชา (ไทย)" >
+        <dxi-validation-rule type="required" message="กรุณากรอกชื่อวิชา (ไทย)"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column dataField="coursenameeng" caption="ชื่อวิชา (อังกฤษ)" >
+        <dxi-validation-rule type="required" message="กรุณากรอกชื่อวิชา (อังกฤษ)"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"></dxi-validation-rule>
+      </dxi-column>
+      <dxi-column dataField="courseunit" caption="หน่วยกิต" [width]="100" alignment="center"></dxi-column>
+      <dxi-column dataField="coursestatus" caption="สถานะ" [width]="200">
+        <dxo-lookup [dataSource]="cousta" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+        </dxo-lookup>
+      </dxi-column>
+
+      <!-- <div *dxTemplate="let data of 'tableName1'">
+        <div class="tablelabel">
+          <span  style="color: brown;font-weight: bold;"> Double Click เพื่อเลือกรายการ</span>
+        </div>
+      </div> -->
+    </dx-data-grid>
+  </div>
+
+<!-- <div class="row" style="padding-bottom: 5px">
+    <div class="col-5 col-xs-5 col-md-6 col-xl-6 col-lg-6"></div>
+    <div class="col-2 col-xs-2 col-md-2 col-xl-2 col-lg-2" [align]="'right'">
+    </div>
+    <div class="col-2 col-xs-2 col-md-2 col-xl-2 col-lg-2">
+        รหัสวิชา
+        <dx-text-box [(ngModel)]="coursecode" [showClearButton]="true" (onValueChanged)="setRevisioncode()">
+        </dx-text-box>
+    </div>
+    <div class="col-3 col-xs-3 col-md-3 col-xl-2 col-lg-2">
+        ลำดับที่
+        <dx-select-box [dataSource]="revisionlist" displayExpr="courseshow" valueExpr="revisioncode"
+            [(ngModel)]="revisioncode" (onSelectionChanged)="getCourse()">
+        </dx-select-box>
+    </div>
+</div> -->
+<!-- <div *ngIf="itemcount == 0; then Showtemplatenull; else Showtemplate"></div> -->
+
+<!-- <ng-template #Showtemplate>
+    <dx-data-grid id="prerequisiteGridcourse" [rowAlternationEnabled]="false" [hoverStateEnabled]="false"
+        [showBorders]="true" [dataSource]="courselist" rowTemplate="rowTemplateName">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-editing mode="row" [allowUpdaing]="true"></dxo-editing>
+        <dxi-column caption="ข้อมูลรายวิชา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <tbody *dxTemplate="let courselist of 'rowTemplateName'">
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>ค่าธรรมเนียม : </b></div>
+                </td>
+                <td colspan="2">
+                    <dx-select-box [width]="100 + '%'" [readOnly]="true" [dataSource]="feechargelist"
+                        displayExpr="feechargedes" valueExpr="feecharge" [value]="courselist.data.feecharge">
+                    </dx-select-box>
+                </td>
+                <td style="vertical-align: middle">
+                    <div class="courselabel"><b>หน่วยกิต : </b></div>
+                </td>
+                <td colspan="6">
+                    <dx-text-box [readOnly]="true" [(value)]="courselist.data.courseunit"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle; width: 5%"></td>
+                <td style="vertical-align: middle">
+                    <div class="courselabel"><b>สถานะ : </b></div>
+                </td>
+                <td colspan="6">
+                    <dx-select-box [width]="100 + '%'" [readOnly]="true" [dataSource]="coursestatuslist"
+                        displayExpr="coursestatusdes" valueExpr="coursestatus" [value]="courselist.data.coursestatus">
+                    </dx-select-box>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>ชื่อวิชา (ไทย) : </b></div>
+                </td>
+                <td colspan="9">
+                    <dx-text-box [readOnly]="true" [(value)]="courselist.data.coursename"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle; width: 5%"></td>
+                <td style="vertical-align: middle">
+                    <div class="courselabel"><b>ประเภท : </b></div>
+                </td>
+                <td colspan="6">
+                    <dx-select-box [width]="100 + '%'" [readOnly]="true" [dataSource]="coursetypelist"
+                        displayExpr="comboshow" valueExpr="comboid" [value]="courselist.data.coursetype">
+                    </dx-select-box>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>ชื่อวิชา (อังกฤษ) : </b></div>
+                </td>
+                <td colspan="9">
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.coursenameeng">
+                    </dx-text-box>
+                </td>
+                <td style="vertical-align: middle; width: 5%"></td>
+                <td style="vertical-align: middle">
+                    <div class="courselabel"><b>วิทยาลัย/คณะ/สถาบัน : </b></div>
+                </td>
+                <td colspan="6">
+                    <dx-select-box [width]="100 + '%'" [readOnly]="true" [dataSource]="facultylist"
+                        displayExpr="comboshow" valueExpr="comboid" [value]="courselist.data.facultyid">
+                    </dx-select-box>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>หน่วยกิต : </b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false" [(value)]="courselist.data.credittotal">
+                    </dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>=</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>C</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.credit1"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="20">
+                    <div class="courselabel2"><b>+</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>L</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.credit2"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>+</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>S</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.credit3"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle; width: 5%"></td>
+                <td style="vertical-align: middle" colspan="5">
+                    <div class="courselabel2" style="color: darkred"><b>อัตรามาตราฐานภาคที่</b></div>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>ชั่วโมง : </b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false" [(value)]="courselist.data.periodtotal">
+                    </dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>=</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>C</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.period1"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="20">
+                    <div class="courselabel2"><b>+</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>L</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.period2"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>+</b></div>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>S</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false"
+                        [(value)]="courselist.data.period3"></dx-text-box>
+                </td>
+                <td style="vertical-align: middle; width: 5%"></td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>1</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false" [(value)]="courselist.data.feesemester1">
+                    </dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>2</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false" [(value)]="courselist.data.feesemester1">
+                    </dx-text-box>
+                </td>
+                <td style="vertical-align: middle" width="50">
+                    <div class="courselabel2"><b>3</b></div>
+                </td>
+                <td>
+                    <dx-text-box [readOnly]="true" [hoverStateEnabled]="false" [(value)]="courselist.data.feesemester1">
+                    </dx-text-box>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; width: 10%">
+                    <div class="courselabel"><b>เงื่อนไขทั่วไป : </b></div>
+                </td>
+                <td colspan="17">
+                    <dx-text-box (onBlur)="onFieldBlur(courselist.data, 'courseid','prerequisitenote')"
+                        [hoverStateEnabled]="false" [(value)]="courselist.data.prerequisitenote">
+                    </dx-text-box>
+                </td>
+            </tr>
+        </tbody>
+
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลรายวิชา</div>
+        </div>
+    </dx-data-grid>
+</ng-template> -->
+<div>
+    <dx-data-grid [dataSource]="prerequisitelist" [showBorders]="true"
+        [rowAlternationEnabled]="true" [hoverStateEnabled]="true" (onSaving)="dataSave($event)"
+        (onToolbarPreparing)="onToolbarPreparing($event)"
+        (onInitNewRow)="onInsertingstart($event)"
+        (onEditingStart)="onEditstart($event)"
+        (onEditCanceling)="onCancelEditmode()"
+        (onSelectionChanged)="selectionChanged($event)"
+        >
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Prerequisite Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="courseid" caption="รหัส" [visible]="false"> </dxi-column>
+        <dxi-column dataField="prerequisitegroup" caption="เงื่อนไขที่" width="100" dataType="number">
+            <dxi-validation-rule type="required" message="กรุณากรอกเงื่อนไขที่"></dxi-validation-rule>
+        </dxi-column>
+        <!-- <dxi-column dataField="tmptype" caption="กรอกรหัส วิชา ระดับ สาขาวิชา" [setCellValue]="setcelltmptype" >
+        </dxi-column> -->
+        <!-- <dxi-column dataField="combotypeid" caption="เลือก วิชา ระดับ สาขาวิชา" [setCellValue]="setcelltmptype" >
+            <dxo-lookup [dataSource]="combotypelist" valueExpr="comboid" displayExpr="comboshow" >
+            </dxo-lookup>
+            
+        </dxi-column> -->
+
+        <dxi-column dataField="prerequisitecourseid" caption="รายวิชาบังคับ:กำหนดระดับ:กำหนดสาขาวิชาเอก">
+            <dxo-lookup [dataSource]="comboprerequisitecourse"  valueExpr="comboid" displayExpr="comboshow" >
+            </dxo-lookup>
+        <dxi-validation-rule type="required" message="กรุณากรอกวิชาบังคับ"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="gradepointmin" caption="คะแนนเฉลี่ยต่ำสุด" width="150" dataType="number">
+            <dxo-format type="fixedPoint" [precision]="2">
+            </dxo-format>
+            <!-- <dxi-validation-rule type="required" message="กรุณากรอกคะแนนเฉลี่ยต่ำสุด"></dxi-validation-rule> -->
+        </dxi-column>
+        <dxi-column dataField="prerequisitetype" caption="ประเภท" width="200">
+            <dxo-lookup [dataSource]="prerequisitetypelist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+            <dxi-validation-rule type="required" message="กรุณากรอกประเภท"></dxi-validation-rule>
+        </dxi-column>
+        <div *dxTemplate="let data of 'tableName'">
+            <div class="tablelabel">
+                <span>เงื่อนไขรายวิชา</span>
+            </div>
+        </div>
+    </dx-data-grid>
+</div>
+
+<div style="padding-bottom: 20px;"></div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
+  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

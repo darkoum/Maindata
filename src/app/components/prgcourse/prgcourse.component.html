@@ -1,0 +1,367 @@
+<div class="row">
+ <div class="col-4">
+  วิทยาลัย/คณะ/สถาบัน
+    <dx-select-box [dataSource]="facshow" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="facid"></dx-select-box>
+  </div> 
+  <div class="col-2">
+    รหัสวิชา
+    <dx-text-box [(ngModel)]="couid" [inputAttr]="{ 'style':  'text-transform: uppercase'}" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *"></dx-text-box>
+  </div>
+  <div class="col-2">
+    ชื่อวิชา
+    <dx-text-box [(ngModel)]="coursename" [inputAttr]="{ 'style':  'text-transform: uppercase'}" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *"></dx-text-box>
+  </div>
+  <div class="col-2">
+    <br />
+    <dx-button class="button" (onClick)="onSearch();" icon="find" type="default" text="ค้นหา" [width]="'100%'"></dx-button>
+  </div>
+  <div class="col-2">
+    <br />
+    <dx-button class="button" (onClick)="showCopy()" icon="copy" type="default" text="คัดลอกรายวิชา" [width]="'100%'"></dx-button>
+  </div>
+</div>
+<!-- [position]="{ of: '#prgcourse' }" -->
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)"  [(visible)]="loadingVisible"
+  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#prgcoursefee' }" [(visible)]="loadingVisiblefee"
+  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>
+
+<div id="data-grid-demo" style="padding:7px;">
+  <dx-data-grid id="prgcourse" #course (onInitNewRow)="getDefault($event)" (onSaving)="dataSave($event)"
+    (onSelectionChanged)="selectionChange($event)" [allowColumnReordering]="true" [allowColumnResizing]="true"
+    [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="coulist"
+    (onToolbarPreparing)="onToolbarPreparing($event)" (onContentReady)="onContentReadyHandler($event)" >
+    <dxo-paging [pageSize]="20"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true" [visible]="true">
+    </dxo-pager>
+    <!-- <dxo-load-panel [enabled]="false">
+    </dxo-load-panel> -->
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+    <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+      <dxo-popup title="บันทึกรายวิชา" [showTitle]="true">
+      </dxo-popup>
+      <dxo-form>
+        <dxi-item itemType="group" [colCount]="36" [colSpan]="2" caption="">
+          <dxi-item dataField="coursecode" [colSpan]="18" [label]="{ text: 'รหัสวิชา' }" editorType="dxTextBox"
+            [editorOptions]="{ maxLength: 16,inputAttr: {'style': 'text-transform: uppercase'}}" ></dxi-item>
+          <dxi-item dataField="revisioncode" [colSpan]="18" editorType="dxNumberBox" [label]="{ text: 'Version' }"
+            [editorOptions]="{ max: 9999}">
+          </dxi-item>
+          <dxi-item dataField="coursestatus" [colSpan]="18" [label]="{ text: 'สถานะ' }"></dxi-item>
+          <dxi-item dataField="transcriptshow" [colSpan]="18" [label]="{ text: 'แสดง Transcript' }"></dxi-item>
+          <dxi-item dataField="coursetype" [colSpan]="18"></dxi-item>
+          <dxi-item dataField="grademode" [colSpan]="18"></dxi-item>
+          <dxi-item dataField="coursename" [colSpan]="36" [label]="{ text: 'ชื่อไทย' }" editorType="dxTextBox"
+            [editorOptions]="{ maxLength: 255}">
+          </dxi-item>
+          <dxi-item dataField="courseabb" [colSpan]="36" [label]="{ text: 'ชื่อย่อ' }" editorType="dxTextBox"
+            [editorOptions]="{ maxLength: 255}">
+          </dxi-item>
+          <dxi-item dataField="coursenameeng" [colSpan]="36" [label]="{ text: 'NAME' }" editorType="dxTextBox"
+            [editorOptions]="{ maxLength: 255 ,inputAttr: {'style': 'text-transform: uppercase'}}"></dxi-item>
+          <dxi-item dataField="courseabbeng" [colSpan]="36" [label]="{ text: 'ABB NAME' }" editorType="dxTextBox"
+            [editorOptions]="{ maxLength: 32}"></dxi-item>
+          <dxi-item dataField="facultyid" [colSpan]="18" [label]="{ text: 'วิทยาลัย/คณะ/สถาบัน' }"></dxi-item>
+          <dxi-item dataField="departmentid" [colSpan]="18" [label]="{ text: 'ภาค/สาขาวิชา' }"></dxi-item>
+          <dxi-item dataField="defaultclassstatus" [colSpan]="36" [label]="{ text: 'วิธีลงทะเบียน' }"></dxi-item>
+          <dxi-item dataField="coursegroup" [colSpan]="9" [label]="{ text: 'หมวด' }"></dxi-item>
+          <dxi-item dataField="studycode1" [colSpan]="9" [label]="{ text: ' ' }" [disabled]="true"></dxi-item>
+          <dxi-item dataField="studycode2" [colSpan]="9" [label]="{ text: ' ' }" [disabled]="true"></dxi-item>
+          <dxi-item dataField="studycode3" [colSpan]="9" [label]="{ text: ' ' }" [disabled]="true"></dxi-item>
+          <dxi-item dataField="credittotal" [colSpan]="9" editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="credit1" [colSpan]="9" [label]="{ text: 'นก. ทฤษฏี',  showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="credit2" [colSpan]="9" [label]="{ text: 'นก.ปฏิบัติ',  showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="credit3" [colSpan]="9" [label]="{ text: 'นก.ศึกษาด้วยตนเอง',  showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <dxi-item dataField="periodtotal" [colSpan]="9" editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="period1" [colSpan]="9" [label]="{ text: 'ชม. ทฤษฏี', showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="period2" [colSpan]="9" [label]="{ text: 'ชม. ปฏิบัติ',  showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="period3" [colSpan]="9" [label]="{ text: 'ชม.ศึกษาด้วยตนเอง', showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+        </dxi-item>
+        <!-- <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <dxi-item dataField="feecharge" [colSpan]="18"></dxi-item>
+        </dxi-item> -->
+        <!-- <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <dxi-item dataField="feesemester1" [colSpan]="9" [label]="{ text: 'ภาค 1',  showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 99999}"></dxi-item>
+          <dxi-item dataField="feesemester2" [colSpan]="9" [label]="{ text: 'ภาค 2', showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 99999}"></dxi-item>
+          <dxi-item dataField="feesemester3" [colSpan]="9" [label]="{ text: 'ภาค 3', showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 99999}"> </dxi-item>
+          <dxi-item dataField="feesemester4" [colSpan]="9" [label]="{ text: 'ภาค 4', showColon: true }"
+            editorType="dxNumberBox" [editorOptions]="{ max: 99999}"> </dxi-item>
+        </dxi-item> -->
+        <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <!-- <dxi-item dataField="opendate" [caption]="{ text: 'วันที่เปิด' }" editorType="dxDateBox" [colSpan]="12"
+            [editorOptions]="{ type: 'date', displayFormat: 'dd/MM/yyyy' }"></dxi-item> -->
+            <dxi-item dataField="opendate" [caption]="{ text: 'วันที่เปิด' }"  [colSpan]="12"></dxi-item>
+            <!-- <dxi-item dataField="closedate" [caption]="{ text: 'วันที่ปิด' }" editorType="dxDateBox" [colSpan]="12"
+            [editorOptions]="{ type: 'date', displayFormat: 'dd/MM/yyyy' }"></dxi-item> -->
+          <dxi-item dataField="closedate" [caption]="{ text: 'วันที่ปิด' }"  [colSpan]="12" ></dxi-item>
+          <dxi-item dataField="notgradeflag"  [colSpan]="12" ></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <dxi-item dataField="versionyear" [colSpan]="12" editorType="dxNumberBox" [editorOptions]="{ max: 9999}">
+          </dxi-item>
+          <dxi-item dataField="creditmin" [colSpan]="12" editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+          <dxi-item dataField="creditmax" [colSpan]="12" editorType="dxNumberBox" [editorOptions]="{ max: 999}">
+          </dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="36" [colSpan]="2">
+          <dxi-item dataField="description1" [label]="{ text: 'คำอธิบาย 1' }" editorType="dxTextArea"
+            [editorOptions]="{ height: 90 ,maxLength: 3000 }" [colSpan]="36">
+          </dxi-item>
+          <dxi-item dataField="description2" [label]="{ text: 'คำอธิบาย 2' }" editorType="dxTextArea"
+            [editorOptions]="{ height: 90 ,maxLength: 3000}" [colSpan]="36">
+          </dxi-item>
+          <dxi-item dataField="descriptioneng1"  editorType="dxTextArea"
+            [editorOptions]="{ height: 90,maxLength: 3000 }" [colSpan]="36">
+          </dxi-item>
+          <dxi-item dataField="descriptioneng2"  editorType="dxTextArea"
+            [editorOptions]="{ height: 90,maxLength: 3000 }" [colSpan]="36">
+          </dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+          <dxi-item dataField="feebase1" [colSpan]="18" [label]="{ text: 'หมวดค่าใช้จ่าย' }"></dxi-item>
+          <dxi-item dataField="courseunicode" [label]="{ text: 'รหัสมาตราฐาน' }" editorType="dxNumberBox"
+            [editorOptions]="{ max: 99999}"></dxi-item>
+          <dxi-item dataField="seccoursecode" [label]="{ text: 'รหัสไทย' }" editorType="dxNumberBox"
+            [editorOptions]="{ max: 99999}"></dxi-item>
+          <dxi-item dataField="courseunit" [colSpan]="12" [label]="{ text: 'หน่วย' }"
+            [editorOptions]="{ max: 99999}"></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+          <dxi-item dataField="createdatetime" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="createuserid" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="lastupdatedatetime" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="lastupdateuserid" [editorOptions]="{ disabled: true }"></dxi-item>
+        </dxi-item>
+      </dxo-form>
+    </dxo-editing>
+    <dxo-selection mode="single"></dxo-selection>
+    <dxi-column dataField="courseid" caption="COURSEID" [visible]="false"></dxi-column>
+    <dxi-column dataField="coursecode" caption="*รหัสวิชา" [width]="10 + '%'">
+      <dxi-validation-rule type="required" message="กรุณากรอกรหัสวิชา"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="revisioncode" caption="*Version" [width]="7 + '%'">
+      <dxi-validation-rule type="required" message="กรุณากรอก Version"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="courseunicode" caption="รหัสเดิม" [visible]="false"></dxi-column>
+    <dxi-column dataField="coursename" caption="*ชื่อวิชา (ไทย)" [width]="30 + '%'">
+      <dxi-validation-rule type="required" message="กรุณากรอกชื่อวิชา (ไทย)"></dxi-validation-rule>
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="coursenameeng" caption="ชื่อวิชา (อังกฤษ)" [width]="30 + '%'">
+      <dxi-validation-rule type="required" message="กรุณากรอกชื่อวิชา (อังกฤษ)"></dxi-validation-rule>
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="courseabb" caption="ชื่อย่อ" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="32" message="ความยาวไม่เกิน 32 ตัวอักษร"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="courseabbeng" caption="ชื่อย่อ (อังกฤษ)" [visible]="false">
+      <!-- <dxi-validation-rule type="required" message="กรุณากรอกชื่อย่อ (อังกฤษ)"></dxi-validation-rule> -->
+      <dxi-validation-rule type="stringLength" [max]="32" message="ความยาวไม่เกิน 32 ตัวอักษร"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="courseunit" caption="หน่วยกิต" [width]="10 + '%'"></dxi-column>
+    <dxi-column dataField="creditmin" caption="หน่วยกิตต่ำสุด" dataType="number" [width]="10 + '%'" [visible]="false">
+    </dxi-column>
+    <dxi-column dataField="creditmax" caption="หน่วยกิตสูงสุด" dataType="number" [width]="10 + '%'" [visible]="false">
+    </dxi-column>
+    <dxi-column dataField="credittotal" caption="หน่วยกิต" dataType="number" [width]="8 + '%'" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกหน่วยกิต"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="periodtotal" caption="ชั่วโมง" dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="credit1" caption="CREDIT1" dataType="number" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกหน่วยกิต"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="credit2" caption="CREDIT2" dataType="number" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกหน่วยกิต"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="credit3" caption="CREDIT3" dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="period1" caption="PERIOD1" dataType="number" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกชั่วโมง"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="period2" caption="PERIOD2" dataType="number" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกชั่วโมง"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="period3" caption="PERIOD3" dataType="number" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกชั่วโมง"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="studycode1" caption="" [visible]="false">
+      <dxo-lookup [dataSource]="stdcod" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="studycode2" caption="" [visible]="false">
+      <dxo-lookup [dataSource]="stdcod" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="studycode3" caption="" [visible]="false">
+      <dxo-lookup [dataSource]="stdcod" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <!-- <dxi-column dataField="feecharge" caption="ค่าใช้จ่าย" [visible]="false">
+      <dxo-lookup [dataSource]="yn" valueExpr="id" displayExpr="name" showClearButton="true"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="feesemester1" caption="FEESEMESTER1" [visible]="false"></dxi-column>
+    <dxi-column dataField="feesemester2" caption="FEESEMESTER2" [visible]="false"></dxi-column>
+    <dxi-column dataField="feesemester3" caption="FEESEMESTER3" [visible]="false"></dxi-column> -->
+    <dxi-column dataField="coursetype" caption="*ประเภท" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกประเภท"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="coutyp" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="coursestatus" caption="สถานะ" [width]="10 + '%'">
+      <dxo-lookup [dataSource]="cousta" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="defaultclassstatus" caption="วิธีลงทะเบียน" [visible]="false">
+      <dxo-lookup [dataSource]="defclass" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="grademode" caption="ระบบเกรด" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณาระบบเกรด"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="gm" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน" [setCellValue]="setdepid" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกวิทยาลัย/วิทยาลัย/คณะ/สถาบัน/สถาบัน"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="facshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="getFilteredDep" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="description1" caption="คำอธิบาย 1" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="3000" message="ความยาวไม่เกิน 3000 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="description2" caption="คำอธิบาย 2" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="3000" message="ความยาวไม่เกิน 3000 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="descriptioneng1" caption="คำอธิบาย (อังกฤษ) 1" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="3000" message="ความยาวไม่เกิน 3000 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="descriptioneng2" caption="คำอธิบาย (อังกฤษ) 2" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="3000" message="ความยาวไม่เกิน 3000 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="createdatetime" caption="สร้างรายการ" dataType="datetime" [visible]="false"></dxi-column>
+    <dxi-column dataField="createuserid" caption="โดย" [visible]="false"></dxi-column>
+    <dxi-column dataField="lastupdatedatetime" caption="แก้ไขล่าสุด" dataType="datetime" [visible]="false"></dxi-column>
+    <dxi-column dataField="lastupdateuserid" caption="โดย" [visible]="false"></dxi-column>
+    <dxi-column dataField="coursegroup" caption="หมวดวิชา" [visible]="false">
+      <dxo-lookup [dataSource]="cougro" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="opendate" caption="วันที่เปิด" dataType="date" [visible]="false">
+    </dxi-column>
+    
+
+    <dxi-column dataField="closedate" caption="วันที่ปิด" dataType="date" [visible]="false"></dxi-column>
+    <dxi-column dataField="feesemester4" caption="FEESEMESTER4" [visible]="false"></dxi-column>
+    <dxi-column dataField="prerequisitenote" caption="PREREQUISITENOTE" [visible]="false"></dxi-column>
+    <dxi-column dataField="ownerlevelid" caption="OWNERLEVELID" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase1" caption="FEEBASE1" [visible]="false">
+      <dxo-lookup [dataSource]="combofeelist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="feebase2" caption="FEEBASE2" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase3" caption="FEEBASE3" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase4" caption="FEEBASE4" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase5" caption="FEEBASE5" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase6" caption="FEEBASE6" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase7" caption="FEEBASE7" [visible]="false"></dxi-column>
+    <dxi-column dataField="feebase8" caption="FEEBASE8" [visible]="false"></dxi-column>
+    <dxi-column dataField="evaluateid" caption="evaluateid" [visible]="false"></dxi-column>
+    <dxi-column dataField="versionyear" caption="ปีหลักสูตร" dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="seccoursecode" caption="SECCOURSECODE" [visible]="false"></dxi-column>
+    <dxi-column dataField="semesterindex" caption="SEMESTERINDEX" [visible]="false"></dxi-column>
+    <dxi-column dataField="studytype" caption="STUDYTYPE" [visible]="false"></dxi-column>
+    <dxi-column dataField="evaluateflag" caption="ประเมิน อ.ผู้สอน" [visible]="false">
+      <dxo-lookup [dataSource]="yn2" valueExpr="id" displayExpr="name" showClearButton="true"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="notgradeflag" caption="GRADE" [visible]="false">
+      <dxo-lookup [dataSource]="ip" valueExpr="id" displayExpr="name" showClearButton="true"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="transcriptshow" caption="แสดงใน Transcript" [visible]="false">
+      <dxo-lookup [dataSource]="yn4" valueExpr="id" displayExpr="name" showClearButton="true"> </dxo-lookup>
+    </dxi-column>
+    <div *dxTemplate="let data of 'tableName1'">
+      <div class="tablelabel">
+        <!-- <span  style="color: brown;font-weight: bold;"> Double Click เพื่อเลือกรายการ</span> -->
+      </div>
+    </div>
+  </dx-data-grid>
+</div>
+<!-- <div id="data-grid-demo" style="padding:7px;">
+  <dx-data-grid id="prgcoursefee" #course (onInitNewRow)="getDefaultadjust($event)" (onSaving)="adjustSave($event)"
+    [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+    [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="feeadjust"
+    (onToolbarPreparing)="onToolbarPreparingCoat($event)" (onContentReady)="onContentReadyHandler($event)">
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true" [visible]="true">
+    </dxo-pager>
+    <dxo-load-panel [enabled]="false">
+    </dxo-load-panel>
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+    <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+    </dxo-editing>
+    <dxo-selection mode="single"></dxo-selection>
+    // <dxi-column dataField="feegroupid" caption="ผังบัญชี" [visible]="true">
+      <dxo-lookup [dataSource]="combofeegrouplist" valueExpr="comboid" displayExpr="comboshow"
+        showClearButton="true"></dxo-lookup>
+    </dxi-column> //
+    <dxi-column dataField="feeid" caption="รหัสค่าใช้จ่าย" [visible]="true">
+      <dxo-lookup [dataSource]="combofeelist" valueExpr="comboid" displayExpr="comboshow"
+        showClearButton="true"></dxo-lookup>
+    </dxi-column>
+   // <dxi-column dataField="feesemester1" caption="เทอม1" [visible]="true"></dxi-column>
+    <dxi-column dataField="feesemester2" caption="เทอม2" [visible]="true"></dxi-column>
+    <dxi-column dataField="feesemester3" caption="เทอม3" [visible]="true"></dxi-column>
+    <dxi-column dataField="feesemester4" caption="เทอม4" [visible]="true"></dxi-column> //
+    <dxi-column dataField="sumflag" caption="รวมรายวิชา" [visible]="true">
+      <dxo-lookup [dataSource]="sumflaglist" valueExpr="id" displayExpr="name" showClearButton="true"> </dxo-lookup>
+    </dxi-column>
+    <div *dxTemplate="let data of 'tableName'">
+      <div class="tablelabel">
+        <span>ค่าใช้จ่ายเพิ่มเติมรายวิชา</span>
+      </div>
+    </div>
+  </dx-data-grid>
+  <br />
+</div> -->
+
+
+<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกรายวิชา" [dragEnabled]="false" [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible" (onHidden)="popup_hidden($event)">
+  รหัสรายวิชา
+  <dx-select-box [dataSource]="coulist2" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="couoldid"></dx-select-box>
+  รหัสรายวิชาใหม่
+  <!-- <div style="width: 50%;"> -->
+  <dx-text-box [(ngModel)]="counewid" placeholder="ระบุรหัสรายวิชาใหม่..."></dx-text-box>
+  Version
+  <!-- <div style="width: 50%;"> -->
+  <dx-number-box [(ngModel)]="versionnew" placeholder="ระบุ Version ใหม่..."></dx-number-box>
+  <br />
+  <dx-button class="button" (onClick)="onCopy()" text="คัดลอก" icon="todo" type="success" stylingMode="outlined">
+  </dx-button>
+</dx-popup>

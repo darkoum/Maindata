@@ -1,0 +1,1060 @@
+<div class="row">
+    <div class="col-2">
+        รหัสนักศึกษา
+        <dx-text-box [(ngModel)]="studentcode" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *">
+        </dx-text-box>
+    </div>
+    <div class="col-2">
+        ชื่อ
+        <dx-text-box [(ngModel)]="studentname" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *">
+        </dx-text-box>
+    </div>
+    <div class="col-2">
+        นามสกุล
+        <dx-text-box [(ngModel)]="studentsurname" [showClearButton]="true"
+            placeholder="การค้นหาบางส่วนใช้ *">
+        </dx-text-box>
+    </div>
+    <div class="col-2">
+        เลขประจำตัวประชาชน
+        <dx-text-box [(ngModel)]="citizenid" [showClearButton]="true"> </dx-text-box>
+    </div>
+    <div class="col-2">
+        สถานะนักศึกษา
+        <dx-select-box [dataSource]="studentstatuslist" [(ngModel)]="studentstatus" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" ></dx-select-box>
+    </div>
+    <div class="col-2">
+        ระดับ
+        <dx-select-box [dataSource]="levlist" [(ngModel)]="levelid" (onValueChanged)="getprogram();refreshGroupyear();" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" ></dx-select-box>
+    </div>
+    <div class="col-2">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="faclist" [(ngModel)]="facultyid" (onValueChanged)="getdepartment();getprogram();refreshGroupyear();" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" ></dx-select-box>
+    </div>
+     <div class="col-2">
+        ภาค/สาขา
+        <dx-select-box [dataSource]="departmentlist" [(ngModel)]="departmentid" (onValueChanged)="getprogram();refreshGroupyear();" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" ></dx-select-box>
+    </div>
+    <div class="col-2">
+        สาขาวิชา
+        <dx-select-box [dataSource]="programlist" (onValueChanged)="refreshGroupyear();" displayExpr="comboshow" valueExpr="comboid"
+            [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="programid">
+        </dx-select-box>
+    </div> 
+    <div class="col-1">
+        รุ่น
+        <dx-number-box [(ngModel)]="groupyear" [showClearButton]="true" [showSpinButtons]="false"
+            (onValueChanged)="refreshGroupyear()">
+        </dx-number-box>
+    </div>
+    <div class="col-3">
+        กลุ่มนักศึกษา
+        <dx-select-box [dataSource]="studentgrouplist" displayExpr="comboshow" searchMode="StartsWith"
+            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getstu()" icon="find" type="default" text="ค้นหา" width="100%"></dx-button>
+    </div>
+</div>
+<div id="data-grid-demo" class="pt-3">
+    <dx-data-grid id="prgstudentmaster" #stumas [columnAutoWidth]="true" [allowColumnReordering]="true"
+        [allowColumnResizing]="true" [repaintChangesOnly]="true" (onSaving)="stuSave($event)"
+        (onEditingStart)="onEditstart($event)" (onSelectionChanged)="selectionChanged($event)"
+        (onEditCanceling)="onCancelEditmode()" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+        [showBorders]="true" [dataSource]="stulist" [columnHidingEnabled]="false" (onEditorPreparing)="onEditorPreparing($event)"
+        >
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 20, 25]" [showInfo]="true"> </dxo-pager>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="false" [useIcons]="true">
+            <dxo-popup title="ระเบียนนักศึกษา" [showTitle]="true" >
+                <!-- [position]="{ my: 'top', at: 'top', of: 'window' }" [height]="'95%'" -->
+            </dxo-popup>
+            <dxo-form>
+                <dxi-item itemType="tabbed" [colSpan]="2">
+                    <dxo-tab-panel-options [deferRendering]="true"> </dxo-tab-panel-options>
+                    <dxi-tab title="ข้อมูลนักศึกษา" icon="user" >
+                        <dxi-item itemType="group" caption="ข้อมูลนักศึกษา" >
+                            <dxi-item itemType="group" [colCount]="12" [colSpan]="12" cssClass="colorLabel">
+                                <dxi-item dataField="studentcode" [label]="{ text: 'รหัสนักศึกษา' }"
+                                    [colSpan]="4">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกรหัสนักศึกษา"></dxi-validation-rule>
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="12" [colSpan]="4" cssClass="colorLabel">
+                                <dxi-item dataField="prefixid" [label]="{ text: 'คำนำหน้า' }" [colSpan]="4">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกคำนำหน้า"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="studentname" [label]="{ text: 'ชื่อ (ไทย)' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 100}" [colSpan]="4">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกชื่อ (ไทย)"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="studentsurname" [label]="{ text: 'นามสกุล (ไทย)' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 100}" [colSpan]="4">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกนามสกุล (ไทย)"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item [colSpan]="4">
+                                </dxi-item>
+                                <dxi-item dataField="studentnameeng" [label]="{ text: 'ชื่อ (อังกฤษ)' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 100}" [colSpan]="4"></dxi-item>
+                                <dxi-item dataField="studentsurnameeng" [label]="{ text: 'นามสกุล (อังกฤษ)' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 100}" [colSpan]="4"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="12" cssClass="colorLabel">
+                                <dxi-item dataField="studentstatus" [label]="{ text: 'สถานภาพ' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                </dxi-item>
+                                <dxi-item dataField="campusid" [label]="{ text: 'ศูนย์/วิทยาเขต' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกศูนย์/วิทยาเขต"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="levelid" [label]="{ text: 'ระดับ' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                </dxi-item>
+                                <dxi-item dataField="facultyid" [label]="{ text: 'วิทยาลัย/คณะ/สถาบัน' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                </dxi-item>
+                                <dxi-item dataField="departmentid" [label]="{ text: 'ภาค/สาขา' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                </dxi-item>
+                                <dxi-item dataField="minorprogramid" [label]="{ text: 'โท' }"
+                                    [colSpan]="6">
+                                </dxi-item>
+                                <dxi-item dataField="programid" [label]="{ text: 'สาขาวิชา' }"
+                                    [editorOptions]="{ readOnly: true }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกหลักสูตร"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="graduateprogramid" [label]="{ text: 'หลักสูตรตรวจจบ' }"
+                                    [colSpan]="6"></dxi-item>
+                            </dxi-item>
+                            <!-- <dxi-item itemType="group" [colCount]="12" [colSpan]="1" cssClass="colorLabel"> -->
+                            <dxi-item itemType="group" [colCount]="12" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item itemType="group" [colCount]="6" [colSpan]="4" cssClass="colorLabel">
+                                    <dxi-item dataField="admitacadyear" [label]="{ text: 'ปีที่เข้า' }" [colSpan]="4">
+                                        <dxi-validation-rule type="required"
+                                            message="กรุณากรอกปีที่เข้า"></dxi-validation-rule>
+                                    </dxi-item>
+                                    <dxi-item dataField="admitsemester" [label]="{ text: 'ภาคที่เข้า' }" [colSpan]="2">
+                                        <dxi-validation-rule type="required"
+                                            message="กรุณากรอกภาคที่"></dxi-validation-rule>
+                                    </dxi-item>
+                                </dxi-item>
+                                
+                                <dxi-item dataField="groupyear" [label]="{ text: 'รุ่นปี' }" [colSpan]="2">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกปีที่เข้า"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="studentgroup" [label]="{ text: 'กลุ่มนักศึกษา' }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกกลุ่มนักศึกษา"></dxi-validation-rule>
+                                </dxi-item>
+                               
+                            </dxi-item>
+                            <!-- <dxi-item itemType="group" [colCount]="12" [colSpan]="6" cssClass="colorLabel"> -->
+                            <dxi-item itemType="group" [colCount]="12" cssClass="colorLabel">
+                                 <dxi-item dataField="webflag" [label]="{ text: 'สิทธิ์ใช้ระบบ' }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกสิทธิ์ใช้ระบบ"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="acadid" [label]="{ text: 'การประเมินผล' }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกการประเมินผล"></dxi-validation-rule>
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="12" cssClass="colorLabel">
+                                <dxi-item dataField="feegroupid" [label]="{ text: 'บัญชีค่าใช้จ่าย' }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกบัญชีค่าใช้จ่าย"></dxi-validation-rule>
+                                </dxi-item>
+                                <dxi-item dataField="schedulegroupid" [label]="{ text: 'ปฎิทิน' }" [colSpan]="6">
+                                    <dxi-validation-rule type="required"
+                                        message="กรุณากรอกปฎิทิน"></dxi-validation-rule>
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="32" cssClass="colorLabel">
+                                <dxi-item dataField="admitdate" [label]="{ text: 'วันที่รับเข้า' } "
+                                    [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="finishdate" [label]="{ text: 'วันที่จบ/พ้นสภาพ' }"
+                                    [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="studentyear" [editorOptions]="{ readOnly: true }" [label]="{ text: 'ชั้นปี' }" [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="gpa" [label]="{ text: 'GPA' }" [colSpan]="8"
+                                    [editorOptions]="{readOnly: true, format: { type: 'fixedPoint', precision: 2 }}"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="32" cssClass="colorLabel">
+                                <dxi-item dataField="creditattempt" [editorOptions]="{ readOnly: true }" [label]="{ text: 'หน่วยกิตลงแล้ว' }"
+                                    [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="creditsatisfy" [editorOptions]="{ readOnly: true }" [label]="{ text: 'หน่วยกิตได้รับ' }"
+                                    [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="creditpoint" [editorOptions]="{ readOnly: true }" [label]="{ text: 'หน่วยกิตคะแนน' }"
+                                    [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="gradepoint" [editorOptions]="{ readOnly: true }" [label]="{ text: 'จำนวนคะแนน' }"
+                                    [colSpan]="8"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="24" cssClass="colorLabel">
+                                <dxi-item dataField="officerid" [label]="{ text: 'อาจารย์ที่ปรึกษา1' }"
+                                [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="officerid2" [label]="{ text: 'อาจารย์ที่ปรึกษา2' }"
+                                [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="officerid3" [label]="{ text: 'อาจารย์ที่ปรึกษา3' }"
+                                [colSpan]="8"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="24" cssClass="colorLabel">
+                                <dxi-item dataField="officerid4" [label]="{ text: 'อาจารย์ที่ปรึกษา4' }"
+                                [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="officerid5" [label]="{ text: 'อาจารย์ที่ปรึกษา5' }"
+                                [colSpan]="8"></dxi-item>
+                                <dxi-item dataField="documentstatus" [label]="{ text: 'สถานะเอกสาร' }"
+                                [colSpan]="8"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="ข้อมูลส่วนบุคคล">
+                        <dxi-item itemType="group" caption="ข้อมูลส่วนบุคคล">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="birthdate" [label]="{ text: 'วัน เดือน ปีเกิด' }"></dxi-item>
+                                <dxi-item dataField="birthyear" [label]="{ text: 'ปี พ.ศ. เกิด ' }"
+                                    helpText="(กรณีไม่มีวันเกิด)">
+                                </dxi-item>
+                                <dxi-item dataField="birthprovinceid"
+                                    [label]="{ text: 'ภูมิลำเนาเดิม (จังหวัด)' }"></dxi-item>
+                                <dxi-item dataField="originid" [label]="{ text: 'เชื้อชาติ' }"></dxi-item>
+                                <dxi-item dataField="nationid" [label]="{ text: 'สัญชาติ' }"></dxi-item>
+                                <dxi-item dataField="religionid" [label]="{ text: 'ศาสนา' }"></dxi-item>
+                                <dxi-item dataField="bloodgroup" [label]="{ text: 'หมู่โลหิต' }"></dxi-item>
+                                <dxi-item dataField="foodallergies" [label]="{ text: 'ประวัติการแพ้อาหาร/ยา' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ข้อมูลหนังสือเดินทางและวีซ่า">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="citizenid"
+                                    [label]="{ text: 'เลขประจำตัวประชาชน/เลขที่หนังสือเดินทาง' }" [editorOptions]="citizeneditorOptions">
+                                </dxi-item>
+                                <!-- <dxi-item dataField="citizenid_foreigner"
+                                    [label]="{ text: 'รหัสประจำตัวต่างชาติ (GCODE)' }">
+                                </dxi-item> -->
+                                <dxi-item dataField="passportstartdate" [label]="{ text: 'วันที่ออก Passport' }"></dxi-item>
+                                <dxi-item dataField="passportenddate" [label]="{ text: 'วันที่หมดอายุ Passport' }"></dxi-item>
+                                <dxi-item dataField="visastartdate" [label]="{ text: 'วันที่ออก Visa' }"></dxi-item>
+                                <dxi-item dataField="visaexpire" [label]="{ text: 'วันที่หมดอายุ Visa' }"></dxi-item>
+                                <dxi-item dataField="visatype" [label]="{ text: 'ประเภท Visa' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ข้อมูลความพิการ">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="deformcode" [label]="{ text: 'รหัสความพิการ' }"></dxi-item>
+                                <dxi-item dataField="deformcard_id" [label]="{ text: 'รหัสบัตรประจำตัวคนพิการ' }"
+                                    [editorOptions]="{ maxLength: 32}"></dxi-item>
+                                <dxi-item dataField="deformcard_startdate" [label]="{ text: 'วันที่ออกบัตร' }"></dxi-item>
+                                <dxi-item dataField="deformcard_enddate" [label]="{ text: 'วันหมดอายุ' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ข้อมูลการศึกษาเดิม">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="schoolid" [label]="{ text: 'ชื่อสถานศึกษาเดิม' }">
+                                </dxi-item>
+                                <dxi-item dataField="entrydegree" [label]="{ text: ' วุฒิเดิม' }"></dxi-item>
+                                <dxi-item dataField="entrygraduatedate" [label]="{ text: 'วันที่สำเร็จ' }"></dxi-item>
+                                <dxi-item dataField="graduatecheck" [label]="{ text: 'สถานะตรวจสอบวุฒิ'}"></dxi-item>
+                                <dxi-item dataField="entrytype" [label]="{ text: 'ประเภทรับเข้า'}"
+                                    [colSpan]="2"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+
+                    </dxi-tab>
+                    <dxi-tab title=" ข้อมูลที่อยู่">
+                        <dxi-item itemType="group" caption="ที่อยู่ตามสำเนาทะเบียนบ้าน">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="homeid" [label]="{ text: 'รหัสประจำบ้าน' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 11}"></dxi-item>
+                                <!-- <dxi-item dataField="homeadd" [label]="{ text: 'หมู่' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 50}"></dxi-item> -->
+                                <dxi-item dataField="homeadd" [label]="{ text: 'บ้านเลขที่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <!-- <dxi-item dataField="homeaddress2" [label]="{ text: 'บ้านเลขที่ 2' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item> -->
+                                <dxi-item dataField="homemoo" [label]="{ text: 'หมู่' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="homesoi" [label]="{ text: 'ตรอก/ซอย' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 100}"></dxi-item>
+                                <dxi-item dataField="homestreet" [label]="{ text: 'ถนน' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 100}"></dxi-item>
+                                <dxi-item dataField="homeprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                <dxi-item dataField="homedistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                <dxi-item dataField="homesubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                <dxi-item dataField="homezipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                <dxi-item dataField="homephoneno" [label]="{ text: 'โทรศัพท์' }"
+                                    editorType="dxTextBox" [editorOptions]="phoneeditorOptions"></dxi-item>
+                                <dxi-item dataField="studentemail" [label]="{ text: 'อีเมล' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 50}"></dxi-item>
+
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ที่อยู่ปัจจุบัน">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="currentadd" [label]="{ text: 'บ้านเลขที่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <!-- <dxi-item dataField="currentaddress2" [label]="{ text: 'บ้านเลขที่ 2' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item> -->
+                                <dxi-item dataField="currentmoo" [label]="{ text: 'หมู่' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="currentsoi" [label]="{ text: 'ตรอก/ซอย' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 100}"></dxi-item>
+                                <dxi-item dataField="currentstreet" [label]="{ text: 'ถนน' }" editorType="dxTextBox"
+                                    [editorOptions]="{ maxLength: 100}"></dxi-item>
+                                    <dxi-item dataField="currentprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                    <dxi-item dataField="currentdistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                <dxi-item dataField="currentsubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                <dxi-item dataField="currentzipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                <dxi-item dataField="currentphoneno" [label]="{ text: 'โทรศัพท์' }"
+                                    editorType="dxTextBox"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="ข้อมูลบิดา">
+                        <dxi-item itemType="group" caption="ข้อมูลบิดา">
+                            <dxi-item itemType="group" [colCount]="6" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="fatherprefixid" [label]="{ text: 'คํานําหน้า' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="fathername" [label]="{ text: 'ชื่อ' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="fathersurname" [label]="{ text: 'นามสกุล' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="fathercitizenid" [label]="{ text: 'เลขประจำตัวประชาชน' }" [colSpan]="3"  [editorOptions]="citizeneditorOptions"></dxi-item>
+                                <dxi-item dataField="fatherbirthdate" [label]="{ text: 'วัน เดือน ปีเกิด' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="fatherstatus" [label]="{ text: 'สถานะ' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="fatherdegree" [label]="{ text: 'วุฒิการศึกษาสูงสุด' }" [colSpan]="3"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ที่อยู่บิดา">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="fathercountry" [label]="{ text: 'ประเทศ' }"></dxi-item>
+                                <!-- <dxi-item dataField="fatherforeignaddress" [label]="{ text: 'ที่อยู่ต่างประเทศ' }"
+                                    editorType="dxTextBox" [colSpan]="2" [editorOptions]="{ maxLength: 50}"></dxi-item> -->
+                                <dxi-item dataField="fatheradd" [label]="{ text: 'บ้านเลขที่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="fathersoi" [label]="{ text: 'ถนน' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="fathermoo" [label]="{ text: 'หมู่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 10}"></dxi-item>
+                                <dxi-item dataField="fatherprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                <dxi-item dataField="fatherdistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                <dxi-item dataField="fathersubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                <dxi-item dataField="fatherzipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                <dxi-item dataField="fatherphoneno" [label]="{ text: 'โทรศัพท์' }"
+                                    editorType="dxTextBox"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="fatherforeignaddress" [label]="{ text: 'ที่อยู่ต่างประเทศ'}"
+                                    [colSpan]="2"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" caption="ข้อมูลที่ทำงานบิดา">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="fatheroccup" [label]="{ text: 'อาชีพ' }"></dxi-item>
+                                <dxi-item dataField="fatherposition" [label]="{ text: 'ตําแหน่ง' }"></dxi-item>
+                                <dxi-item dataField="fatherrevenue" [label]="{ text: 'รายได้' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="ข้อมูลมารดา">
+                        <dxi-item itemType="group" caption="ข้อมูลมารดา">
+                            <dxi-item itemType="group" [colCount]="6" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="motherprefixid" [label]="{ text: 'คํานําหน้า' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="mothername" [label]="{ text: 'ชื่อ' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="mothersurname" [label]="{ text: 'นามสกุล' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="mothercitizenid" [label]="{ text: 'เลขประจำตัวประชาชน' }" [colSpan]="3"  [editorOptions]="citizeneditorOptions"></dxi-item>
+                                <dxi-item dataField="motherbirthdate" [label]="{ text: 'วัน เดือน ปีเกิด' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="motherstatus" [label]="{ text: 'สถานะ' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="motherdegree" [label]="{ text: 'วุฒิการศึกษาสูงสุด' }" [colSpan]="3"></dxi-item>
+                            </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" caption="ที่อยู่มารดา">
+                                <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="mothercountry" [label]="{ text: 'ประเทศ' }"></dxi-item>
+                                    <dxi-item dataField="motheradd" [label]="{ text: 'บ้านเลขที่' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                    <dxi-item dataField="mothersoi" [label]="{ text: 'ถนน' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                    <dxi-item dataField="mothermoo" [label]="{ text: 'หมู่' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 10}"></dxi-item>
+                                    <dxi-item dataField="motherprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                    <dxi-item dataField="motherdistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                    <dxi-item dataField="mothersubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                    <dxi-item dataField="motherzipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                    <dxi-item dataField="motherphoneno" [label]="{ text: 'โทรศัพท์' }"
+                                        editorType="dxTextBox"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                                </dxi-item>
+                                <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                    <dxi-item dataField="motherforeignaddress" [label]="{ text: 'ที่อยู่ต่างประเทศ'}"
+                                        [colSpan]="2"></dxi-item>
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" caption="ข้อมูลที่ทำงานมารดา">
+                                <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="motheroccup" [label]="{ text: 'อาชีพ' }"></dxi-item>
+                                <dxi-item dataField="motherposition" [label]="{ text: 'ตําแหน่ง' }"></dxi-item>
+                                <dxi-item dataField="motherrevenue" [label]="{ text: 'รายได้' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="ข้อมูลผู้ปกครอง">
+                        <dxi-item itemType="group" caption="ข้อมูลผู้ปกครอง">
+                            <dxi-item itemType="group" [colCount]="6" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="parentprefixid" [label]="{ text: 'คํานําหน้า' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="parentname" [label]="{ text: 'ชื่อ' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="parentsurname" [label]="{ text: 'นามสกุล' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="parentcitizenid" [label]="{ text: 'เลขประจำตัวประชาชน' }" [colSpan]="3" [editorOptions]="citizeneditorOptions"></dxi-item>
+                                <dxi-item dataField="parentbirthdate" [label]="{ text: 'วัน เดือน ปีเกิด' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="parentrelation" [label]="{ text: 'ผู้ปกครองมีความสัมพันธ์เป็น' }" [colSpan]="3"></dxi-item>
+                                <dxi-item dataField="parentdegree" [label]="{ text: 'วุฒิการศึกษาสูงสุด' }" [colSpan]="3"></dxi-item>
+                            </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" caption="ที่อยู่ผู้ปกครอง">
+                                <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                     <dxi-item dataField="parentcountry" [label]="{ text: 'ประเทศ' }"></dxi-item>
+                                    <dxi-item dataField="parentadd" [label]="{ text: 'บ้านเลขที่' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                    <dxi-item dataField="parentsoi" [label]="{ text: 'ถนน' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                    <dxi-item dataField="parentmoo" [label]="{ text: 'หมู่' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 10}"></dxi-item>
+                                    <dxi-item dataField="parentprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                    <dxi-item dataField="parentdistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                    <dxi-item dataField="parentsubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                    <dxi-item dataField="parentzipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                        editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                    <dxi-item dataField="parentphoneno" [label]="{ text: 'โทรศัพท์' }"
+                                        editorType="dxTextBox"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                         
+                                </dxi-item>
+                                 <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                    <dxi-item dataField="parentforeignaddress" [label]="{ text: 'ที่อยู่ต่างประเทศ'}"
+                                        [colSpan]="2"></dxi-item>
+                                </dxi-item>
+                            </dxi-item>
+                            <dxi-item itemType="group" caption="ข้อมูลที่ทำงานผู้ปกครอง">
+                                <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                    <dxi-item dataField="parentofficename" [label]="{ text: 'ชื่อบริษัท' }"></dxi-item>
+                                    <dxi-item dataField="parentofficephone" [label]="{ text: 'โทรศัพท์' }"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                                    <dxi-item dataField="parentoccup" [label]="{ text: 'อาชีพ' }"></dxi-item>
+                                    <!-- <dxi-item dataField="parentposition" [label]="{ text: 'ตําแหน่ง' }"></dxi-item> -->
+                                    <dxi-item dataField="parentrevenue" [label]="{ text: 'รายได้' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>
+                    </dxi-tab>
+                    <dxi-tab title="สถานภาพการทำงานในปัจจุบัน">
+                        <dxi-item itemType="group" caption="สถานภาพการทำงานในปัจจุบัน">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="officename" [label]="{ text: 'ชื่อบริษัท' }" [colSpan]="2"></dxi-item>
+                                <dxi-item dataField="workingstatus" [label]="{ text: 'สถานะการทำงาน' }"></dxi-item>
+                                <dxi-item dataField="workingsalary" [label]="{ text: 'รายได้' }"></dxi-item>
+                            </dxi-item>
+                        </dxi-item>    
+                        <dxi-item itemType="group" caption="ที่อยู่ที่ทำงาน">
+                            <dxi-item itemType="group" [colCount]="2" [colSpan]="2" cssClass="colorLabel">
+                                <dxi-item dataField="officeadd" [label]="{ text: 'เลขที่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="officesoi" [label]="{ text: 'ถนน' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 50}"></dxi-item>
+                                <dxi-item dataField="officemoo" [label]="{ text: 'หมู่' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 10}"></dxi-item>
+                                <dxi-item dataField="officeprovinceid" [label]="{ text: 'จังหวัด' }"></dxi-item>
+                                <dxi-item dataField="officedistrict" [label]="{ text: 'เขต/อำเภอ' }"></dxi-item>
+                                <dxi-item dataField="officesubdistrict" [label]="{ text: 'แขวง/ตำบล' }"></dxi-item>
+                                <dxi-item dataField="officezipcode" [label]="{ text: 'รหัสไปรษณีย์' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 8}"></dxi-item>
+                                <dxi-item dataField="officephoneno" [label]="{ text: 'โทรศัพท์' }"
+                                    editorType="dxTextBox"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                                <dxi-item dataField="officefaxno" [label]="{ text: 'โทรสาร' }"
+                                    editorType="dxTextBox" [editorOptions]="{ maxLength: 10}"></dxi-item>
+                            </dxi-item>       
+                        </dxi-item>
+                    </dxi-tab>
+                </dxi-item>
+            </dxo-form>
+        </dxo-editing>
+        <dxi-column dataField="studentid" caption="รหัส" sortOrder="asc" [visible]="false"></dxi-column>
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" width="120"></dxi-column>
+        <dxi-column dataField="prefixid" caption="คำนำหน้า" width="100">
+            <dxo-lookup [dataSource]="prefix" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentname" caption="ชื่อ"></dxi-column>
+        <dxi-column dataField="studentsurname" caption="นามสกุล"></dxi-column>
+        <dxi-column dataField="studentnameeng" [visible]="false" caption="ชื่อ"></dxi-column>
+        <dxi-column dataField="studentsurnameeng" [visible]="false" caption="นามสกุล"></dxi-column>
+        <dxi-column dataField="admitacadyear" [visible]="false" caption="ปีที่เข้า"></dxi-column>
+        <dxi-column dataField="admitsemester" [visible]="false" caption="ภาคที่"></dxi-column>
+        <dxi-column dataField="studentstatus" caption="สถานภาพ"  width="150">
+            <dxo-lookup [dataSource]="getstalist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentyear" caption="ชั้นปี" width="50"></dxi-column>
+        <dxi-column dataField="gpa" caption="GPA" format="0.00" width="60"></dxi-column>
+        <dxi-column dataField="graduateprogramid" caption="หลักสูตรตรวจจบ" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredGra" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="feemultiply" caption="feemultiply" [visible]="false"></dxi-column>
+        <dxi-column dataField="studentemail" caption="studentemail" [visible]="false"></dxi-column>
+        <dxi-column dataField="mail" caption="mail" [visible]="false"></dxi-column>
+        <dxi-column dataField="cardid" caption="cardid" [visible]="false"></dxi-column>
+        <dxi-column dataField="schedulegroupid" caption="schedulegroupid" [visible]="false">
+            <dxo-lookup [dataSource]="schgrolist" valueExpr="schedulegroupid" displayExpr="schedulegroupshow">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="webflag" caption="webflag" [visible]="false">
+            <dxo-lookup [dataSource]="webflag" valueExpr="key" displayExpr="value"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="acadid" caption="acadid" [visible]="false">
+            <dxo-lookup [dataSource]="acadlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentpassword" caption="studentpassword" dataType="password" [visible]="false">
+        </dxi-column>
+        <!-- <dxi-column dataField="parentpassword" caption="parentpassword" dataType="password" [visible]="false">
+        </dxi-column> -->
+
+        <dxi-column dataField="creditattempt" caption="creditattempt" [visible]="false"></dxi-column>
+        <dxi-column dataField="creditsatisfy" caption="creditsatisfy" [visible]="false"></dxi-column>
+        <dxi-column dataField="creditpoint" caption="creditpoint" [visible]="false"></dxi-column>
+        <dxi-column dataField="gradepoint" caption="gradepoint" [visible]="false"></dxi-column>
+        <dxi-column dataField="honor" caption="honor" [visible]="false"></dxi-column>
+        <!-- <dxi-column dataField="parentrelation" caption="parentrelation" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredrelationlist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column> -->
+        <!-- office data -->
+        <dxi-column dataField="officename" caption="officename" [visible]="false"></dxi-column>
+        <dxi-column dataField="workingstatus" caption="workingstatus" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredWorkingStatus" valueExpr="comboid"
+                displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="workingposition" caption="workingposition" [visible]="false"></dxi-column>
+        <dxi-column dataField="workingsalary" caption="workingsalary" [visible]="false" dataType="number"
+            editorType="dxNumberBox" [editorOptions]="{format: '#,###.00', showSpinButtons: true}"></dxi-column>
+        <dxi-column dataField="officeadd" caption="officeadd" [visible]="false"></dxi-column>
+        <dxi-column dataField="officesoi" caption="officesoi" [visible]="false"></dxi-column>
+        <dxi-column dataField="officemoo" caption="officemoo" [visible]="false"></dxi-column>
+        <dxi-column dataField="officestreet" caption="officestreet" [visible]="false"></dxi-column>
+        <dxi-column dataField="officesubdistrict" caption="officesubdistrict" [visible]="false" [setCellValue]="setOsubdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredOSubDistrict" valueExpr="sub_districtid" displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officedistrict" caption="officedistrict" [visible]="false" [setCellValue]="setOdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredODistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officeprovinceid" caption="officeprovinceid" [visible]="false" [setCellValue]="setOprovinceValue">
+            <dxo-lookup [dataSource]="oplist" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officezipcode" caption="officezipcode" [visible]="false"></dxi-column>
+        <dxi-column dataField="officephoneno" caption="officetel" [visible]="false"></dxi-column>
+        <dxi-column dataField="officefaxno" caption="officefax" [visible]="false"></dxi-column>
+        <dxi-column dataField="admitdate" caption="admitdate" dataType="date" [visible]="false"></dxi-column>
+        <dxi-column dataField="lastupdatedatetime" caption="lastupdatedatetime" dataType="datetime" [visible]="false">
+        </dxi-column>
+        <dxi-column dataField="finishdate" caption="finishdate" dataType="date" [visible]="false"></dxi-column>
+        <dxi-column dataField="webflagdescrition" caption="webflagdescrition" [visible]="false"></dxi-column>
+
+        <dxi-column dataField="financestatus" caption="financestatus" [visible]="false">
+            <!-- <dxo-lookup [dataSource]="getfinencelist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup> -->
+            <dxo-lookup [dataSource]="lstfinancestatus" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน" width="200">
+            <dxo-lookup [dataSource]="faclist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="getFilteredDep" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="feegroupid" caption="feegroupid" [visible]="false">
+            <dxo-lookup [dataSource]="feegrolist" valueExpr="feegroupid" displayExpr="feegroupshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid" caption="officerid" [visible]="false">
+            <dxo-lookup [dataSource]="offlist" valueExpr="officerid" displayExpr="officershow" [allowClearing]="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid2" caption="officerid" [visible]="false">
+            <dxo-lookup [dataSource]="offlist" valueExpr="officerid" displayExpr="officershow" [allowClearing]="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid3" caption="officerid" [visible]="false">
+            <dxo-lookup [dataSource]="offlist" valueExpr="officerid" displayExpr="officershow" [allowClearing]="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid4" caption="officerid" [visible]="false">
+            <dxo-lookup [dataSource]="offlist" valueExpr="officerid" displayExpr="officershow" [allowClearing]="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid5" caption="officerid" [visible]="false">
+            <dxo-lookup [dataSource]="offlist" valueExpr="officerid" displayExpr="officershow" [allowClearing]="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="groupyear" caption="รุ่น" [setCellValue]="setgroupyear" [visible]="false"></dxi-column>
+        <dxi-column dataField="studentgroup" caption="กลุ่มนักศึกษา" [visible]="false">
+            <dxo-lookup [dataSource]="getFilteredGroup2" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="studentgroupshow" caption="กลุ่มนักศึกษา" [visible]="false">
+            <dxo-lookup [dataSource]="grouplist2" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="programid" caption="สาขาวิชา">
+            <dxo-lookup [dataSource]="programgralist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        
+        <dxi-column dataField="minorprogramid" [visible]="false" caption="สาขาโท">
+            <dxo-lookup [dataSource]="milist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="levelid" caption="ระดับ" [visible]="false">
+            <dxo-lookup [dataSource]="levlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="campusid" caption="ศูนย์/วิทยาเขต" width="150">
+            <dxo-lookup [dataSource]="camlist" valueExpr="comboid" displayExpr="comboshow" > </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column [visible]="false" dataField="foodallergies" caption="foodallergies">
+            <dxo-lookup [dataSource]="foodallergieslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="bloodgroup" caption="BLOODGROUP">
+            <dxo-lookup [dataSource]="getbloodgroup" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="originid" caption="ORIGINID">
+            <dxo-lookup [dataSource]="getoriginlist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="nationid" caption="NATIONID">
+            <dxo-lookup [dataSource]="nationlist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="religionid" caption="RELIGIONID">
+            <dxo-lookup [dataSource]="religionlist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+
+        <dxi-column [visible]="false" dataField="studentsex" caption="STUDENTSEX"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="nickname" caption="NICKNAME"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="bankaccount" caption="BANKACCOUNT"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="admitage" caption="ADMITAGE"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="birthdate" dataType="date" caption="BIRTHDATE"
+            editCellTemplate="birthdate"></dxi-column>
+        <dxi-column [visible]="false" dataField="birthyear" dataType="number" caption="BIRTHYEAR"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="birthsubdistrict" caption="BIRTHSUBDISTRICT"></dxi-column>
+        <dxi-column [visible]="false" dataField="birthdistrict" caption="BIRTHDISTRICT"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="birthprovinceid" caption="BIRTHPROVINCEID">
+            <dxo-lookup [dataSource]="birthprovincelist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="citizenid" caption="CITIZENID">
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขบัตรประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="async" message="เลขบัตรประชาชนไม่ถูกต้อง" [validationCallback]="assertThaiId"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="citizenid_foreigner" caption="เลขที่หนังสือเดินทาง"></dxi-column>
+        <dxi-column [visible]="false" dataField="passportid" caption="PASSPORTID"></dxi-column>
+        <dxi-column [visible]="false" dataField="passportexpire" dataType="date" caption="PASSPORTEXPIRE"
+            editCellTemplate="passportexpire">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="passportstartdate" dataType="date" caption="passportstartdate"
+            editCellTemplate="passportstartdate">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="passportenddate" dataType="date" caption="passportenddate"
+            editCellTemplate="passportenddate">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="visastartdate" caption="visastartdate" editCellTemplate="visastartdate"></dxi-column>
+        <dxi-column [visible]="false" dataField="visaexpire" caption="visaexpire" editCellTemplate="visaexpire"></dxi-column>
+        <dxi-column [visible]="false" dataField="visatype" caption="visatype">
+            <dxo-lookup [dataSource]="lstcombovisatype" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="deformcode" caption="deformcode">
+            <dxo-lookup [dataSource]="lstcombodeform" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="deformcard_id" caption="deformcard_id"></dxi-column>
+        <dxi-column [visible]="false" dataField="deformcard_startdate" dataType="date" caption="deformcard_startdate"
+            editCellTemplate="deformdatestart">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="deformcard_enddate" dataType="date" caption="deformcard_enddate"
+            editCellTemplate="deformdateend">
+        </dxi-column>
+
+        <dxi-column [visible]="false" dataField="entrytype" caption="ENTRYTYPE">
+            <dxo-lookup [dataSource]="getFilteredEntrytype" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <!-- editCellTemplate="schoolidedit" -->
+        <dxi-column [visible]="false" dataField="schoolid" caption="SCHOOLID">
+            <dxo-lookup [dataSource]="schoollist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column [visible]="false" dataField="entrydegree" caption="ENTRYDEGREE">
+            <dxo-lookup [dataSource]="entrydegree" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="entrydegreeeng" caption="ENTRYDEGREEENG"></dxi-column>
+        <dxi-column [visible]="false" dataField="entryhonor" caption="ENTRYHONOR"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="entryhonor2" caption="entryhonor2"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="entryhonor3" caption="entryhonor3"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrygpa" dataType="number" caption="entrygpa">
+            <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+        </dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="gpa" dataType="number" caption="GPA">
+            <dxo-format type="fixedPoint" [precision]="2"> </dxo-format>
+        </dxi-column> -->
+        <dxi-column [visible]="false" dataField="entrygraduatedate" dataType="date" caption="ENTRYGRADUATEDATE"
+            editCellTemplate="entrygraduatedate">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="schoolid2" caption="SCHOOLID2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrygraduateyear2" caption="ENTRYGRADUATEYEAR2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrylevelcode2" caption="ENTRYLEVELCODE2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrydegree2" caption="ENTRYDEGREE2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrydegreeeng2" caption="ENTRYDEGREEENG2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entryprogram2" caption="ENTRYPROGRAM2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entryhonor2" caption="ENTRYHONOR2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrygpa2" caption="ENTRYGPA2"></dxi-column>
+        <dxi-column [visible]="false" dataField="entrygpa3" caption="ENTRYGPA3"></dxi-column>
+        <dxi-column [visible]="false" dataField="homeadd" caption="homeadd"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="homeaddress1" caption="homeaddress1"></dxi-column>
+        <dxi-column [visible]="false" dataField="homeaddress2" caption="homeaddress2"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="homeid" caption="homeid"></dxi-column>
+        <dxi-column [visible]="false" dataField="homemoo" caption="HOMEMOO"></dxi-column>
+        <dxi-column [visible]="false" dataField="homesoi" caption="HOMESOI"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="homename" caption="homename"></dxi-column> -->
+
+        <dxi-column [visible]="false" dataField="homestreet" caption="HOMESTREET"></dxi-column>
+        <dxi-column [visible]="false" dataField="homesubdistrict" caption="HOMESUBDISTRICT"
+            [setCellValue]="setHsubdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredHSubDistrict" valueExpr="sub_districtid"
+                displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="homedistrict" caption="HOMEDISTRICT"
+            [setCellValue]="setHdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredHDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="homeprovinceid" caption="HOMEPROVINCEID"
+            [setCellValue]="setHprovinceValue">
+            <dxo-lookup [dataSource]="hplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="homezipcode" caption="HOMEZIPCODE">
+            <!-- <dxo-lookup [dataSource]="getFilteredHZipcode" valueExpr="zipcode" displayExpr="zipcode"> </dxo-lookup> -->
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="homephoneno" caption="HOMEPHONENO">
+            <!-- <dxi-validation-rule type="async" message="หมายเลขโทรศัพท์ต้องมี 10 หลัก" [validationCallback]="assertPhone"></dxi-validation-rule> -->
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="currentadd" caption="currentadd"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="currentaddress2" caption="currentaddress2"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="currentmoo" caption="currentmoo"></dxi-column>
+        <dxi-column [visible]="false" dataField="currentsoi" caption="currentsoi"></dxi-column>
+        <dxi-column [visible]="false" dataField="currentstreet" caption="currentstreet"></dxi-column>
+        <!-- [setCellValue]="setCprovinceValue" -->
+        <dxi-column [visible]="false" dataField="currentprovinceid" caption="CURRENTPROVINCEID"
+            [setCellValue]="setCprovinceValue">
+            <dxo-lookup [dataSource]="cplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="currentdistrict" caption="CURRENTDISTRICT"
+            [setCellValue]="setCdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredCDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="currentsubdistrict" caption="currentsubdistrict"
+            [setCellValue]="setCsubdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredCSubDistrict" valueExpr="sub_districtid" displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="currentzipcode" caption="CURRENTZIPCODE">
+            <!-- <dxo-lookup [dataSource]="getFilteredCZipcode" valueExpr="zipcode" displayExpr="zipcode"> </dxo-lookup> -->
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="currentphoneno" caption="CURRENTPHONENO"></dxi-column>
+
+        <!-- <dxi-column [visible]="false" dataField="currentmobileno" caption="currentmobileno"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="contactadd" caption="contactadd"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="contactaddress2" caption="contactaddress2"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="contactdistrict" caption="CONTACTDISTRICT"
+            [setCellValue]="setCCdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredCCDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="contactzipcode" caption="CONTACTZIPCODE">
+            <!-- <dxo-lookup [dataSource]="getFilteredCCZipcode" valueExpr="zipcode" displayExpr="zipcode"> </dxo-lookup> -->
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="contactprovinceid" caption="CONTACTPROVINCEID"
+            [setCellValue]="setCCprovinceValue">
+            <dxo-lookup [dataSource]="ccplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="contactphoneno" caption="CONTACTPHONENO"></dxi-column>
+
+        <dxi-column [visible]="false" dataField="fatherprefixid" caption="fatherprefixid">
+            <dxo-lookup [dataSource]="prefix" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fathername" caption="fathername"></dxi-column>
+        <dxi-column [visible]="false" dataField="fathersurname" caption="fathersurname"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="fathernationid" caption="fathernationid">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherorigin" caption="fatherorigin">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherreligionid" caption="fatherreligionid">
+        </dxi-column> -->
+        <dxi-column [visible]="false" dataField="fathercitizenid" caption="fathercitizenid">
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขบัตรประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="async" message="เลขบัตรประชาชนไม่ถูกต้อง" [validationCallback]="assertThaiId"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherbirthdate" caption="fatherbirthdate" editCellTemplate="fatherbirthdate"></dxi-column>
+        <dxi-column [visible]="false" dataField="fatherstatus" caption="fatherstatus">
+            <dxo-lookup [dataSource]="getfstatus" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherdegree" caption="fatherdegree">
+            <dxo-lookup [dataSource]="getfmpdegree" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatheradd" caption="fatheradd"></dxi-column>
+        <dxi-column [visible]="false" dataField="fathermoo" caption="fathermoo"></dxi-column>
+        <dxi-column [visible]="false" dataField="fathersoi" caption="fathersoi"></dxi-column>
+        <dxi-column [visible]="false" dataField="fatherstreet" caption="fatherstreet"></dxi-column>
+        <dxi-column [visible]="false" dataField="fathersubdistrict" [setCellValue]="setFsubdistrictValue" caption="fathersubdistrict">
+            <dxo-lookup [dataSource]="getFilteredFSubDistrict" valueExpr="sub_districtid" displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherdistrict" [setCellValue]="setFdistrictValue" caption="fatherdistrict">
+            <dxo-lookup [dataSource]="getFilteredFDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherprovinceid" [setCellValue]="setFprovinceValue" caption="fatherprovinceid">
+            <dxo-lookup [dataSource]="fplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fathercountry" caption="fathercountry">
+            <dxo-lookup [dataSource]="fclist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherforeignaddress" caption="fatherforeignaddress">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherzipcode" caption="fatherzipcode"></dxi-column>
+        <dxi-column [visible]="false" dataField="fatherphoneno" caption="fatherphoneno"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="fatherdeformcode" caption="fatherdeformcode">
+        </dxi-column> -->
+        <dxi-column [visible]="false" dataField="fatheroccup" caption="fatheroccup">
+            <dxo-lookup [dataSource]="foccup" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="fatherposition" caption="fatherposition"></dxi-column>
+        <dxi-column [visible]="false" dataField="fatherrevenue" caption="fatherrevenue">
+            <dxo-lookup [dataSource]="frevenue" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="studentfathername" caption="studentfathername"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="motherprefixid" caption="motherprefixid">
+            <dxo-lookup [dataSource]="prefix" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="mothername" caption="mothername"></dxi-column>
+        <dxi-column [visible]="false" dataField="mothersurname" caption="mothersurname"></dxi-column>
+        <dxi-column [visible]="false" dataField="mothercitizenid" caption="mothercitizenid">
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขบัตรประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="async" message="เลขบัตรประชาชนไม่ถูกต้อง" [validationCallback]="assertThaiId"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherbirthdate" caption="motherbirthdate" editCellTemplate="motherbirthdate"></dxi-column>
+        <dxi-column [visible]="false" dataField="motherstatus" caption="motherstatus">
+            <dxo-lookup [dataSource]="getmstatus" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherdegree" caption="motherdegree">
+            <dxo-lookup [dataSource]="getfmpdegree" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motheradd" caption="motheradd"></dxi-column>
+        <dxi-column [visible]="false" dataField="mothermoo" caption="mothermoo"></dxi-column>
+        <dxi-column [visible]="false" dataField="mothersoi" caption="mothersoi"></dxi-column>
+        <dxi-column [visible]="false" dataField="motherstreet" caption="motherstreet"></dxi-column>
+        <dxi-column [visible]="false" dataField="mothersubdistrict" [setCellValue]="setMsubdistrictValue" caption="mothersubdistrict">
+            <dxo-lookup [dataSource]="getFilteredMSubDistrict" valueExpr="sub_districtid" displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherdistrict" [setCellValue]="setMdistrictValue" caption="motherdistrict">
+            <dxo-lookup [dataSource]="getFilteredMDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherprovinceid" [setCellValue]="setMprovinceValue" caption="motherprovinceid">
+            <dxo-lookup [dataSource]="mplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="mothercountry" caption="mothercountry">
+            <dxo-lookup [dataSource]="mclist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherforeignaddress" caption="motherforeignaddress">
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherzipcode" caption="motherzipcode"></dxi-column>
+        <dxi-column [visible]="false" dataField="motherphoneno" caption="motherphoneno"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="motherdeformcode" caption="motherdeformcode">
+        </dxi-column> -->
+        <dxi-column [visible]="false" dataField="motheroccup" caption="motheroccup">
+            <dxo-lookup [dataSource]="moccup" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="motherposition" caption="motherposition"></dxi-column>
+        <dxi-column [visible]="false" dataField="motherrevenue" caption="motherrevenue">
+            <dxo-lookup [dataSource]="mrevenue" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentprefixid" caption="parentprefixid">
+            <dxo-lookup [dataSource]="prefix" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentname" caption="parentname"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentsurname" caption="parentsurname"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentcitizenid" caption="parentcitizenid">
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขบัตรประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="async" message="เลขบัตรประชาชนไม่ถูกต้อง" [validationCallback]="assertThaiId"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentbirthdate" caption="parentbirthdate" editCellTemplate="parentbirthdate"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentstatus" caption="parentstatus">
+            <dxo-lookup [dataSource]="getpstatus" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentdegree" caption="parentdegree">
+            <dxo-lookup [dataSource]="getfmpdegree" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentadd" caption="parentadd"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentmoo" caption="parentmoo"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentsoi" caption="parentsoi"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentstreet" caption="parentstreet"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentsubdistrict" [setCellValue]="setPsubdistrictValue" caption="parentsubdistrict">
+            <dxo-lookup [dataSource]="getFilteredPSubDistrict" valueExpr="sub_districtid" displayExpr="sub_districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentdistrict" [setCellValue]="setPdistrictValue" caption="parentdistrict">
+            <dxo-lookup [dataSource]="getFilteredPDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentprovinceid" [setCellValue]="setPprovinceValue" caption="parentprovinceid">
+            <dxo-lookup [dataSource]="pplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentzipcode" caption="parentzipcode"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentphoneno" caption="parentphoneno"></dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="parentdeformcode" caption="parentdeformcode">
+        </dxi-column> -->
+        <dxi-column [visible]="false" dataField="parentoccup" caption="parentoccup">
+            <dxo-lookup [dataSource]="poccup" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="parentposition" caption="parentposition"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="parentrevenue" caption="parentrevenue">
+            <dxo-lookup [dataSource]="prevenue" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentrelation" caption="parentrelation">
+            <dxo-lookup [dataSource]="getFilteredrelationlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="parentoccup" caption="parentoccup"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="parentofficename" caption="parentofficename"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentofficephone" caption="parentofficephone"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentcountry" caption="parentcountry">
+            <dxo-lookup [dataSource]="fclist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentforeignaddress" caption="parentforeignaddress">
+        </dxi-column>
+
+        <!-- <dxi-column [visible]="false" dataField="parentname" caption="parentname"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentcitizenid" caption="parentcitizenid"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentearn" caption="parentearn" dataType="number"
+            editorType="dxNumberBox" [editorOptions]="{format: '#,###.00', showSpinButtons: true}"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentadd" caption="parentadd"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentdistrict" caption="PARENTDISTRICT"
+            [setCellValue]="setPdistrictValue">
+            <dxo-lookup [dataSource]="getFilteredPDistrict" valueExpr="districtid" displayExpr="districtname">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentprovinceid" caption="PARENTPROVINCEID"
+            [setCellValue]="setPprovinceValue">
+            <dxo-lookup [dataSource]="pplist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="parentzipcode" caption="PARENTZIPCODE"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentpassword" caption="parentpassword"></dxi-column>
+        <dxi-column [visible]="false" dataField="parentphoneno" caption="PARENTPHONENO"></dxi-column> -->
+        <dxi-column [visible]="false" dataField="graduatecheck" caption="GRADUATECHECK">
+            <dxo-lookup [dataSource]="getgraduatecheck" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="documentstatus" caption="สถานะเอกสาร">
+            <dxo-lookup [dataSource]="documentstatuslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <div *dxTemplate="let cellInfo of 'birthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'fatherbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'motherbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'parentbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'passportexpire'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'passportstartdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'passportenddate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'visastartdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'visaexpire'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'deformdatestart'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'deformdateend'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'entrygraduatedate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'entrygraduatedate2'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'fatherbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'motherbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'parentbirthdate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'cardexpirydate'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'graduatecheckdatefrom'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'graduatecheckdateto'">
+            <dx-date-box-custom [date]="cellInfo.value"
+                (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+
+        <div *dxTemplate="let cellInfo of 'schoolidedit'">
+            <dx-lookup [dataSource]="schoollist" [items]="cellInfo.data.comboid" [value]="cellInfo.value"
+                displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="3" [searchTimeout]="500"
+                [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสวิชาอย่างน้อย 3 ตัวอักษร"
+                (onValueChanged)="updateSchool($event, cellInfo)" itemTemplate="lookupItem">
+                <div *dxTemplate="let item of 'lookupItem'">
+                    {{ item.comboshow }}
+                </div>
+            </dx-lookup>
+            <!-- <dx-lookup [dataSource]="schocombo" [items]="cellInfo.data.schoolid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="1" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุโรงเรียน/สถาบัน" (onValueChanged)="updateSchool($event, cellInfo)"></dx-lookup> -->
+        </div>
+    </dx-data-grid>
+</div>
+
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#stumas' }" [(visible)]="loadingVisible"
+    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

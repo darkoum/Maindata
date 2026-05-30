@@ -1,0 +1,32 @@
+::ng-deep .captionbold {
+    font-size: 14px;
+    font-weight: 1000;
+    color: rgb(128,0,0);
+}
+::ng-deep #prgstudentinfo2 tr.notes-row td {
+    padding-top: 0px;  
+    /* height:21px; */
+    color: #1b4461;
+}
+::ng-deep #prgstudentinfo tr.notes-row2 td {
+    padding-top: 0px;  
+    padding-bottom : 0px;  
+    /* height:21px; */
+    color: #1b4461;
+}
+::ng-deep #prgstudentinfo tr.notes-row td {
+    padding-top: 0px;  
+    padding-bottom : 0px;  
+}
+::ng-deep #prgstudentinfo tr.main-row td {
+  padding-bottom : 0px;  
+}
+.biodetail tr td{
+  border: transparent;
+  padding: 5px;
+}
+
+label {
+  padding: 1px;
+}
+

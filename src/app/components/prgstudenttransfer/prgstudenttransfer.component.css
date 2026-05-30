@@ -1,0 +1,33 @@
+::ng-deep .condition {
+    vertical-align: middle;
+    text-align: center;
+}
+
+::ng-deep #studenttranfernull {
+    height: 200px;
+    background-color: #CCC;
+    margin-bottom: 5px;
+}
+
+::ng-deep #studenttranfer {
+    background-color: #CCC;
+    margin-bottom: 5px;
+}
+
+.biodetail tr td{
+  border: transparent;
+  padding: 5px;
+}
+
+label {
+  padding: 1px;
+}
+
+::ng-deep #studenttranfer tr.notes-row td {
+    padding-top: 0px;  
+    padding-bottom : 0px;  
+    
+}
+::ng-deep #studenttranfer tr.main-row td {
+  padding-bottom : 0px;  
+}

@@ -1,0 +1,241 @@
+<div class="row">
+    <div style="margin:0 auto;min-width:500px;width:40%;">
+        <div class="widget-container">
+            <div class="card">
+                <!-- <div class="card-header" translate>{{repname}}</div> -->
+                <div class="card-header">ดึงรูปเข้าสู่ระบบ</div>
+                <div class="card-body">
+
+                <dx-tab-panel  #tabPanel [selectedIndex]="0" [animationEnabled]="false" [showNavButtons]="true" (onOptionChanged)="selectTab($event)">
+                    <dxi-item title="นักศึกษา" class="p-2 m-2">
+                        <div class="row text-left mb-1 mt-2">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <dx-radio-group layout="horizontal" #eventRadioGroup id="radio-group-with-selection"
+                                    [dataSource]="itemlists" displayExpr="name" valueExpr="id" [(ngModel)]="vselect">
+                                </dx-radio-group>
+                            </div>
+                        </div>
+                        <div *ngIf="vselect != 1">
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">ศูนย์/วิทยาเขต</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="lstCampus" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="campusid"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">ระดับ</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" (onSelectionChanged)="getProgram()"
+                                        [dataSource]="lstLev" displayExpr="comboshow" searchMode="StartsWith"
+                                        valueExpr="comboid" [(ngModel)]="levelid" [searchEnabled]="true"
+                                        [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">วิทยาลัย/คณะ/สถาบัน</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" (onSelectionChanged)="getProgram()"
+                                        [dataSource]="lstFac" displayExpr="comboshow" searchMode="StartsWith"
+                                        valueExpr="comboid" [(ngModel)]="facultyid" [searchEnabled]="true"
+                                        [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">สาขาวิชา</label>
+                                </div>
+                                <div class="col-md-9">
+
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="lstProgram" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="programid"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">สถานะจาก</label>
+                                </div>
+                                <div class="col-md-9">
+
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="status" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="statusfrom"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">สถานะถึง</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="status" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="statusto"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row text-left mb-1">
+                            <div class="col-3">
+                                <label for="exampleInputEmail1">ปีที่เข้า</label>
+                            </div>
+                            <div class="col-4">
+                                <dx-number-box mode="number" [(ngModel)]="acadyear" [showSpinButtons]="true"> </dx-number-box>
+                            </div>
+                            <!-- <div class="col-2">
+                                ภาคที่
+                            </div>
+
+                            <div class="col-3">
+                                <dx-text-box [(ngModel)]="semester" ></dx-text-box>
+                            </div> -->
+                        </div> 
+
+                        <div class="row text-left mb-1" *ngIf="vselect == 1">
+                            <div class="col-md-3">
+                                <label for="exampleInputEmail1">Upload</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input [(ngModel)]="test" type="file" multiple id="FileUpload" (change)="selectFolder($event)"
+                                    webkitdirectory mozdirectory msdirectory odirectory directory />
+                            </div>
+                        </div>
+
+                        <!-- <div class="row text-left mb-1" *ngIf="vselect == 2">
+                            <div class="col-md-3">
+                                <label for="exampleInputEmail1">Path to Save File</label>
+                            </div>
+                            <div class="col-md-9">
+                                <dx-text-box [(ngModel)]="pathdownload" [showClearButton]="true">
+                                </dx-text-box>
+                                
+                            </div>
+                        </div> -->
+                    </dxi-item>
+                    <dxi-item title="อาจารย์" class="p-2 m-2">
+                        <div class="row text-left mb-1 mt-2">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-9">
+                                <dx-radio-group layout="horizontal" #eventRadioGroup id="radio-group-with-selection"
+                                    [dataSource]="itemlists" displayExpr="name" valueExpr="id" [(ngModel)]="vselect">
+                                </dx-radio-group>
+                            </div>
+                        </div>
+                        <div *ngIf="vselect != 1">
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">ศูนย์/วิทยาเขต</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="lstCampus" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="campusid"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">ระดับ</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" (onSelectionChanged)="getProgram()"
+                                        [dataSource]="lstLev" displayExpr="comboshow" searchMode="StartsWith"
+                                        valueExpr="comboid" [(ngModel)]="levelid" [searchEnabled]="true"
+                                        [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">วิทยาลัย/คณะ/สถาบัน</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <dx-select-box [disabled]="getVal()" (onSelectionChanged)="getDepartment()"
+                                        [dataSource]="lstFac" displayExpr="comboshow" searchMode="StartsWith"
+                                        valueExpr="comboid" [(ngModel)]="facultyid" [searchEnabled]="true"
+                                        [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">สาขาวิชา</label>
+                                </div>
+                                <div class="col-md-9">
+
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="lstProgram" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="programid"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div> -->
+                            <div class="row text-left mb-1">
+                                <div class="col-md-3">
+                                    <label for="exampleInputEmail1">ภาค/สาขา</label>
+                                </div>
+                                <div class="col-md-9">
+
+                                    <dx-select-box [disabled]="getVal()" [dataSource]="lstDept" displayExpr="comboshow"
+                                        searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="departmentid"
+                                        [searchEnabled]="true" [showClearButton]="true">
+                                    </dx-select-box>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-left mb-1" *ngIf="vselect == 1">
+                            <div class="col-md-3">
+                                <label for="exampleInputEmail1">Upload</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input [(ngModel)]="test" type="file" multiple id="FileUpload" (change)="selectFolder($event)"
+                                    webkitdirectory mozdirectory msdirectory odirectory directory />
+                            </div>
+                        </div>
+
+                        <!-- <div class="row text-left mb-1" *ngIf="vselect == 2">
+                            <div class="col-md-3">
+                                <label for="exampleInputEmail1">Path to Save File</label>
+                            </div>
+                            <div class="col-md-9">
+                                <dx-text-box [(ngModel)]="pathdownload" [showClearButton]="true">
+                                </dx-text-box>
+                                
+                            </div>
+                        </div> -->
+                    </dxi-item>
+                </dx-tab-panel> 
+
+
+                    <br>
+                    <div class="row text-left">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9 ml-10">
+                            <dx-button class="button" (onClick)="process()" text="PROCESS" icon="preferences"
+                                type="success" [width]="140"></dx-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

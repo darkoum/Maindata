@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-2">
+        ศูนย์/วิทยาเขต
+        <dx-select-box [dataSource]="campusdata" displayExpr="comboshow" (onValueChanged)="getgrouplistbygroupyear()"
+            searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="campusid" [searchEnabled]="true"
+            [showClearButton]="true">
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        ระดับ
+        <dx-select-box [dataSource]="lvldata" displayExpr="comboshow" (onValueChanged)="getgrouplistbygroupyear()"
+            searchMode="StartsWith" valueExpr="comboid" [(ngModel)]="levelid" [searchEnabled]="true"
+            [showClearButton]="true">
+
+        </dx-select-box>
+    </div>
+    <div class="col-1">
+        รุ่น
+        <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getgrouplistbygroupyear()" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <div class="col-3">
+        กลุ่มนักศึกษา
+        <dx-select-box [dataSource]="grouplistbygroupyear" displayExpr="comboshow" searchMode="StartsWith"
+            valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getdata()" icon="find" type="default" text="ค้นหา" width="100%">
+        </dx-button>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="updatedgraduate()" text="กำหนดทั้งหมด" icon="preferences" width="100%" type="default"
+            [width]="150">
+        </dx-button>
+    </div>
+</div>
+<br>
+<div id="data-grid-demo" style="width: 100%">
+    <dx-data-grid id="prgstudentgroup" [columnAutoWidth]="true" (onRowClick)="getprogramid($event)"
+        (onSaving)="dataSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true"
+        [dataSource]="datalist">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+            <dxo-popup title="Student Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="studentid" caption="" [visible]="false"></dxi-column>
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" width="120" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentname" caption="ชื่อ" width="350" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentsurname" caption="นามสกุล" width="350" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="studentstatus" caption="สถานะ" width="150" [allowEditing]="false">
+            <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column> -->
+        <dxi-column dataField="graduateprogramid" caption="ตรวจสอบจบ">
+            <dxo-lookup [dataSource]="graduatelist" valueExpr="comboid" displayExpr="comboshow" >
+            </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="entrydegree" caption="วุฒิเดิม">
+      <dxo-lookup [dataSource]="lstEntryDegree" valueExpr="entrydegreecode" displayExpr="entrydegreename"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="entrygpax" caption="GPA เข้า" format="0.##"></dxi-column>
+    <dxi-column dataField="entrytype" caption="วิธีรับเข้า">
+      <dxo-lookup [dataSource]="lstEntryType" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column> -->
+    </dx-data-grid>
+</div>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

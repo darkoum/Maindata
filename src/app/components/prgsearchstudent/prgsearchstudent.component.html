@@ -1,0 +1,147 @@
+<div id="accordion">
+            <div class="row">
+                <div class="col-3">
+                    รหัสนักศึกษา
+                    <dx-text-box [(ngModel)]="studentcode" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *">
+                    </dx-text-box>
+                </div>
+                <div class="col-3">
+                    ชื่อ
+                    <dx-text-box [(ngModel)]="studentname" [showClearButton]="true" placeholder="การค้นหาบางส่วนใช้ *">
+                    </dx-text-box>
+                </div>
+                <div class="col-3">
+                    นามสกุล
+                    <dx-text-box [(ngModel)]="studentsurname" [showClearButton]="true"
+                        placeholder="การค้นหาบางส่วนใช้ *">
+                    </dx-text-box>
+                </div>
+                <div class="col-3">
+                    เลขประจำตัวประชาชน
+                    <dx-text-box [(ngModel)]="citizenid" [showClearButton]="true"> </dx-text-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    รุ่น
+                    <dx-number-box [(ngModel)]="groupyear" [showClearButton]="true" [showSpinButtons]="false"
+                        (onValueChanged)="refreshGroupyear()">
+                    </dx-number-box>
+                </div>
+                <div class="col-4">
+                    กลุ่มนักศึกษา
+                    <dx-select-box [dataSource]="studentgrouplist" displayExpr="comboshow" searchMode="StartsWith"
+                        valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="studentgroup">
+                    </dx-select-box>
+                </div>
+                <div class="col-4">
+                    สาขาวิชา
+                    <dx-select-box [dataSource]="lstProgram" displayExpr="comboshow" valueExpr="comboid"
+                        [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="programid">
+                    </dx-select-box>
+                </div> 
+                <div class="col-2">
+                    <br />
+                    <dx-button width="100%" class="button" (onClick)="searchCriteria();" icon="find"
+                        [disabled]="!studentcode && !studentname && !studentsurname && !citizenid && !groupyear && !studentgroup && !facultyid && !departmentid && !lstProgram && !documentcheck"
+                        type="default" text="ค้นหา">
+                    </dx-button><br />
+                </div>
+            </div>
+</div>
+<div class="row">
+    <div [class]="divimgpage01" id="divContainer01">
+        <!--  <span  style="color: brown;font-weight: bold;"> Double Click เพื่อเลือกรายการ</span> -->
+        <!-- <div style="padding-top: 10px;">รายชื่อนักศึกษา</div> -->
+        <div id="data-grid-demo" style="padding-top: 10px;">
+            <dx-data-grid id="gridContainer01" [dataSource]="lstStudentSearch" [rowAlternationEnabled]="true"
+                [hoverStateEnabled]="true" [showBorders]="true" [columnResizingMode]="columnResizingMode"
+                [columnAutoWidth]="true" (onSelectionChanged)="setstudentselect($event)" (onRowDblClick)="callform($event);">
+                <dxo-paging [pageSize]="15"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-editing mode="single" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false"
+                    [useIcons]="true">
+                    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                </dxo-editing>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="studentid" caption="studentid" [visible]="false">
+                </dxi-column>
+
+                <dxi-column dataField="studentcode" alignment="center" width="120" caption="รหัสนักศึกษา"
+                    [fixed]="true"></dxi-column>
+                <dxi-column dataField="prefixname" caption="คำนำหน้า" width="100"></dxi-column>
+                <dxi-column dataField="studentname" caption="ชื่อ"></dxi-column>
+                <dxi-column dataField="studentsurname" caption="นามสกุล"></dxi-column>
+                <dxi-column dataField="studentstatus" caption="สถานะ" width="150"></dxi-column>
+                <dxi-column dataField="studentyear" caption="ชั้นปี" width="50"></dxi-column>
+                <dxi-column dataField="campusname" caption="ศูนย์/วิทยาเขต"></dxi-column>
+                <dxi-column dataField="programname" caption="สาขาวิชา"></dxi-column>
+                <dxi-column dataField="levelname" caption="ระดับ" width="150"></dxi-column>
+                <dxi-column dataField="facultyname" caption="วิทยาลัย/คณะ/สถาบัน"></dxi-column>
+                <dxi-column dataField="gpa" caption="GPA" format="#0.00" dataType="number" width="60"></dxi-column>
+                <dxi-column dataField="studentemail" caption="E-mail"></dxi-column>
+                <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column>
+                <dxi-column dataField="studentgroupabb" caption="กลุ่มนักศึกษา"></dxi-column>
+                <dxi-column dataField="feegroupid" caption="บัญชีค่าใช้จ่าย"></dxi-column>
+                <dxi-column dataField="admitacadyear" caption="ปีที่เข้า"></dxi-column>
+                <dxi-column dataField="admitsemester" caption="ภาค"></dxi-column>
+                <dxi-column dataField="citizenid" width="150" caption="เลขประจำตัวประชาชน"></dxi-column>
+
+                <!-- <dxi-column dataField="programyear" caption="ปีหลักสูตร"></dxi-column> -->
+            </dx-data-grid>
+        </div>
+    </div>
+    <div [class]="divimgpage02" id="divContainer02">
+        <br>
+        <dx-data-grid [visible]="officerimgshow" id="gridContainer02" [rowAlternationEnabled]="true"
+            [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="lstStudentSearchimg"
+            rowTemplate="rowTemplateName">
+            <dxo-paging [pageSize]="1"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [showInfo]="true" [visible]="false"> </dxo-pager>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+            <tbody class="biodetail dx-row" [ngClass]="{ 'dx-row-alt': lstStudentSearchimg.rowIndex % 2 }"
+                *dxTemplate="let lstStudentSearchimg of 'rowTemplateName'">
+                <tr class="notes-row">
+                    <td rowspan="5" style="width: 160px;">
+                        <img class="img-crop" [src]="lstStudentSearchimg.data.stuimg" alt="User Image" height="150px"
+                            width="120px" />
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td class="text-wrap">
+                        <label style="color: #1b4461"><b>ที่ปรึกษา : </b>{{ lstStudentSearchimg.data.officername
+                            }}</label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td class="text-wrap">
+                        <label style="color: #1b4461"><b>สถานะ : </b>{{ lstStudentSearchimg.data.studentstatus
+                            }}</label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td class="text-wrap">
+                        <label style="color: #1b4461"><b>การเงิน : </b>{{ lstStudentSearchimg.data.financestatus
+                            }}</label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td class="text-wrap">
+                        <label style="color: #1b4461"><b>ผังบัญชี : </b>{{ lstStudentSearchimg.data.feegroupdes
+                            }}</label>
+                    </td>
+                </tr>
+            </tbody>
+            <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+                <div class="tableheader">ข้อมูลนักศึกษา</div>
+            </div>
+        </dx-data-grid>
+
+    </div>
+
+    <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true"
+        [shading]="true" [closeOnOutsideClick]="false">
+    </dx-load-panel>
+</div>

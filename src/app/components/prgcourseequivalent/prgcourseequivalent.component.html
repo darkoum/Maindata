@@ -1,0 +1,51 @@
+<div id="data-grid-demo">
+    <dx-data-grid id="gridcourseequivalent" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" (onSaving)="couequSave($event)" (onEditingStart)="onEditstart($event)" (onEditCanceling)="onCancelEditmode()" [rowAlternationEnabled]="true"
+        [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="courseequivalentlist">
+        <dxo-paging [pageSize]="20"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Courseequivalent Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+
+        <dxi-column dataField="programid" caption="programid" [visible]="false"></dxi-column>
+        <dxi-column dataField="courseequivalentid" caption="จากวิชา (เก่า)" [allowEditing]="true" >
+            <dxi-validation-rule type="required" message="กรุณากรอกจากวิชา (เก่า)"></dxi-validation-rule>
+
+            <dxo-lookup [dataSource]="coulist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="courseunit" caption="หน่วยกิต" [editorOptions]="{ disabled: true }" [width]="100" alignment="center">
+        </dxi-column>
+
+        <dxi-column dataField="courseid" caption="แทนด้วยวิชา" [allowEditing]="true" >
+            <dxi-validation-rule type="required" message="กรุณากรอกแทนด้วยวิชา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="coulist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="courseunit1" caption="หน่วยกิต" [editorOptions]="{ disabled: true }" [width]="100" alignment="center">
+        </dxi-column>
+        <dxi-column dataField="semesterfrom" caption="*จากปี/ภาคการศึกษา" [width]="150" dataType="number"></dxi-column>
+        <dxi-column dataField="semesterto" caption="*ถึงปี/ภาคการศึกษา" [width]="150" dataType="number"></dxi-column>
+
+        <!-- <div *dxTemplate="let cellInfo of 'changeCourse'">
+            <dx-lookup [dataSource]="coulist2" [items]="cellInfo.data.courseid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="3" [searchTimeout]="500" [searchEnabled]="true" searchMode="startswith" searchPlaceholder="กรุณาระบุรหัสวิชาอย่างน้อย 3 ตัวอักษร"
+                (onValueChanged)="updateCourse($event, cellInfo)">
+            </dx-lookup>
+        </div> -->
+    </dx-data-grid>
+
+    <dx-popup [width]="200" [height]="150" [showTitle]="true" title="Message" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+        <div style="text-align: center">
+            {{ notification }}
+           
+        </div>
+    </dx-popup>
+</div>
+
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
+  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

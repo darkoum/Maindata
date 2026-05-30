@@ -1,0 +1,29 @@
+<div id="data-grid-demo">
+    <dx-data-grid id="prgprogramgroup" [columnAutoWidth]="true" [dataSource]="programgrouplist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" (onInitNewRow)="onInsertingstart($event)" (onSaving)="ProgramgroupSave($event)"
+        (onToolbarPreparing)="onToolbarPreparing($event)">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Prefix Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+
+        <dxi-column dataField="programgroupcode" caption="*รหัส" >
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="programgroupname" caption="*ชื่อประเภทสาขา (ไทย)">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อประเภทสาขา (ไทย)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="programgroupnameeng" caption="ชื่อประเภทสาขา (อังกฤษ)"></dxi-column>
+       
+        <div *dxTemplate="let data of 'tableName'">
+            <div class="tablelabel">
+                <span>ประเภทสาขา</span>
+            </div>
+        </div>
+    </dx-data-grid>
+</div>

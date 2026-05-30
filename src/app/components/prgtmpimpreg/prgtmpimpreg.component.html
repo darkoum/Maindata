@@ -1,0 +1,46 @@
+<div class="row">
+     <div class="col-2">
+        ปี พ.ศ.
+        <dx-number-box mode="number" [(ngModel)]="year" [showSpinButtons]="true" (onValueChanged)="getData()"> </dx-number-box>
+    </div>
+    <!-- <div class="col-2">
+         <label >วันที่</label>
+        <dx-date-box-custom [date]="dateselect" [showClearButton]="true" displayFormat="shortdate" (onValueChanged)="dateselect = $event.value" >
+                            </dx-date-box-custom>
+    </div> -->
+    <!-- <div class="col-2">
+         <br />
+        <dx-button class="button" (onClick)="onProcess()" icon="save" type="default" text="บันทึกข้อมูล" style="width: 100%;">
+        </dx-button>
+    </div> -->
+</div>
+<br>
+<div id="data-grid-demo">
+    <dx-data-grid id="prgreligion" [columnAutoWidth]="true" [dataSource]="tmpimpreglist" (onSaving)="onSave($event)" (onInitNewRow)="onInsertingstart($event)">
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Origin Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="false" [width]="240" placeholder="Search..."></dxo-search-panel>
+        <dxo-selection mode="single"></dxo-selection>
+
+        <!-- <dxi-column dataField="datatodate" caption="วันที่" dataType="date" sortOrder="asc" >
+        </dxi-column> -->
+        <dxi-column dataField="createdatetime" caption="วันเวลาที่สร้าง" dataType="datetime" [width]="200" [allowEditing]="false">
+        </dxi-column>
+        
+        <dxi-column dataField="createuserid" caption="บันทึกโดย" [width]="200" [allowEditing]="false">
+        </dxi-column>
+        <dxi-column dataField="description" caption="หมายเหตุ" [allowEditing]="true">
+        </dxi-column>
+        
+    </dx-data-grid>
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true"
+    [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

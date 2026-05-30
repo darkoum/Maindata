@@ -1,0 +1,82 @@
+
+<div class="row">
+    <div class="col-6"></div>
+     <div class="col-2">
+        เลขที่คำถาม  จาก
+        <dx-text-box [(ngModel)]="numfrom" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <div class="col-2">
+        ถึง
+        <dx-text-box [(ngModel)]="numto" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <!-- (onClick)="getStudentinfo()"  -->
+        <dx-button class="button" (onClick)="getdata1()"  icon="find" type="default" text="ค้นหา" [width]="150">
+        </dx-button>
+    </div>
+</div>
+<br>
+<!-- <div class="tableremark">*Double Click ที่ชื่อกรณีย้ายเป็นรายคน</div> -->
+
+<div id="data-grid-demo" style="width: 100%">
+    <dx-data-grid id="prgstudentgroup" [columnAutoWidth]="true" (onSelectionChanged)="selection($event)" (onSaving)="dataSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="datalist1" >
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Student Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <!-- <dxi-column dataField="studentid" caption=""></dxi-column> -->
+        <dxi-column dataField="questionid" caption="เลขที่"></dxi-column>
+        <dxi-column dataField="questionname" caption="คำถาม"></dxi-column>
+        <!-- <dxi-column dataField="creditattempt" caption="หน่วยกิตลงทะเบียน"></dxi-column>
+        <dxi-column dataField="creditsatisfy" caption="หน่วยกิตผ่าน"></dxi-column> -->
+
+        <!-- <dxi-column dataField="gpa" caption="GPA" format="0.00"></dxi-column> -->
+      
+        <!-- <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column> -->
+        <!-- <dxi-column dataField="studentgroupabb" caption="กลุ่มนักศึกษา"></dxi-column> -->
+        <!-- <dxi-column dataField="entrydegree" caption="วุฒิเดิม">
+      <dxo-lookup [dataSource]="lstEntryDegree" valueExpr="entrydegreecode" displayExpr="entrydegreename"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="entrygpax" caption="GPA เข้า" format="0.##"></dxi-column>
+    <dxi-column dataField="entrytype" caption="วิธีรับเข้า">
+      <dxo-lookup [dataSource]="lstEntryType" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column> -->
+    </dx-data-grid>
+</div>
+<div id="data-grid-demo" style="width: 100%">
+    <dx-data-grid id="prgstudentgroup" [columnAutoWidth]="true" (onSaving)="dataSave2($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="datalist2" >
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="false" [allowedPageSizes]="[15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="Student Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <!-- <dxi-column dataField="studentid" caption=""></dxi-column> -->
+        <dxi-column dataField="choiceid" caption="เลขที่"></dxi-column>
+        <dxi-column dataField="choicename" caption="คำอธิบาย"></dxi-column>
+        <dxi-column dataField="questionid" caption="เลขที่" [visible]="false"></dxi-column>
+        <!-- <dxi-column dataField="creditattempt" caption="หน่วยกิตลงทะเบียน"></dxi-column>
+        <dxi-column dataField="creditsatisfy" caption="หน่วยกิตผ่าน"></dxi-column> -->
+
+        <!-- <dxi-column dataField="gpa" caption="GPA" format="0.00"></dxi-column> -->
+      
+        <!-- <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column> -->
+        <!-- <dxi-column dataField="studentgroupabb" caption="กลุ่มนักศึกษา"></dxi-column> -->
+        <!-- <dxi-column dataField="entrydegree" caption="วุฒิเดิม">
+      <dxo-lookup [dataSource]="lstEntryDegree" valueExpr="entrydegreecode" displayExpr="entrydegreename"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="entrygpax" caption="GPA เข้า" format="0.##"></dxi-column>
+    <dxi-column dataField="entrytype" caption="วิธีรับเข้า">
+      <dxo-lookup [dataSource]="lstEntryType" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column> -->
+    </dx-data-grid>
+</div>

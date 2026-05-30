@@ -1,0 +1,8 @@
+::ng-deep #prgfacultysubdetail .gridheaderremark {
+    height: 70px;
+    width: Auto;
+    text-align: center;
+    color: #800000;
+    padding-top: 15px;
+    font-size: 14px; 
+}

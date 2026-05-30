@@ -1,0 +1,371 @@
+<div class="row">
+    <div class="col-xl-8  col-7">
+    </div>
+    <div class="col-xl-2  col-3">
+        รหัสนักศึกษา
+        <!-- <dx-text-box mode="number" [(ngModel)]="studentcode" [showClearButton]="true"> </dx-text-box> -->
+        <app-student-selector
+            (onValueChanged)="studentcode = $event"
+            [disabled]="false"
+            [tmpstudentcode]="studentcode"
+        ></app-student-selector>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getStudentinfo()" icon="find" type="default" text="ค้นหา" [width]="'100%'">
+        </dx-button>
+    </div>
+</div>
+<br />
+<div>
+    <dx-data-grid id="prgstudentstatus" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="studentinfo" rowTemplate="rowTemplateName">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true" [visible]="false"> </dxo-pager>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <tbody style="height: 130px;" class="biodetail dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }" *dxTemplate="let studentinfo of 'rowTemplateName'">
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>รหัสนักศึกษา : </b>{{ studentinfo.data.studentcode }}</label>
+                </td>
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>ชื่อ-นามสกุล:
+            </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }}
+            {{ studentinfo.data.studentsurname }}
+          </label>
+                </td>
+                <td style="width: 250px;">
+                    <label style="color: #1b4461"><b>วันที่รับเข้า :</b> {{studentinfo.data.admitdateshow}}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>วันที่จบ/พ้นสภาพ : </b>{{ studentinfo.data.finishdateshow }}</label>
+                </td>
+                <td rowspan="5" style="width: 160px;">
+                    <img class="img-crop" [src]="studentinfo.data.stuimg" alt="User Image" height="140px" width="120px" />
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>ศูนย์/วิทยาเขต : </b>{{ studentinfo.data.campusname }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>วิทยาลัย/คณะ/สถาบัน : </b>{{ studentinfo.data.facultyname }} </label>
+                </td>
+                <!-- <td>
+                    <label style="color: #1b4461"><b></b>{{ studentinfo.data.admitdateshow }} </label>
+                </td> -->
+            </tr>
+            <tr class="notes-row">
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ภาค/สาขา : </b>{{ studentinfo.data.departmentname }}</label>
+                </td>
+                <td colspan="2" class="text-wrap">
+                    <!-- <label style="color: #1b4461"><b>{{ studentinfo.data.programtitle }} : </b>{{ studentinfo.data.programname }}
+          </label> -->
+                    <label style="color: #1b4461"><b>สาขาวิชา : </b>{{ studentinfo.data.programname }}</label>
+                </td>
+                <td colspan="1" class="text-wrap">
+                    <label style="color: #1b4461"><b>บัญชี คชจ : </b>{{ studentinfo.data.feegroupid }}:
+            {{ studentinfo.data.feegroupname }}
+          </label>
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>กลุ่มนักศึกษา : </b>{{ studentinfo.data.studentgroupabb }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ปีที่เข้า : </b>{{ studentinfo.data.admitacadyear }} </label> &nbsp; &nbsp;
+                    <label style="color: #1b4461"><b>ภาคที่ : </b>{{ studentinfo.data.admitsemester }} </label> &nbsp; &nbsp;
+                    <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>สถานภาพนักศึกษา : </b>{{ studentinfo.data.studentstatusshow }} </label>
+                </td>
+                <!-- <td>
+                    <label style="color: #1b4461"><b></b>{{ studentinfo.data.finishdateshow }} </label>
+                </td> -->
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>ระบบวัดผล : </b>{{ studentinfo.data.acadid }}:
+            {{ studentinfo.data.description }}
+          </label>
+                </td>
+
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>สถานะการเงิน : </b>{{studentinfo.data.financestatusshow}} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>GPAX : </b>{{ studentinfo.data.gpa | number : "0.2-2" }} </label>
+                </td>
+            </tr>
+        </tbody>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลนักศึกษา</div>
+        </div>
+    </dx-data-grid>
+</div>
+<!-- <div class="iframediv">
+    <iframe id="report-frame" width="100%" frameborder="1" [src]=" '../prgstudentinfo?studentid='+studentcode|safe "></iframe>
+</div> -->
+
+<div id="data-grid-demo" style="padding-top: 7px;">
+    <!-- (onSaving)="onSave($event)" (onEditingStart)="onEditstart($event)" (onSelectionChanged)="selectionChanged($event)" (onInitNewRow)="onInsertingstart($event)" (onEditCanceling)="onCancelEditmode()" -->
+    <dx-data-grid id="prgstudentstatus1" [columnFixing]="true" [columnAutoWidth]="true" (onSaving)="ontmpSave($event)" (onSelectionChanged)="selectionChanged($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" (onInitNewRow)="onInsertingstart($event)"
+        [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [dataSource]="studentstatuslist" [showBorders]="true" (onToolbarPreparing)="onToolbarPreparing($event)">
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5, 0]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="บันทึกสถานะรายภาค" [showTitle]="true" [height]="'auto'">
+            </dxo-popup>
+            <dxo-form>
+                <dxi-item itemType="group" [colCount]="1" [colSpan]="2">
+                    <dxi-item editCellTemplate="studentname"></dxi-item>
+                    <div *dxTemplate="let cellInfo of 'studentname'">
+                        <div style="font-size: large;">รหัสนักศึกษา {{tmpstudentname}}</div>
+                    </div>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="5" [colSpan]="2">
+                    <dxi-item dataField="acadyear" [colSpan]="1" [label]="{ text: 'ปีการศึกษา' }" [editorOptions]="{showSpinButtons: true ,min:0 ,max:9999}"></dxi-item>
+                    <dxi-item dataField="semester" [colSpan]="1" [label]="{ text: 'ภาคที่' }" [editorOptions]="{showSpinButtons: true ,min:0 ,max:9 }"></dxi-item>
+                    <dxi-item dataField="studentstatus" [colSpan]="3" [label]="{ text: 'สถานภาพนักศึกษา' }"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="remark" [colSpan]="6"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="approvedate" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="datefrom" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="dateto" [colSpan]="2"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                    <dxi-item dataField="enrolltype" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="enrollstatus" [colSpan]="2"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                    <dxi-item dataField="gradestatus" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="gradepro" [colSpan]="2"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="partialpayment" [colSpan]="1" ></dxi-item>
+                    <dxi-item dataField="delaypayment" [colSpan]="1"></dxi-item>
+                    <dxi-item dataField="creditmin" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="creditmax" [colSpan]="2"></dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="officerid" [colSpan]="2" [editorOptions]="{showClearButton: true}"></dxi-item>
+                    <dxi-item dataField="officerid2" [colSpan]="2" [editorOptions]="{showClearButton: true}"></dxi-item>
+                    <dxi-item dataField="officerid3" [colSpan]="2" [editorOptions]="{showClearButton: true}"></dxi-item>
+                    <dxi-item dataField="officerid4" [colSpan]="2" [editorOptions]="{showClearButton: true}"></dxi-item>
+                    <dxi-item dataField="officerid5" [colSpan]="2" [editorOptions]="{showClearButton: true}"></dxi-item>
+                </dxi-item>
+
+            </dxo-form>
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-selection mode="single"></dxo-selection>
+
+
+        <dxi-column [fixed]="true" fixedPosition="left" dataField="acadyear" caption="*ปีการศึกษา">
+            <dxi-validation-rule type="required" message="กรุณากรอกปีการศึกษา"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [fixed]="true" fixedPosition="left" dataField="semester" caption="*ภาคที่">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาคที่" min="0" max="3"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column [fixed]="true" fixedPosition="left" dataField="studentstatus" caption="*สถานภาพนักศึกษา">
+            <dxi-validation-rule type="required" message="กรุณากรอกสถานภาพนักศึกษา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="remark" caption="หมายเหตุ"></dxi-column>
+        <dxi-column dataField="approvedate" dataType="date" caption="วันที่อนุมัติ" editCellTemplate="editapprovedate"></dxi-column>
+
+        <dxi-column dataField="datefrom" dataType="date" caption="จากวันที่" editCellTemplate="editdatefrom"></dxi-column>
+        <dxi-column dataField="dateto" dataType="date" caption="ถึงวันที่" editCellTemplate="editdateto"></dxi-column>
+        <dxi-column dataField="enrolltype" caption="เงื่อนไข">
+            <dxo-lookup [dataSource]="enrolltypelist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="enrollstatus" caption="สถานะลงทะเบียน">
+            <dxo-lookup [dataSource]="enrollstatuslist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="gradestatus" caption="สถานะเกรด">
+            <dxo-lookup [dataSource]="gradestatuslist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="gradepro" caption="สถานะเกรดเฉลี่ย">
+            <dxo-lookup [dataSource]="gradeprolist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="partialpayment" caption="งวดผ่อน"></dxi-column>
+        <dxi-column dataField="delaypayment" dataType="date" caption="วันผ่อนผัน"></dxi-column>
+        <dxi-column dataField="creditmin" caption="CR:MIN"></dxi-column>
+        <dxi-column dataField="creditmax" caption="CR:MAX"></dxi-column>
+
+        
+        <dxi-column dataField="creditattempt" caption="CR:ลง"></dxi-column>
+        <dxi-column dataField="creditentry" caption="CR:ส่งเกรด"></dxi-column>
+        <dxi-column dataField="creditsatisfy" caption="CR:ผ่าน"></dxi-column>
+        <dxi-column dataField="creditpoint" caption="CR:คำนวณ"></dxi-column>
+        <dxi-column dataField="gradepoint" caption="POINT"></dxi-column>
+        <dxi-column dataField="gpa" caption="GPA" format="0.00" dataType="number" width="60">
+
+        </dxi-column>
+        <dxi-column dataField="sumcreditattempt" caption="SUM CR:ลง"></dxi-column>
+        <dxi-column dataField="sumcreditsatisfy" caption="SUM CR:ผ่าน"></dxi-column>
+        <dxi-column dataField="sumcreditpoint" caption="SUM CR:คำนวณ"></dxi-column>
+        <dxi-column dataField="sumgradepoint" caption="SUM POINT"></dxi-column>
+        <dxi-column dataField="gpax" caption="GPAX" format="0.00" dataType="number" width="60"></dxi-column>
+        
+        
+        <dxi-column dataField="officerid" caption="ที่ปรึกษา 1">
+            <dxo-lookup [dataSource]="officerlist1" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid2" caption="ที่ปรึกษา 2">
+            <dxo-lookup [dataSource]="officerlist1" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid3" caption="ที่ปรึกษา 3">
+            <dxo-lookup [dataSource]="officerlist1" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid4" caption="ที่ปรึกษา 4">
+            <dxo-lookup [dataSource]="officerlist1" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerid5" caption="ที่ปรึกษา 5">
+            <dxo-lookup [dataSource]="officerlist1" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="createdatetime" dataType="datetime" caption="สร้างรายการ"></dxi-column>
+        <dxi-column dataField="createuserid" caption="โดย"></dxi-column>
+        <dxi-column dataField="lastupdatedatetime" dataType="datetime" caption="แก้ไขล่าสุด"></dxi-column>
+        <dxi-column dataField="lastupdateuserid" caption="โดย"></dxi-column>
+        
+        <div *dxTemplate="let data of 'tableName'">
+            <div class="tablelabel">
+                <span>สถานะรายภาค</span>
+            </div>
+        </div>
+
+
+
+        <div *dxTemplate="let cellInfo of 'editapprovedate'">
+            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+
+        <div *dxTemplate="let cellInfo of 'editdatefrom'">
+            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+
+        <div *dxTemplate="let cellInfo of 'editdateto'">
+            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+
+    </dx-data-grid>
+</div>
+
+
+
+<dx-tab-panel #tabPanel [selectedIndex]="0" [animationEnabled]="false" [showNavButtons]="true" (onOptionChanged)="selectTab($event)">
+    <dxi-item title="ประวัติการแก้ไข">
+        <dx-data-grid id="prgstudentstatus3" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [allowColumnReordering]="true" [allowColumnResizing]="true" [dataSource]="studentstatuslog" [showBorders]="true" [columnAutoWidth]="true">
+
+            <dxo-paging [pageSize]="5"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true">
+            </dxo-pager>
+            <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column dataField="acadyear" caption="ปีการศึกษา" [width]="100"></dxi-column>
+            <dxi-column dataField="semester" caption="ภาคที่" [width]="80"></dxi-column>
+            <dxi-column dataField="action" caption="ประเภท"></dxi-column>
+            <dxi-column dataField="oldstatus" caption="สถานะเดิม"></dxi-column>
+            <dxi-column dataField="newstatus" caption="สถานะใหม่"></dxi-column>
+            <dxi-column dataField="updateuserid" caption="โดย" [width]="200"></dxi-column>
+            <dxi-column dataField="updatedatetime" dataType="datetime" caption="วัน-เวลา" [width]="140"></dxi-column>
+
+            <div *dxTemplate="let data of 'tableName'">
+                <div class="tablelabel">
+                    <span></span>
+                </div>
+            </div>
+        </dx-data-grid>
+    </dxi-item>
+</dx-tab-panel>
+
+
+<dx-popup [width]="300" [height]="200" [showTitle]="true" title="กรุณาระบุวันที่จบ/พ้นสภาพ" [dragEnabled]="false" [closeOnOutsideClick]="false" [showCloseButton]="false" [(visible)]="popupVisible">
+    <dxi-toolbar-item widget="dxButton" toolbar="bottom" location="after" [options]="emailButtonOptions">
+    </dxi-toolbar-item>
+    <div>
+        <!-- <dx-number-box [(ngModel)]="fisnishadate" [showSpinButtons]="true"></dx-number-box> -->
+        <!--  <dx-date-box [(ngModel)]="finishdate" [showClearButton]="true" [useMaskBehavior]="false" type="datetime" displayFormat="shortdate"></dx-date-box> -->
+        <dx-date-box-custom [date]="finishdate" (onValueChanged)="finishdate = $event.value" [showClearButton]="true"></dx-date-box-custom>
+
+    </div>
+</dx-popup>
+<!-- <div id="data-grid-demo">
+    <table style="width: 100%">
+        <tr>
+        <td width="55%" style="vertical-align: top;">
+            <dx-data-grid id="prgstudentstatus2" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+            [dataSource]="studentreclist" [showBorders]="true" (onSaving)="onRecSave($event)"
+            [allowColumnReordering]="true" [allowColumnResizing]="true" (onEditingStart)="onEditstart($event)"
+            (onToolbarPreparing)="onToolbarPreparing($event)" (onEditCanceling)="onCancelEditmode()"
+            (onInitNewRow)="onInsertingstart($event)" (onSelectionChanged)="RecselectionChanged($event)">
+            <dxo-paging [pageSize]="5"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true">
+            </dxo-pager>
+            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup [title]="tmpacadyear" [showTitle]="true" [width]="700" [height]="525"
+                [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+            </dxo-editing>
+            <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="recordtype" caption="ประวัติ">
+                    <dxo-lookup [dataSource]="recordtypelist" valueExpr="comboid" displayExpr="comboshow">
+                    </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="createdatetime" dataType="datetime" caption="วันที่ทำรายการ"></dxi-column>
+                <dxi-column dataField="recorddate" dataType="date" caption="วันที่เริ่ม"></dxi-column>
+                <dxi-column dataField="sequence" caption="ครั้งที่"></dxi-column>
+                <dxi-column dataField="approvedate" dataType="date" caption="อนุมัติถึง"></dxi-column>
+                <dxi-column dataField="description" caption="คำอธิบาย"></dxi-column>
+                <dxi-column dataField="documentnumber" caption="เลขคำสั่ง"></dxi-column>
+                <div *dxTemplate="let data of 'tableName'">
+                    <div class="tablelabel">
+                        <span>บันทึกประวัติ</span>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </td>
+        <td width="45%" style="vertical-align: top;">
+            <dx-data-grid id="prgstudentstatus3" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+            [allowColumnReordering]="true" [allowColumnResizing]="true" [dataSource]="studentstatuslog"
+            [showBorders]="true" (onToolbarPreparing)="onToolbarPreparing($event)" [columnAutoWidth]="true">
+            <dxo-paging [pageSize]="5"></dxo-paging>
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true">
+            </dxo-pager>
+            <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+            <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="acadyear" caption="ปีการศึกษา"></dxi-column>
+                <dxi-column dataField="semester" caption="ภาคที่"></dxi-column>
+                <dxi-column dataField="oldstatus" caption="สถานะเดิม"></dxi-column>
+                <dxi-column dataField="newstatus" caption="สถานะใหม่"></dxi-column>
+                <dxi-column dataField="updateuserid" caption="โดย"></dxi-column>
+                <dxi-column dataField="updatedatetime" dataType="datetime" caption="วัน-เวลา"></dxi-column>
+                <dxi-column dataField="action" caption="ประเภท"></dxi-column>
+                <div *dxTemplate="let data of 'tableName'">
+                    <div class="tablelabel">
+                        <span>ประวัติการแก้ไข</span>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </td>
+    </tr>
+    </table>
+</div> -->
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

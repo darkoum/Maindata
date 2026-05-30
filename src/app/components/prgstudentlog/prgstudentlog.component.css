@@ -1,0 +1,42 @@
+/* ::ng-deep #report-frame {
+    margin-left: -260px;
+    overflow: hidden !important;
+    height: 100%;
+}
+
+.iframediv {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+} */
+
+
+.biodetail tr td{
+  border: transparent;
+  padding: 5px;
+}
+
+label {
+  padding: 1px;
+}
+
+::ng-deep label {
+    margin-bottom: 0px;
+}
+::ng-deep #prgstudentlog tr.notes-row td {
+    padding: 0px;  
+   
+}
+::ng-deep #prgstudentlog tr.main-row td {
+ 
+  padding-bottom : 0px;  
+
+ 
+}
+/* .dx-toolbar-items-container {
+    height: 30px !important;
+} */
+/* .dx-toolbar .dx-toolbar-before {
+    padding: 0px !important;
+} */

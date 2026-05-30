@@ -1,0 +1,119 @@
+<div class="row">
+    <!-- <div class="col-1" style="vertical-align: middle;">
+          </div> -->
+    <div class="col-2">
+        ปีการศึกษาที่เข้า
+        <dx-number-box [(ngModel)]="acadyear" [showSpinButtons]="true" [min]="1" [max]="9999">
+        </dx-number-box>
+    </div>
+    <div class="col-2">
+        ภาคที่เข้า
+        <dx-number-box [(ngModel)]="semester" [showSpinButtons]="true" [min]="0" [max]="3">
+        </dx-number-box>
+    </div>
+    <div class="col-2">
+        ศูนย์/วิทยาเขต
+        <dx-select-box [dataSource]="camcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="camcomboid"></dx-select-box>
+
+
+    </div>
+    <div class="col-3">
+        ระดับจาก
+        <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo()" [(ngModel)]="levcomboid">
+        </dx-select-box>
+    </div>
+    <div class="col-3">
+        ระดับถึง
+        <dx-select-box #level [dataSource]="levcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getprocombo()" [(ngModel)]="levcomboidto">
+        </dx-select-box>
+    </div>
+</div>
+<div class="row">
+    <!-- <div class="col-1" style="vertical-align: middle;">
+          </div> -->
+    <div class="col-4">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="faccombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getdepartmentlist();" [(ngModel)]="faccomboid">
+        </dx-select-box>
+    </div>
+    <div class="col-4">
+        ภาค/สาขา
+        <dx-select-box [dataSource]="depcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="depcomboid">
+        </dx-select-box>
+    </div>
+
+    <div class="col-2">
+        วันที่ Download จาก
+        <dx-date-box-custom [date]="reportdate" (onValueChanged)="reportdate = $event.value" [disabled]="flagnonedownload" [type]="'date'"></dx-date-box-custom>
+    </div>
+    <div class="col-2">
+        วันที่ Download ถึง
+        <dx-date-box-custom [date]="reportdateto" (onValueChanged)="reportdateto = $event.value" [disabled]="flagnonedownload" [type]="'date'"></dx-date-box-custom>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-8"></div>
+
+
+    <div class="col-2">
+        <br>
+        <dx-check-box [(ngModel)]="flagnonedownload" text="ดึงเฉพาะข้อมูลที่ยังไม่ Download" (onValueChanged)="checkedchanged($event)">
+        </dx-check-box>
+    </div>
+
+    <div class="col-2" style="text-align: center;">
+        <br>
+        <dx-button style="width: 100%;" class="button"  (onClick)="onSearch()" text="ค้นหา" icon="search" type="success">
+
+        </dx-button>
+    </div>
+</div>
+<hr>
+<!-- <input type="file" id="ctrl" webkitdirectory directory /> -->
+<div id="datagrid">
+    <dx-data-grid id="enrollcancelgrid" [dataSource]="studentlist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [columnAutoWidth]="true" (onToolbarPreparing)="onToolbarPreparing($event)">
+        <dxo-position at="center" my="center" of="window"> </dxo-position>
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+            <dxo-popup title="บันทึกย้ายสาขาวิชา" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+
+        <dxo-selection mode="single"></dxo-selection>
+
+        <dxi-column dataField="studentid" [visible]="false"></dxi-column>
+
+        <dxi-column dataField="studentcode" [width]="120" caption="รหัสนักศึกษา" [allowEditing]="false" alignment="center"></dxi-column>
+        <dxi-column dataField="citizenid" [width]="150" caption="เลขประจำตัวประชาชน" [allowEditing]="false" alignment="center"></dxi-column>
+        <dxi-column dataField="prefixname" [width]="100" caption="คำนำหน้า" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="sname" caption="ชื่อ" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="surname" caption="สกุล" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="facultyname" caption="วิทยาลัย/คณะ/สถาบัน" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="departmentname" caption="ภาค/สาขา" [allowEditing]="false"></dxi-column>
+        <dxi-column dataField="documentdownloaddate" caption="วันที่ดาวน์โหลด" [allowEditing]="false" [width]="150" alignment="center"></dxi-column>
+
+        <div *dxTemplate="let data of 'labeldate'">
+            <div class="tablelabel" style="display: flex;">
+                <div style="padding: 10px;">วันที่ดาวน์โหลด</div>
+                <div style="width: 150px;">
+                     <dx-date-box-custom [date]="downloaddate" (onValueChanged)="downloaddate = $event.value" [type]="'date'"></dx-date-box-custom>
+                </div>
+            </div>
+        </div>
+
+        <div *dxTemplate="let data of 'tablebutton'">
+            <dx-button class="button" style="width: 150px;" [disabled]="!studentlist || !downloaddate" (onClick)="btClick($event)" text="Export" icon="exportxlsx" type="default">
+            </dx-button>
+        </div>
+
+    </dx-data-grid>
+
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

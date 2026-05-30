@@ -1,0 +1,145 @@
+<div class="row mb-3">
+  <div class="col-2">
+    ค้นหาโดย
+    <dx-select-box [dataSource]="searchtype" displayExpr="comboshow" valueExpr="comboid" (onValueChanged)="studentadvisor = []" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="officertype"
+      [readOnly]="existsadvisor">
+    </dx-select-box>
+  </div>
+  <div class="col-3">
+    อาจารย์ที่ปรึกษา
+    <dx-text-box *ngIf="officertype == 0" [(ngModel)]="officer" [showClearButton]="'true'"
+      (onValueChanged)="studentadvisor = [];" [placeholder]="'ค้นหาโดยรหัสอาจารย์'"
+      [showClearButton]="true" [readOnly]="existsadvisor"></dx-text-box>
+    <dx-select-box *ngIf="officertype == 1" [dataSource]="officerlist" displayExpr="comboshow" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="officer" [readOnly]="existsadvisor">
+    </dx-select-box>
+  </div>
+  <div class="col-2">
+    ลำดับ
+    <dx-select-box [dataSource]="seqofficerlist" displayExpr="comboshow" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="seqofficerfrom" 
+      (onValueChanged)="seqofficerto = seqofficerfrom" [readOnly]="existsadvisor">
+    </dx-select-box>
+  </div>
+  <div class="col-3">
+    <br>
+    <!-- <dx-check-box [(ngModel)]="existsadvisor" (onValueChanged)="studentadvisor = []" class="checkBalance" text="แสดงเฉพาะนักศึกษาที่ยังไม่บันทึกอาจารย์ที่ปรึกษา"></dx-check-box> -->
+    <dx-check-box [(ngModel)]="chkpresent" class="checkBalance" text="นักศึกษาปัจจุบันเท่านั้น" [readOnly]="existsadvisor"></dx-check-box>
+  </div>
+  <div class="col-2" [align]="'right'">
+    
+    <br />
+    <dx-button class="button" (onClick)="onSearch();" icon="find" type="default" text="ค้นหา" [width]="'100%'">
+    </dx-button>
+  </div>
+</div>
+<div id="data-grid-demo">
+  <dx-data-grid id="prgcourse" #course (onInitNewRow)="getDefault($event)" (onSaving)="dataSave($event)"
+    [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+    [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="studentadvisor"
+    (onToolbarPreparing)="onToolbarPreparing($event)">
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20,0]" [showInfo]="true" [visible]="true">
+    </dxo-pager>
+    <dxo-load-panel [enabled]="false">
+    </dxo-load-panel>
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+    <!-- <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="!existsadvisor" [allowAdding]="!existsadvisor" [useIcons]="true"> -->
+    <dxo-editing mode="row" [allowUpdating]="false" [allowAdding]="!existsadvisor" [allowDeleting]="true" [useIcons]="true">
+      <!-- <dxo-popup title="บันทึกนักศึกษาในที่ปรึกษา" [showTitle]="true"> -->
+      <dxo-popup [title]="officer" [showTitle]="true">
+      </dxo-popup>
+      <dxo-form>
+        <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+          <dxi-item dataField="studentid" [visible]="false">
+          </dxi-item>
+          <dxi-item dataField="studentcode">
+          </dxi-item>
+          <dxi-item dataField="studentfullname">
+          </dxi-item>
+          <dxi-item dataField="facultyid">
+          </dxi-item>
+          <dxi-item dataField="programid"></dxi-item>
+        </dxi-item>
+      </dxo-form>
+    </dxo-editing>
+    <dxo-selection mode="single"></dxo-selection>
+
+    <!-- <dxi-column dataField="studentcode" [caption]="'รหัสนักศึกษา'" [width]="120" [setCellValue]="getStudentname">
+      <dxi-validation-rule type="required" message="กรุณากรอกรหัสนักศึกษา"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="studentfullname" [caption]="'ชื่อนักศึกษา'" width="350" [allowEditing]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกชื่อนักศึกษา"></dxi-validation-rule>
+    </dxi-column> -->
+    <dxi-column dataField="studentid" caption="ชื่อ-นามสกุล" editCellTemplate="changeStudent" [setCellValue]="setstudentidValue" [fixed]="true">
+        <dxo-lookup [dataSource]="stulist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        <dxi-validation-rule type="required" message="กรุณาระบุนักศึกษา"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="facultyid" [caption]="'วิทยาลัย/คณะ/สถาบัน'" [allowEditing]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกวิทยาลัย/คณะ/สถาบัน"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="lstfaculty" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="programid" [caption]="'สาขาวิชา'" [allowEditing]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกสาขาวิชา"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="lstprogram" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="studentstatus" [caption]="'สถานะ'" witdh="150" [allowEditing]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกสถานะ"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="statuslist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <div *dxTemplate="let cellInfo of 'changeStudent'">
+      <dx-lookup [dataSource]="stulist" [items]="cellInfo.data.studentid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="3" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสนักศึกษาอย่างน้อย 3 ตัวอักษร"
+          (onValueChanged)="updateCell($event, cellInfo)" itemTemplate="lookupItem">
+          <div *dxTemplate="let item of 'lookupItem'">
+              <div>
+                  {{ item.comboshow }}
+              </div>
+          </div>
+      </dx-lookup>
+    </div>
+  </dx-data-grid>
+  <br />
+</div>
+<div class="row" *ngIf="studentadvisor.length > 0">
+<div class="col-2">
+    <br>
+    <dx-select-box [dataSource]="searchtype" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true"
+      [showClearButton]="false" [(ngModel)]="officertypeto">
+    </dx-select-box>
+  </div>
+  <div class="col-2">
+    อาจารย์ที่ปรึกษา
+    <dx-text-box *ngIf="officertypeto == 0" [(ngModel)]="officercodeto" [showClearButton]="true"
+      [placeholder]="'ค้นหาโดยรหัสอาจารย์'"></dx-text-box>
+    <dx-select-box *ngIf="officertypeto == 1" [dataSource]="officerlist" displayExpr="comboshow" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="officercodeto">
+    </dx-select-box>
+  </div>
+  <div class="col-2">
+    ลำดับ
+    <dx-select-box [dataSource]="seqofficerlist" displayExpr="comboshow" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="seqofficerto" [readOnly]="existsadvisor">
+    </dx-select-box>
+  </div>
+  <div class="col-2">
+    รหัสนักศึกษาจาก
+    <!-- <dx-text-box [(ngModel)]="studentcodefrom" [showClearButton]="true" [placeholder]="'ค้นหาโดยรหัสนักศึกษา'"
+      (onValueChanged)="studentcodeto = studentcodefrom"></dx-text-box> -->
+    <dx-text-box [(ngModel)]="studentcodefrom" [showClearButton]="true" [placeholder]="'ค้นหาโดยรหัสนักศึกษา'"></dx-text-box>
+  </div>
+  <div class="col-2">
+    รหัสนักศึกษาถึง
+    <dx-text-box [(ngModel)]="studentcodeto" [showClearButton]="true"
+      [placeholder]="'ค้นหาโดยรหัสนักศึกษา'"></dx-text-box>
+  </div>
+  <div class="col-2" [align]="'right'">
+    <br />
+    <dx-button class="button" (onClick)="changeOfficer()" type="default"
+      text="ย้ายอาจารย์ที่ปรึกษา" [width]="100 + '%'">
+    </dx-button>
+  </div>
+</div>
+<div style="padding-bottom: 20px;"></div>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
+  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

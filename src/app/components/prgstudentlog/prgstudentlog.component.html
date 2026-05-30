@@ -1,0 +1,160 @@
+<div class="row">
+    <div class="col-8">
+    </div>
+    <div class="col-2">
+        รหัสนักศึกษา
+        <!-- <dx-text-box mode="number" [(ngModel)]="studentcode" [showClearButton]="true"> </dx-text-box> -->
+        <app-student-selector
+            (onValueChanged)="studentcode = $event"
+            [disabled]="false"
+            [tmpstudentcode]="studentcode"
+        ></app-student-selector>
+    </div>
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getStudentinfo()" icon="find" type="default" text="ค้นหา" style="width: 100%;">
+        </dx-button>
+    </div>
+</div>
+<br />
+<div>
+    <dx-data-grid id="prgstudentlog" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="studentinfo" rowTemplate="rowTemplateName">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true" [visible]="false"> </dxo-pager>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+        <tbody class="biodetail dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }" *dxTemplate="let studentinfo of 'rowTemplateName'">
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>เลขประจำตัวนักศึกษา : </b>{{ studentinfo.data.studentcode }}</label>
+                </td>
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>ชื่อ-นามสกุล:
+            </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }}
+            {{ studentinfo.data.studentsurname }}
+          </label>
+                </td>
+                <td style="width: 250px;">
+                    <label style="color: #1b4461"><b>วันที่รับเข้า :</b> {{studentinfo.data.admitdateshow}}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>วันที่จบ/พ้นสภาพ : </b>{{ studentinfo.data.finishdateshow }}</label>
+                </td>
+                <td rowspan="5" style="width: 160px;">
+                    <img class="img-crop" [src]="studentinfo.data.stuimg" alt="User Image" height="150px" width="120px" />
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>วิทยาเขต : </b>{{ studentinfo.data.campusname }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>คณะ/วิทยาลัย : </b>{{ studentinfo.data.facultyname }} </label>
+                </td>
+                <!-- <td>
+                    <label style="color: #1b4461"><b></b>{{ studentinfo.data.admitdateshow }} </label>
+                </td> -->
+            </tr>
+            <tr class="notes-row">
+                <td class="text-wrap">
+                    <label style="color: #1b4461"><b>ภาควิชา : </b>{{ studentinfo.data.departmentname }}</label>
+                </td>
+                <td colspan="2" class="text-wrap">
+                    <!-- <label style="color: #1b4461"><b>{{ studentinfo.data.programtitle }} : </b>{{ studentinfo.data.programname }}
+          </label> -->
+                    <label style="color: #1b4461"><b>หลักสูตร : </b>{{ studentinfo.data.programname }}</label>
+                </td>
+                <td colspan="1" class="text-wrap">
+                    <label style="color: #1b4461"><b>บัญชี คชจ : </b>{{ studentinfo.data.feegroupid }}:
+            {{ studentinfo.data.feegroupname }}
+          </label>
+                </td>
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>กลุ่มเรียน : </b>{{ studentinfo.data.studentgroupabb }}</label>
+                </td>
+                <td>
+                    <label style="color: #1b4461"><b>ปีที่เข้า : </b>{{ studentinfo.data.admitacadyear }} </label> &nbsp; &nbsp;
+                    <label style="color: #1b4461"><b>ภาคที่ : </b>{{ studentinfo.data.admitsemester }} </label> &nbsp; &nbsp;
+                    <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>สถานภาพนักศึกษา : </b>{{ studentinfo.data.studentstatusshow }} </label>
+                </td>
+                <!-- <td>
+                    <label style="color: #1b4461"><b></b>{{ studentinfo.data.finishdateshow }} </label>
+                </td> -->
+            </tr>
+            <tr class="notes-row">
+                <td>
+                    <label style="color: #1b4461"><b>ระบบวัดผล : </b>{{ studentinfo.data.acadid }}:
+            {{ studentinfo.data.description }}
+          </label>
+                </td>
+
+                <td colspan="1">
+                    <label style="color: #1b4461"><b>สถานะการเงิน : </b>{{studentinfo.data.financestatusshow}} </label>
+                </td>
+                <td colspan="2">
+                    <label style="color: #1b4461"><b>GPAX : </b>{{ studentinfo.data.gpa | number : "0.2-2" }} </label>
+                </td>
+            </tr>
+        </tbody>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลนักศึกษา</div>
+        </div>
+    </dx-data-grid>
+</div>
+
+                <!-- <dx-select-box [dataSource]="eventtypelist" (onValueChanged)="getStudentupdatelog()" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="eventtype">
+                </dx-select-box> -->
+<div id="data-grid-demo" style="padding-top: 7px;">
+    <!-- (onSaving)="onSave($event)" (onEditingStart)="onEditstart($event)" (onSelectionChanged)="selectionChanged($event)" (onInitNewRow)="onInsertingstart($event)" (onEditCanceling)="onCancelEditmode()" -->
+    <dx-data-grid id="prgstudentlog1" (onToolbarPreparing)="onToolbarPreparing($event)" [dataSource]="studentupdateloglist">
+        <!-- (onSelectionChanged)="selectionChanged($event) (onSaved)="ProCodSave($event)" -->
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10,15,20, 0]" [showInfo]="true">
+        </dxo-pager>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="สถานภาพนักศึกษา" [showTitle]="true" [height]="'auto'">
+            </dxo-popup>
+
+
+        </dxo-editing>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <!-- <dxo-filter-panel [visible]="true"></dxo-filter-panel> -->
+        <dxo-selection mode="single"></dxo-selection>
+
+        <!-- <dxi-column [fixed]="true" fixedPosition="left" dataField="eventtype" caption="ประเภท"> </dxi-column> -->
+        <dxi-column [fixed]="true" fixedPosition="left" dataField="eventtypename" caption="ประเภทรายการแก้ไข">
+            <dxo-lookup [dataSource]="eventtypelist" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="olddata" caption="ค่าเดิม">
+        </dxi-column>
+        <dxi-column dataField="newdata" caption="ค่าใหม่"></dxi-column>
+        <dxi-column dataField="updateuserid" caption="แก้ไขโดย" width="200"></dxi-column>
+        <dxi-column dataField="updatedatetime" dataType="datetime" caption="วันเวลาแก้ไข" width="150"></dxi-column>
+        <div *dxTemplate="let info of 'tableName'">
+        <div style="display: flex;  height: 30px;">
+            <span class="p-0 my-auto" style="margin-right: 10px;">ประเภทรายการแก้ไข</span>
+                <!-- <dx-select-box
+                class="p-0 my-auto"
+                style="min-width: 310px;"
+                [dataSource]="eventtypelist"
+                (onValueChanged)="getStudentupdatelog()"
+                displayExpr="comboshow"
+                searchMode="StartsWith"
+                valueExpr="comboid"
+                [searchEnabled]="true"
+                [showClearButton]="true"
+                [(ngModel)]="eventtype">
+                </dx-select-box> -->
+            </div>
+        </div>
+    </dx-data-grid>
+</div>

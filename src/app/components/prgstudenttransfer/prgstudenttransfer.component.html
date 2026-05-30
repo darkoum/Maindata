@@ -1,0 +1,300 @@
+<div id="accordion" style="padding-bottom: 5px;">
+    <dx-accordion #accordion [collapsible]="false" [multiple]="false" [animationDuration]="300">
+        <dxi-item title="ค้นหาข้อมูลนักศึกษา">
+            <div class="row" style="padding: 3px">
+                <div class="col-3">
+                    จากวันที่
+                    <!--  <dx-date-box type="date" [(ngModel)]="transferdatefrom" [showClearButton]="true"></dx-date-box> -->
+                    <dx-date-box-custom [date]="transferdatefrom" (onValueChanged)="transferdatefrom = $event.value" [showClearButton]="true"></dx-date-box-custom>
+                </div>
+                <div class="col-3">
+                    ถึง
+                    <!--    <dx-date-box type="date" [(ngModel)]="transferdateto" [showClearButton]="true"> </dx-date-box> -->
+                    <dx-date-box-custom [date]="transferdateto" (onValueChanged)="transferdateto = $event.value" [showClearButton]="true"></dx-date-box-custom>
+                </div>
+                <div class="col-3">
+                    ประเภท
+                    <dx-select-box [width]="100 + '%'" [dataSource]="transfertypelist" displayExpr="comboshow" valueExpr="comboid" [(ngModel)]="transfertype" [searchEnabled]="true" [showClearButton]="true"
+                    (onValueChanged)="gettransferdes()">
+                    </dx-select-box>
+                </div>
+                <div class="col-2">
+                    ปีการศึกษา
+                    <dx-number-box [(value)]="acadyear" [showSpinButtons]="true" [min]="1" [max]="9999"></dx-number-box>
+                </div>
+                <div class="col-1">
+                    ภาค
+                    <dx-number-box [(value)]="semester" [showSpinButtons]="true" [min]="0" [max]="3"></dx-number-box>
+                </div>
+            </div>
+
+            <div class="row" style="padding: 3px">
+                <div class="col-3">
+                    ศูนย์/วิทยาเขต
+                    <dx-select-box [width]="100 + '%'" [dataSource]="campuslist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [(ngModel)]="campusid" (onItemClick)="getShowstrwhere($event)" [showClearButton]="true">
+                    </dx-select-box>
+                </div>
+                <div class="col-3">
+                    ระดับ
+                    <dx-select-box [width]="100 + '%'" [dataSource]="levellist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [(ngModel)]="levelid" (onItemClick)="getShowstrwhere($event)" [showClearButton]="true">
+                    </dx-select-box>
+                </div>
+                <div class="col-3">
+                    วิทยาลัย/คณะ/สถาบัน
+                    <dx-select-box [width]="100 + '%'" [dataSource]="facultylist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [(ngModel)]="facultyid" (onItemClick)="getShowstrwhere($event)" [showClearButton]="true">
+                    </dx-select-box>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <br>
+                            <dx-button stylingMode="contained" text="ค้นหา" icon="find" type="default" [width]="150" (onClick)="getStudenttransfer();">
+                            </dx-button>
+                        </div>
+                        <div class="col-6">
+                            <br>
+                            <dx-button stylingMode="contained" text="ค้นหานักศึกษา" icon="find" type="default" [width]="150" (onClick)="ShowpopupSearchStudent();">
+                            </dx-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </dxi-item>
+    </dx-accordion>
+</div>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
+<div *ngIf="itemcount == 0; then Showtemplatenull; else Showtemplate"></div>
+<ng-template #Showtemplatenull>
+    <div id="studenttranfernull"></div>
+</ng-template>
+<ng-template #Showtemplate>
+    <div>
+        <dx-data-grid id="studenttranfer" [columnAutoWidth]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="studentinfo" rowTemplate="rowTemplateName">
+            <!-- <dxo-paging [pageSize]="0"></dxo-paging> -->
+            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true" [visible]="false">
+            </dxo-pager>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxi-column caption="ข้อมูลนักศึกษา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+            <tbody class="biodetail dx-row" [ngClass]="{ 'dx-row-alt': studentinfo.rowIndex % 2 }" *dxTemplate="let studentinfo of 'rowTemplateName'">
+                <tr class="main-row">
+                    <td style="width: 25%; height: 25px">
+                        <!-- <label style="color: #1b4461"><b>รหัสนักศึกษา : </b>{{ studentinfo.data.studentcode}}</label> -->
+                        <label style="color: #1b4461"><b>รหัสนักศึกษา : </b>{{ studentinfo.data.studentcode}}</label>
+                    </td>
+                    <td colspan="2">
+                        <label style="color: #1b4461"><b>ชื่อ :
+                            </b>{{ studentinfo.data.prefixname }}{{ studentinfo.data.studentname }}
+                            {{ studentinfo.data.studentsurname }}
+                        </label>
+                    </td>
+                    <td style="width: 15%">
+                        <label style="color: #1b4461"><b>วันที่รับเข้า</b></label>
+                    </td>
+                    <td rowspan="5" style="width: 15%;text-align: center;">
+                        <img class="img-crop" [src]="studentinfo.data.stuimg" alt="User Image" height="150px" width="120px" />
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td>
+                        <label style="color: #1b4461"><b>ศูนย์/วิทยาเขต : </b>{{ studentinfo.data.campusname }}</label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>ระดับ : </b>{{ studentinfo.data.levelname }} </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>วิทยาลัย/คณะ/สถาบัน : </b>{{ studentinfo.data.facultyname }} </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b></b>{{ studentinfo.data.admitdate }} </label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td>
+                        <label style="color: #1b4461"><b>ภาค/สาขา : </b>{{ studentinfo.data.departmentname }}</label>
+                    </td>
+                    <td colspan="2">
+                        <label style="color: #1b4461"><b>{{ studentinfo.data.programtitle }} :
+                            </b>{{ studentinfo.data.programname }}
+                        </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>วันที่จบ/พ้นสภาพ</b></label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td>
+                        <!-- <label style="color: #1b4461"><b>กลุ่มนักศึกษา : </b>{{ studentinfo.data.studentgroupabb }}</label> -->
+                        <label style="color: #1b4461"><b>รุ่น/กลุ่มนักศึกษา : </b>{{ studentinfo.data.studentgroupabb }}</label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>ปีที่เข้า : </b>{{ studentinfo.data.admitacadyear }} </label> &nbsp; &nbsp;
+                        <label style="color: #1b4461"><b>ภาคที่ : </b>{{ studentinfo.data.admitsemester }} </label> &nbsp; &nbsp;
+                        <label style="color: #1b4461"><b>ชั้นปี : </b>{{ studentinfo.data.studentyear }} </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>สถานะภาพ : </b>{{ studentinfo.data.studentstatusdes }} </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b></b>{{ studentinfo.data.finishdate }} </label>
+                    </td>
+                </tr>
+                <tr class="notes-row">
+                    <td>
+                        <label style="color: #1b4461"><b>ระบบวัดผล : </b>{{ studentinfo.data.acadid }}:
+                            {{ studentinfo.data.description }}
+                        </label>
+                    </td>
+                    <td colspan="2">
+                        <label style="color: #1b4461"><b>บัญชี คชจ : </b>{{ studentinfo.data.feegroupid }}:
+                            {{ studentinfo.data.feegroupname }}
+                        </label>
+                    </td>
+                    <td>
+                        <label style="color: #1b4461"><b>สถานะการเงิน : </b>{{ studentinfo.data.financestatus }}
+                        </label> &nbsp;
+                        <label style="color: #1b4461"><b>GPAX : </b>{{ studentinfo.data.gpa | number: '1.2-2'}} </label>
+                    </td>
+                </tr>
+            </tbody>
+            <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+                <div class="tableheader">ข้อมูลนักศึกษา</div>
+            </div>
+        </dx-data-grid>
+    </div>
+</ng-template>
+<div id="datagrid"> 
+    <dx-data-grid [dataSource]="studenttransfer" (onSaving)="dataSave($event)" (onInitNewRow)="onInsertingstart($event)" (onSelectionChanged)="selectionChanged($event)"
+    (onToolbarPreparing)="onToolbarPreparing($event)" (onEditCanceled)="onEditCanceled($event)"
+    >
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup [title]="transfertypedes" [showTitle]="true" [height]="'auto'"></dxo-popup>
+            <dxo-form>
+                <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                    <dxi-item dataField="studentid" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="oldgroupyear"></dxi-item>
+                    <dxi-item dataField="oldstudentgroup" [colSpan]="3"></dxi-item>
+                    <dxi-item dataField="newstudentcode" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="newgroupyear"></dxi-item>
+                    <dxi-item dataField="newstudentgroup" [colSpan]="3"></dxi-item>
+                    <dxi-item dataField="transferstatus" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="transferdate" [colSpan]="2"></dxi-item>
+                    <dxi-item dataField="description" [colSpan]="2"></dxi-item>
+                </dxi-item>
+            </dxo-form>
+        </dxo-editing>
+
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <!-- <dxo-filter-panel [visible]="true"></dxo-filter-panel> -->
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="studentid" caption="ชื่อ-นามสกุล" [setCellValue]="setstudentidValue" [fixed]="true">
+            <dxo-lookup [dataSource]="studentlist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+            <dxi-validation-rule type="required" message="กรุณาระบุรหัสนักศึกษา"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="studentcode" caption="รหัสนักศึกษาเดิม" width="120"> </dxi-column>
+        <dxi-column dataField="oldgroupyear" caption="รุ่นเดิม" [allowEditing]="false" width="60">
+        </dxi-column>
+        <!-- <dxi-column dataField="oldstudentgroup" caption="กลุ่มนักศึกษาเดิม" [allowEditing]="false"> -->
+        <dxi-column dataField="oldstudentgroup" caption="กลุ่มนักศึกษาเดิม" [allowEditing]="false" >
+            <dxo-lookup [dataSource]="stugroupnamelistold" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="oldprogramid" [visible]="false"></dxi-column>
+        <dxi-column dataField="acadyear" [visible]="false"></dxi-column>
+        <dxi-column dataField="semester" [visible]="false"></dxi-column>
+        <dxi-column dataField="transfertype" [visible]="false"></dxi-column>
+        <dxi-column dataField="newstudentcode" caption="รหัสนักศึกษาใหม่" width="120"> </dxi-column>
+        <dxi-column dataField="newgroupyear" caption="รุ่นใหม่" [setCellValue]="setnewgroupyearValue" width="60">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <!-- <dxi-column dataField="newstudentgroup" caption="กลุ่มนักศึกษาใหม่" [setCellValue]="setnewstudentgroup"> -->
+        <dxi-column dataField="newstudentgroup" caption="กลุ่มนักศึกษาใหม่" [setCellValue]="setnewstudentgroup" [editorOptions]="newStudentgroupEditorOptions">
+            <!-- <dxo-lookup [dataSource]="getFilterednewStudentgroup" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup> -->
+            <dxo-lookup [dataSource]="getFilterednewStudentgroup" valueExpr="comboid" displayExpr="comboshow" searchMode="contains" >
+            </dxo-lookup>
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="transferstatus" caption="สถานะ" width="100">
+            <dxo-lookup [dataSource]="tranferstatuslist" valueExpr="comboid" displayExpr="comboshow">
+            </dxo-lookup>
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="transferdate" caption="วันที่โอนย้าย" dataType="date" editCellTemplate="edittransferdate" width="100">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="description" caption="คำอธิบาย"> </dxi-column>
+        <!-- <div *dxTemplate="let cellInfo of 'changeStudent'">
+            <dx-lookup [dataSource]="studentlist" [items]="cellInfo.data.studentid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="3" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสนักศึกษาอย่างน้อย 3 ตัวอักษร"
+                (onValueChanged)="updateCell($event, cellInfo)" itemTemplate="lookupItem">
+                <div *dxTemplate="let item of 'lookupItem'">
+                    <div>
+                        {{ item.comboshow }}
+                    </div>
+                </div>
+            </dx-lookup>
+        </div> -->
+        <div *dxTemplate="let cellInfo of 'edittransferdate'">
+            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+        </div>
+    </dx-data-grid>
+</div>
+<!---------------------------------------------------------------------------------------------------------------- -->
+<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="แก้ไขหลักสูตร/สถานะ" [dragEnabled]="true" [closeOnOutsideClick]="false" [(visible)]="popupVisible">
+    <dxo-position at="center center" my="center center" of="window"> </dxo-position>
+    <dx-scroll-view width="100%" height="100%">
+        <div class="card card-body" style="padding: 5px;">
+            <div class="row d-flex">
+                <div class="col-8">
+                </div>
+                <div class="col-2">
+                    รหัสนักศึกษา
+                    <dx-text-box [(ngModel)]="searchstudentid" [showClearButton]="true"> </dx-text-box>
+                </div>
+                <div class="col-2">
+                    <br>
+                    <!-- <dx-button stylingMode="contained" text="ค้นหา" icon="find" type="default" [width]="100" (onClick)="SearchStudenttransfer();">
+                    </dx-button> -->
+                    <dx-button stylingMode="contained" text="ค้นหา" icon="find" type="default" width="100%" (onClick)="SearchStudenttransfer();">
+                    </dx-button>
+                </div>
+            </div>
+            <dx-data-grid id="searchstudenttransfer" [columnAutoWidth]="true" [dataSource]="searchstudentlist" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true">
+                <dxo-paging [pageSize]="0"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[0]" [showInfo]="true" [visible]="false">
+                </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+                    <dxo-popup [showTitle]="true" title="บันทึกสาขาที่เปิด" [position]="{ my: 'center', at: 'center', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <!-- <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel> -->
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+
+                <dxi-column dataField="acadyear" caption="ปี"></dxi-column>
+                <dxi-column dataField="semester" caption="ภาค"></dxi-column>
+                <dxi-column dataField="studentcode" caption="รหัสนักศึกษาเดิม"> </dxi-column>
+                <dxi-column dataField="oldgroupyear" caption="รุ่นเดิม"></dxi-column>
+                <dxi-column dataField="oldstudentgroup" caption="กลุ่มนักศึกษาเดิม"></dxi-column>
+                <dxi-column dataField="pgnameold" caption="สาขาเดิม"></dxi-column>
+                <dxi-column dataField="newstudentcode" caption="รหัสนักศึกษาใหม่"> </dxi-column>
+                <dxi-column dataField="newgroupyear" caption="รุ่นใหม่"></dxi-column>
+                <dxi-column dataField="newstudentgroup" caption="กลุ่มนักศึกษาใหม่"></dxi-column>
+                <dxi-column dataField="pgnamenew" caption="สาขาใหม่"></dxi-column>
+                <dxi-column dataField="transferdate" caption="วันที่"></dxi-column>
+                <div *dxTemplate="let data of 'heddershow'">
+                    <div style="color:brown;">
+                        <b *ngIf="searchstudentlist?.length > 0">{{ tmptextsearch1 }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ tmptextsearch2
+                            }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{
+                            tmptextsearch3 }}</b>
+                    </div>
+                </div>
+
+            </dx-data-grid>
+        </div>
+    </dx-scroll-view>
+</dx-popup>
+<!---------------------------------------------------------------------------------------------------------------- -->

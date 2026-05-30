@@ -1,0 +1,96 @@
+
+            <div class="row">
+                <!-- <div class="col-2">
+                    ศูนย์/วิทยาเขต
+                    <dx-select-box [dataSource]="camshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getShowstrwhere($event)" [(ngModel)]="camid">
+                    </dx-select-box>
+                </div> -->
+
+                <div class="col-2">
+                    รหัสค้นหา
+                    <dx-text-box [(ngModel)]="offcode" [showClearButton]="true"> </dx-text-box>
+                </div>
+                <div class="col-2">
+                    ชื่อ
+                    <dx-text-box [(ngModel)]="offname" [showClearButton]="true"> </dx-text-box>
+                </div>
+                <div class="col-2">
+                    นามสกุล
+                    <dx-text-box [(ngModel)]="offsurname" [showClearButton]="true"> </dx-text-box>
+                </div>
+
+                <div class="col-2">
+                    ประเภท
+                    <dx-select-box [dataSource]="officertypeshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getShowstrwhere($event)" [(ngModel)]="offtypecode">
+                    </dx-select-box>
+                </div>
+
+                <div class="col-2">
+                    สังกัด
+                    <dx-select-box [dataSource]="facshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [value]="facshow[0]?.comboid" [searchEnabled]="true" [showClearButton]="true" (onItemClick)="getShowstrwhere($event)" [(ngModel)]="facid">
+                    </dx-select-box>
+                </div>
+
+                <div class="col-2">
+                    <br />
+                    <dx-button class="button" (onClick)="onSearch()" text="ค้นหา" icon="find" type="default" [width]="'100%'">
+                    </dx-button>
+                </div>
+            </div>
+
+
+<div class="row">
+    <div class="col-3">
+        <br />
+    </div>
+</div>
+
+<!-- <label><b>Double Click ที่ชื่อกรณีย้ายเป็นรายคน</b></label> -->
+
+<!-- <div class="col-12"> -->
+
+<div id="data-grid-demo">
+    <dx-data-grid id="gridprgsearchofficer" (onSelectionChanged)="selectionChanged($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="offlist" [columnAutoWidth]="true" [allowColumnResizing]="true" [columnHidingEnabled]="true">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [allowAdding]="false" [useIcons]="true">
+            <dxo-popup title="Student Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+            </dxo-popup>
+        </dxo-editing>
+
+
+
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <!-- <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel> -->
+        <dxi-column dataField="officerid" caption="ID" [visible]="false"></dxi-column>
+        <dxi-column dataField="officercode" caption="รหัสค้นหา"></dxi-column>
+        <dxi-column dataField="prefixid" caption="คำนำหน้า">
+            <dxo-lookup [dataSource]="preshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officername" caption="ชื่อ (ไทย)"></dxi-column>
+        <dxi-column dataField="officersurname" caption="นามสกุล (ไทย)"></dxi-column>
+        <dxi-column dataField="officernameeng" caption="ชื่อ (อังกฤษ)"></dxi-column>
+        <dxi-column dataField="officersurnameeng" caption="นามสกุล (อังกฤษ)"></dxi-column>
+        <dxi-column dataField="officertype" caption="ประเภท" [visible]="true">
+            <dxo-lookup [dataSource]="officertypeshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน" [visible]="true" >
+            <dxo-lookup [dataSource]="facshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="true">
+            <dxo-lookup [dataSource]="depshow" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+
+        </dxi-column>
+        <dxi-column dataField="officeremail" caption="อีเมล"></dxi-column>
+        <!-- <dxi-column dataField="officerpassword" caption="Password" [visible]="false"></dxi-column> -->
+        <dxi-column dataField="officerstatus" caption="สถานะ">
+            <dxo-lookup [dataSource]="officerstatusshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+    </dx-data-grid>
+</div>
+
+<!-- </div> -->

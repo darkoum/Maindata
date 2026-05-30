@@ -1,0 +1,22 @@
+::ng-deep .condition {
+    vertical-align: middle;
+    text-align: center;
+}
+
+::ng-deep #datagrid {
+    padding-top: 5px;
+}
+
+::ng-deep .dx-datagrid-header-panel {
+    height: 60px;
+}
+
+::ng-deep .dx-datagrid-search-panel {
+    margin-top: 15px;
+}
+
+::ng-deep #studenttransferGrid .dx-button-text{
+    padding-top: 3px !important;
+}
+
+/* dx-show-invalid-badge dx-textbox dx-texteditor dx-editor-outlined dx-searchbox dx-show-clear-button dx-texteditor-empty dx-widget */

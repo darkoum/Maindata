@@ -1,0 +1,83 @@
+<div id="data-grid-demo">
+
+    <dx-data-grid id="gridContainer" [columnAutoWidth]="true" [hoverStateEnabled]="true" [dataSource]="degreelist" [showBorders]="true" (onInitNewRow)="getDefault($event)" (onSaving)="dataSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+        [showBorders]="true" [allowColumnReordering]="true" [allowColumnResizing]="true">
+
+        <dxo-paging [pageSize]="15"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="บันทึกวุฒิ/ปริญญา" [showTitle]="true" [height]="'auto'">
+            </dxo-popup>
+
+            <dxo-form>
+                <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+                    <dxi-item dataField="degreeid" [label]="{ text: 'รหัส' }"></dxi-item>
+
+
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="2" [colSpan]="2">
+
+                    <dxi-item dataField="degreename" [colSpan]="2" [label]="{ text: 'ชื่อปริญญา(ไทย)' }"></dxi-item>
+                    <dxi-item dataField="degreenameeng" [colSpan]="2" [label]="{ text: 'ชื่อปริญญา(อังกฤษ)' }"></dxi-item>
+                    <dxi-item dataField="degreeabb"></dxi-item>
+                    <dxi-item dataField="degreeabbeng"></dxi-item>
+                    <dxi-item dataField="degreecertificate" [label]="{ text: 'ชื่อในปริญญาบัตร(ไทย)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificateeng" [label]="{ text: 'ชื่อในปริญญาบัตร(อังกฤษ)' }"></dxi-item>
+                    <!-- <dxi-item dataField="degreecertificateabb" [label]="{ text: 'ชื่อใน Transcript แบบย่อ(ไทย)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificateabbeng" [label]="{ text: 'ชื่อใน Transcript แบบย่อ(อังกฤษ)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificatehonor" [label]="{ text: 'ชื่อในปริญญาบัตรที่ได้เกียรตินิยม(ไทย)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificatehonoreng" [label]="{ text: 'ชื่อในปริญญาบัตรที่ได้เกียรตินิยม(อังกฤษ)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificatehonorabb" [label]="{ text: 'ชื่อในปริญญาบัตรที่ได้เกียรตินิยมแบบย่อ(ไทย)' }"></dxi-item>
+                    <dxi-item dataField="degreecertificatehonorabbeng" [label]="{ text: 'ชื่อในปริญญาบัตรที่ได้เกียรตินิยมแบบย่อ(อังกฤษ)' }"></dxi-item> -->
+                    <dxi-item dataField="degreelevel" [label]="{ text: 'ขั้น' }"></dxi-item>
+                    <dxi-item dataField="parinyaprefix" [label]="{ text: 'เลขนำหน้าปริญญาบัตร' }"></dxi-item>
+                    <dxi-item dataField="statusflag" ></dxi-item>
+
+                </dxi-item>
+
+            </dxo-form>
+        </dxo-editing>
+        <dxo-search-panel [visible]="true" [width]="240" [highlightCaseSensitive]="false" placeholder="ค้นหา..."></dxo-search-panel>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column dataField="degreeid" caption="*รหัส" sortOrder="asc" [width]="100" dataType="number" [visible]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column caption="*รหัส" [width]="100" allowSearch="true" [calculateCellValue]="getdegreeid"></dxi-column>
+        <dxi-column dataField="degreename" caption="*ชื่อปริญญา (ไทย)">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อปริญญา (ไทย)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="degreenameeng" caption="*ชื่อปริญญา (อังกฤษ)">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อปริญญา (อังกฤษ)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="degreeabb" caption="ชื่อย่อ (ไทย)"></dxi-column>
+        <dxi-column dataField="degreeabbeng" caption="ชื่อย่อ (อังกฤษ)"></dxi-column>
+        <dxi-column dataField="degreelevel" caption="*ขั้น">
+            <dxi-validation-rule type="required" message="กรุณากรอกขั้น"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="degreelevel" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+       
+        <dxi-column dataField="statusflag" caption="สถานะใช้งาน" [width]="100">
+            <dxi-validation-rule type="required" message="กรุณากรอกสถานะใช้งาน"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="statusflaglist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificate" caption="ชื่อในปริญญา"></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificateeng" caption="ชื่อในปริญญา(อังกฤษ)"></dxi-column>
+        <dxi-column [visible]="false" dataField="parinyaprefix" caption="เลขนำหน้าปริญญาบัตร">
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขนำหน้าปริญญาบัตร"></dxi-validation-rule>
+        </dxi-column>
+        <!-- <dxi-column [visible]="false" dataField="degreeorder" caption="ลำดับใบเสนอสำเร็จ"></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificateabb" caption="ชื่อย่อในปริญญา"></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificateabbeng" caption="ชื่อย่อในปริญญา (อังกฤษ)"></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificatehonor" caption=""></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificatehonoreng" caption=""></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificatehonorabb" caption=""></dxi-column>
+        <dxi-column [visible]="false" dataField="degreecertificatehonorabbeng" caption=""></dxi-column> -->
+        
+
+
+    </dx-data-grid>
+
+</div>

@@ -1,0 +1,99 @@
+<div class="row">
+    <div style="margin:0 auto;min-width:500px;width:40%;">
+        <div class="widget-container">
+            <div class="card">
+                <div class="card-header" translate>{{repname}}</div>
+                <div class="card-body" style="border-radius: 0px 0px 5px 5px;">
+                    <div style="margin-left: 15px;">
+                    <form [formGroup]="frm" *ngIf="frm">
+                        <div class="row">
+                            <ng-container *ngFor="let item of frmdata">
+                                <div *ngIf="item.tempname == ''" class="col-md-{{item.colspancaption}} text-left mb-1">
+                                </div>
+
+                                <ng-container *ngIf="item.combo && item.tempname != ''">
+                                    <div class="col-md-{{item.colspancaption}} mb-1"
+                                        style="display: grid;align-items: center;padding: 0px 0px 0px 0px;">
+                                        <span>{{item.caption}}<span *ngIf="item.require == 1" style="color: rgb(220, 19, 19);font-weight: bold;">*</span></span>
+                                    </div>
+                                    <div class="col-md-{{item.colspan}} text-left mb-1" style="padding: 1px 15px 0px 0px;">
+                                        <dx-select-box [dataSource]="combolist[item.sequence]"
+                                            formControlName="{{syspre}}{{item.sequence}}"
+                                            (onValueChanged)="HandleEvent(item.tempname)"
+                                            [class.error]="!frm.get(syspre + item.sequence).valid">
+                                            <dx-validator *ngIf="item.require == 1">
+                                                <dxi-validation-rule type="required" message="กรุณาระบุ{{item.caption}}"></dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-select-box>
+                                    </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="!item.combo && item.tempname != ''">
+                                    <div class="col-md-{{item.colspancaption}} text-left mb-1"
+                                        style="display: grid;align-items: center;padding: 0px 0px 0px 0px;">
+                                        <span *ngIf="item.datatype != 'C'">{{item.caption}}<span *ngIf="item.require == 1" style="color: rgb(220, 19, 19);font-weight: bold;">*</span></span>
+                                    </div>
+                                    <div class="col-md-{{item.colspan}} text-left mb-1" style="padding: 1px 15px 0px 0px;">
+                                        <div *ngIf="item.datatype == 'C'" (click)="chkGroup(item.tempname, item.sequence)" style="padding: 5px 0px 5px 0px;">
+                                            <dx-check-box  formControlName="{{syspre}}{{item.sequence}}" text="{{item.caption}}"></dx-check-box>
+                                        </div>
+                                        <dx-date-box-custom *ngIf="item.datatype == 'D' || item.datatype == 'H'"
+                                            [type]="item.datatype == 'D'? 'date' : 'datetime'"
+                                            [date]="frm.get(syspre + item.sequence).value"
+                                            (onValueChanged)="frm.get(syspre + item.sequence).setValue($event.value)"
+                                            [showClearButton]="true"
+                                            [validator]="item.require == 1">
+                                            
+                                        </dx-date-box-custom>
+                                        <dx-text-box *ngIf="item.datatype == 'T' || item.datatype == 'P'" 
+                                            [inputAttr]="{ 'style':  'text-transform: uppercase'}"
+                                            formControlName="{{syspre}}{{item.sequence}}"
+                                            [showClearButton]="true" 
+                                            (onValueChanged)="HandleEventText(item.sequence,item.tempname,$event.value)"
+                                            [class.error]="!frm.get(syspre + item.sequence).valid">
+                                            <dx-validator *ngIf="item.require == 1">
+                                                <dxi-validation-rule type="required" message="กรุณาระบุ{{item.caption}}"></dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-text-box>
+                                        <dx-number-box *ngIf="item.datatype == 'N'" formControlName="{{syspre}}{{item.sequence}}"
+                                            [showSpinButtons]="true" [min]="item.minvalue?item.minvalue:0" [max]="item.maxvalue?item.maxvalue:9999" 
+                                            (onValueChanged)="HandleEvent(item.tempname)"
+                                            [class.error]="!frm.get(syspre + item.sequence).valid">
+                                            <dx-validator *ngIf="item.require == 1">
+                                                <dxi-validation-rule type="required" message="กรุณาระบุ{{item.caption}}"></dxi-validation-rule>
+                                            </dx-validator>
+                                        </dx-number-box>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </form>
+                    <div class="row text-left mb-1" *ngIf="export > 0">
+                        <div class="col-md-3" style="display: grid;align-items: center;padding: 0px;">
+                            <label>รูปแบบไฟล์</label>
+                        </div>
+                        <div class="col-md-5" style="padding: 0px 0px 0px 0px;">
+                            <dx-select-box [dataSource]="combolist[export]" displayExpr="comboshow" valueExpr="comboid"
+                                [(ngModel)]="reptype"></dx-select-box>
+                        </div>
+                    </div>
+                    <div class="row text-left">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9 ml-10" style="padding: 5px 0px 0px 0px;">
+                            <dx-button class="button" (onClick)="submit()" text="PROCESS" icon="preferences"
+                                type="success" [width]="140"></dx-button>
+                        </div>
+                    </div>
+
+                    <div class="row text-left">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9 ml-10 pt-1 text-primary" style="padding: 5px 0px 0px 0px;">
+                            {{repfilename}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+.biodetail tr td{
+  border: transparent;
+  padding: 5px;
+}
+
+label {
+  padding: 1px;
+}
+
+::ng-deep #prgstudentinfo tr.notes-row td {
+    padding-top: 0px;  
+    padding-bottom : 0px;  
+    
+}
+::ng-deep #prgstudentinfo tr.main-row td {
+  padding-bottom : 0px;  
+}
+.center-radio {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.radio-group-box legend {
+  font-size: 12px;       /* smaller font size */
+  font-weight: normal;   /* regular font weight */
+  padding: 0 5px;        /* some horizontal padding */
+}

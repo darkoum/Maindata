@@ -1,0 +1,173 @@
+<div class="card card-body" id="accordion" style="padding-bottom:10px;background-color: white!important;">
+
+    <div class="row">
+        <div class="col-3">
+            ศูนย์/วิทยาเขต
+            <dx-select-box [dataSource]="campuscombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [(ngModel)]="campusid" [showClearButton]="false" >
+            </dx-select-box>
+        </div>
+       
+        <div class="col-1">
+            รุ่น
+          <dx-text-box [(ngModel)]="groupyear" (onValueChanged)="getstudentgroup(campusid,groupyear)"></dx-text-box>
+        </div>
+        <div class="col-4">
+            กลุ่มนักศึกษา
+            <dx-select-box [(ngModel)]="studentgroup" [dataSource]="studentgroupcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true"  [showClearButton]="true"  ></dx-select-box>
+        </div>
+        <div class="col-2">
+            รหัสนักศึกษา
+            <!-- <dx-text-box [(ngModel)]="studentcode" > </dx-text-box> -->
+            <app-student-selector
+            (onValueChanged)="studentcode = $event"
+            [disabled]="false"
+            [tmpstudentcode]="studentcode"
+        ></app-student-selector>
+        </div>
+
+         <div class="col-2">
+            <br />
+            <dx-button class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา" style="width: 100%;">
+            </dx-button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<br>
+<div class="row">
+    <div class="col-12">
+        <div id="data-grid-demo">
+            <dx-data-grid [disabled]="!studentlist" id="prgschoolstatus" [columnAutoWidth]="true" [allowColumnReordering]="true" [allowColumnResizing]="true" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" (onSaving)="dataSave($event)"
+                [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="studentlist">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="false" [allowDeleting]="false" [useIcons]="true" [allowAdding]="false">
+
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="studentid" caption="studentid" [visible]="false"></dxi-column>
+          
+                <dxi-column dataField="campusid" caption="ศูนย์/วิทยาเขต" [visible]="false">
+                    <dxo-lookup [dataSource]="campuscombo" valueExpr="comboid" displayExpr="comboshow" showClearButton="true"></dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="studentcode" caption="รหัสนักศึกษา" [fixed]="true"></dxi-column>
+                <dxi-column dataField="prefixname" caption="คำนำหน้า"></dxi-column>
+                <dxi-column dataField="studentname" caption="ชื่อ"></dxi-column>
+                <dxi-column dataField="studentsurname" caption="นามสกุล"></dxi-column>
+                <dxi-column dataField="groupyear" caption="รุ่น"></dxi-column>
+                <dxi-column dataField="studentgroup" caption="กลุ่มนักศึกษา">
+                    <dxo-lookup [dataSource]="stusetcombo" valueExpr="comboid" displayExpr="comboshow" showClearButton="true"> </dxo-lookup>
+
+                </dxi-column>
+                
+                <dxi-column dataField="schoolid" caption="โรงเรียน/สถาบัน" >
+                    <dxo-lookup [dataSource]="schocombo" valueExpr="comboid" displayExpr="comboshow" showClearButton="true"> </dxo-lookup>
+                </dxi-column>
+                
+                <dxi-column dataField="entrydegree" caption="วุฒิที่จบ">
+                    <dxo-lookup [dataSource]="entdegcombo" valueExpr="comboid" displayExpr="comboshow" showClearButton="true"> </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="entryhonor" caption="เกียรตินิยม"></dxi-column>
+                <dxi-column dataField="entrygpax" caption="GPA" format="#0.00" dataType="number"></dxi-column>
+                <dxi-column dataField="entrygraduatedate" dataType="date" caption="วันที่จบ"></dxi-column>
+
+                
+               
+
+                <!-- <div *dxTemplate="let cellInfo of 'editsenddate'">
+                    <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)" [showClearButton]="true"></dx-date-box-custom>
+                </div> -->
+
+                <!-- <div *dxTemplate="let cellInfo of 'editreceivedate'">
+                    <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)" [showClearButton]="true"></dx-date-box-custom>
+                </div> -->
+
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+                <div id="prgschoolstatus2" >
+                    <dx-data-grid [disabled]="!studentlist" id="prgschoolstatus2" [columnAutoWidth]="true" (onInitNewRow)="getDefault2($event)" (onSaving)="dataSave2($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="schstaitelist">
+                        <dxo-paging [pageSize]="5"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+                        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="false" [useIcons]="true">
+
+                        </dxo-editing>
+                        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                        <dxo-selection mode="single"></dxo-selection>
+                        <dxi-column dataField="schoolstatusid" caption="ครั้งที่ส่งตรวจสอบ" [visible]="true" [fixed]="true" editCellTemplate="editschoolstatusid">
+                            <dxo-lookup [dataSource]="schostacombo" valueExpr="comboid" displayExpr="comboshow" showClearButton="false"> </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="studentid" caption="STUDENTID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="controlcode" caption="CONTROLCODE" [visible]="false"></dxi-column>
+                        <dxi-column dataField="studentcode" width="180" caption="รหัสนักศึกษา" [allowEditing]="false" [fixed]="true">
+                        </dxi-column>
+                        <dxi-column dataField="prefixname" caption="คำนำหน้า" [allowEditing]="false" [fixed]="true">
+                        </dxi-column>
+                        <dxi-column dataField="studentname" caption="ชื่อ" [allowEditing]="false" [fixed]="true"></dxi-column>
+                        <dxi-column dataField="studentsurname" caption="นามสกุล" [allowEditing]="false" [fixed]="true">
+                        </dxi-column>
+                        <dxi-column dataField="studentstatusdes" caption="สถานภาพนักศึกษา" [allowEditing]="false"></dxi-column>
+                        <!-- <dxi-column dataField="programname" caption="สาขาวิชา" [allowEditing]="false"></dxi-column> -->
+                        <dxi-column dataField="studentgroupabb" caption="กลุ่มนักศึกษา" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="documentstatus" caption="สถานะตรวจสอบวุฒิ">
+                            <dxo-lookup [dataSource]="docstashow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                            </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="personname" caption="ชื่อ-นามสกุลเดิม"></dxi-column>
+                        
+                        <!-- <dxi-column dataField="personname" caption="ชื่อ-นามสกุลเดิม"></dxi-column> -->
+
+                        <!-- <dxi-column dataField="finishdate" caption="วันที่สำเร็จ" dataType="date" [allowEditing]="false">
+                        </dxi-column> -->
+                        <dxi-column dataField="datereturn" caption="วันที่รับ" dataType="date" editCellTemplate="editdatereturn"></dxi-column>
+                        <dxi-column dataField="documentreturn" caption="เลขที่ส่งหนังสือรับ"></dxi-column>
+                        <dxi-column dataField="remark" caption="หมายเหตุ"></dxi-column>
+
+                        <!-- <dxi-column dataField="lastupdateuserid" caption="แก้ไขโดย" [allowEditing]="false"></dxi-column>
+                        <dxi-column dataField="lastupdatedatetime" caption="วันที่แก้ไขล่าสุด" dataType="datetime" [allowEditing]="false"></dxi-column> -->
+
+                        <dxi-column dataField="schoolstatustype" caption="SCHOOLSTATUSTYPE" [visible]="false"></dxi-column>
+                        <dxi-column dataField="sequence" caption="SEQUENCE" [visible]="false"></dxi-column>
+                        <dxi-column dataField="programid" caption="PROGRAMID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="schoolid" caption="SCHOOLID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="schoolprovinceid" caption="SCHOOLPROVINCEID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="schooldistrict" caption="SCHOOLDISTRICT" [visible]="false"></dxi-column>
+                        <dxi-column dataField="schoolsubdistrict" caption="SCHOOLSUBDISTRICT" [visible]="false"></dxi-column>
+                        <dxi-column dataField="admitacadyear" caption="ADMITACADYEAR" [visible]="false"></dxi-column>
+                        <dxi-column dataField="admitsemester" caption="ADMITSEMESTER" [visible]="false"></dxi-column>
+                        <dxi-column dataField="groupyear" caption="GROUPYEAR" [visible]="false"></dxi-column>
+                        <dxi-column dataField="studentgroup" caption="STUDENTGROUP" [visible]="false"></dxi-column>
+                        <dxi-column dataField="levelid" caption="LEVELID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="divisioncode" caption="DIVISIONCODE" [visible]="false"></dxi-column>
+                        <dxi-column dataField="schoolname" caption="SCHOOLNAME" [visible]="false"></dxi-column>
+
+                         <div *dxTemplate="let cellInfo of 'editschoolstatusid'">
+                            <dx-select-box [items]="cellInfo.data.schoolstatusid" [value]="cellInfo.value" [dataSource]="schostabystucombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false"  (onValueChanged)="updatedatafrom($event, cellInfo)">
+                            </dx-select-box>
+                        </div>
+
+                        <div *dxTemplate="let cellInfo of 'editdatereturn'">
+                            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)" [showClearButton]="true"></dx-date-box-custom>
+                        </div>
+
+                    </dx-data-grid>
+                </div>
+                
+
+
+           
+    </div>
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

@@ -1,0 +1,325 @@
+<div class="row">
+
+  <div class="col-4">
+    วิทยาลัย/คณะ/สถาบัน
+    <dx-select-box [dataSource]="facshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="facid" (onValueChanged)="getDepcombo()">
+    </dx-select-box>
+  </div>
+  
+  <div class="col-4">
+    ภาค/สาขา
+    <dx-select-box [dataSource]="depcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="depid">
+    </dx-select-box>
+  </div>
+
+  <div class="col-2">
+    ปีอ้างอิง
+    <dx-number-box [(ngModel)]="programyear" [showClearButton]="true" ></dx-number-box>
+  </div>
+
+  <div class="col-4">
+    ระดับ
+    <dx-select-box [dataSource]="levshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
+      [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="levid">
+    </dx-select-box>
+  </div>
+
+
+  <div class="col-2">
+    ประเภท
+    <dx-select-box [dataSource]="programtypelist" displayExpr="name" searchMode="StartsWith" valueExpr="id"
+      [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="programtype">
+    </dx-select-box>
+  </div>
+  <div class="col-2">
+    สถานะ
+    <dx-select-box [dataSource]="programstatuslist" displayExpr="name" searchMode="StartsWith" valueExpr="id"
+      [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="programstatus">
+    </dx-select-box>
+  </div>
+  <div class="col-1">
+    <br />
+
+    <dx-button class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา" [width]="'100%'">
+    </dx-button>
+  </div>
+  <div class="col-2">
+    <br />
+    <dx-button class="button" (onClick)="popupVisible = true" icon="copy" type="default" text="คัดลอกสาขาวิชา" [width]="'100%'"></dx-button>
+  </div>
+</div>
+
+<div id="data-grid-demo" style="padding-top: 10px;">
+  <dx-data-grid id="prgprogram" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)"
+    (onSaving)="dataSave($event)" (onEditingStart)="onEditstart($event)" (onEditCanceling)="onCancelEditmode()"
+    [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+    [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="prolist">
+   
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10,15,20,0]" [showInfo]="true"> </dxo-pager>
+
+    <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+
+    <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+      <dxo-popup title="สาขาวิชา" [showTitle]="true"> </dxo-popup>
+
+      <dxo-form>
+        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+          <dxi-item dataField="programtype" [label]="{ text: 'ประเภท' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="programyear" [label]="{ text: 'ปีอ้างอิง' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="revisioncode" [label]="{ text: 'แก้ไขที่' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item itemType="empty" [colSpan]="2"></dxi-item>
+
+          <dxi-item dataField="program" [label]="{ text: 'รหัสสาขาวิชา' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="programsem" [label]="{ text: 'ภาคอ้างอิง' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="programstatus" [label]="{ text: 'สถานะ' }" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="programversion" [label]="{ text: 'แผน' }"
+            [editorOptions]="{ disabled: false, showClearButton: true }"> </dxi-item>
+
+          <dxi-item dataField="levelid" [label]="{ text: 'ระดับ' }" [colSpan]="2" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="degreeid" [label]="{ text: 'ปริญญา' }" [colSpan]="2"
+            [editorOptions]="{ disabled: false }"></dxi-item>
+          <dxi-item dataField="facultyid" [label]="{ text: 'วิทยาลัย/คณะ/สถาบัน' }" [colSpan]="2" [editorOptions]="{ disabled: false }">
+          </dxi-item>
+          <dxi-item dataField="departmentid" [label]="{ text: 'ภาค/สาขา' }" [colSpan]="2"
+            [editorOptions]="{ disabled: false }"></dxi-item>
+         
+          <dxi-item dataField="programname" [colSpan]="4"> </dxi-item>
+          <dxi-item dataField="programnameeng" [colSpan]="4"> </dxi-item>
+
+          <dxi-item dataField="programabb" [colSpan]="2"> </dxi-item>
+          <dxi-item dataField="programabbeng" [colSpan]="2"> </dxi-item>
+
+          <dxi-item dataField="programnamecertify" [colSpan]="4"> </dxi-item>
+          <dxi-item dataField="programnamecertifyeng" [colSpan]="4"> </dxi-item>
+          <dxi-item dataField="programnamecertifyabb" [colSpan]="4"> </dxi-item>
+          <dxi-item dataField="programnamecertifyabbeng" [colSpan]="4"> </dxi-item>
+          <dxi-item dataField="studyperiod" [colSpan]="2"> </dxi-item>
+          <dxi-item dataField="programcode" [editorOptions]="{showClearButton: true }" [colSpan]="2"></dxi-item>
+
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="13" [colSpan]="2">
+          <dxi-item dataField="credittotal" [editorOptions]="{ disabled: true }" [colSpan]="3"></dxi-item>
+          <dxi-item dataField="semesterperyear" [colSpan]="2"></dxi-item>
+          <dxi-item dataField="gradepointmin" [colSpan]="2"></dxi-item>
+          <dxi-item dataField="studyyearmax" [colSpan]="2"></dxi-item>
+          <dxi-item dataField="studyyear" [colSpan]="2"></dxi-item>
+          <dxi-item dataField="offsetyear" [colSpan]="2"></dxi-item>
+
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+          <dxi-item dataField="passcondition" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="description" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="descriptioneng" [colSpan]="4"></dxi-item>
+       
+        </dxi-item>
+
+        <dxi-item itemType="group" [colCount]="12" [colSpan]="2">
+          <dxi-item dataField="controllername" [colSpan]="6"></dxi-item>
+          <dxi-item dataField="controllerposition" [colSpan]="6"></dxi-item>
+
+          <dxi-item dataField="versiondate" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="opendate" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="kopendate" [colSpan]="4"></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="15" [colSpan]="2">
+          <dxi-item dataField="programyear" [colSpan]="3"></dxi-item>
+          <dxi-item dataField="programsem" [colSpan]="3"></dxi-item>
+          <dxi-item dataField="semesterindexf" [colSpan]="3"></dxi-item>
+          <dxi-item dataField="semesterindext" [colSpan]="3"></dxi-item>
+          <dxi-item dataField="closedate" [colSpan]="3"></dxi-item>
+        </dxi-item>
+        <dxi-item itemType="group" [colCount]="12" [colSpan]="2">
+          <dxi-item dataField="webstatus" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="showtranscript" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="programgroup" [editorOptions]="{showClearButton: true }" [colSpan]="4"></dxi-item>
+          <dxi-item dataField="createdatetime" [colSpan]="3" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="createuserid" [colSpan]="3" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="lastupdatedatetime" [colSpan]="3" [editorOptions]="{ disabled: true }"></dxi-item>
+          <dxi-item dataField="lastupdateuserid" [colSpan]="3" [editorOptions]="{ disabled: true }"></dxi-item>
+
+          <!-- <dxi-item dataField="uocisec" [editorOptions]="{showClearButton: true }" [colSpan]="12"></dxi-item> -->
+
+        </dxi-item>
+
+
+      </dxo-form>
+    </dxo-editing>
+
+    <dxo-selection mode="single"></dxo-selection>
+
+    <dxi-column dataField="program" caption="*รหัสสาขาวิชา" [fixed]="true" [width]="120">
+      <dxi-validation-rule type="required" message="กรุณากรอกรหัสสาขาวิชา"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="programid" caption="programid" [visible]="false"> </dxi-column>
+    <dxi-column dataField="programcode" caption="กลุ่มสาขาวิชา" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกกลุ่มสาขาวิชา"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="procodshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+
+    <dxi-column dataField="programyear" caption="ปีที่เริ่มรับนศ." dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="programsem" caption="ภาคที่เริ่มรับนศ." dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="revisioncode" caption="แก้ไขที่" [visible]="false"></dxi-column>
+   
+    <dxi-column dataField="programversion" caption="แผน" [visible]="false">
+      <dxo-lookup [dataSource]="prover" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="programstatus" caption="สถานะ" [visible]="false">
+      <dxo-lookup [dataSource]="prosta" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="levelid" caption="ระดับ" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกระดับ"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="levshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="degreeid" caption="ปริญญา" [visible]="false" [setCellValue]="degchange">
+      <dxi-validation-rule type="required" message="กรุณากรอกปริญญา"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="degshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน" [visible]="false" [setCellValue]="setdepid">
+      <dxi-validation-rule type="required" message="กรุณากรอกวิทยาลัย/วิทยาลัย/คณะ/สถาบัน/สถาบัน"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="facshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="getFilteredDep" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+    </dxi-column>
+  
+    <dxi-column dataField="programname" caption="*ชื่อสาขาวิชา (ไทย)" [setCellValue]="prochange">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+      <dxi-validation-rule type="required" message="กรุณากรอกชื่อสาขาวิชา (ไทย)"></dxi-validation-rule>
+    </dxi-column>
+    
+    <dxi-column dataField="programnameeng" caption="ชื่อสาขาวิชา (อังกฤษ)">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+    </dxi-column>
+
+    <dxi-column dataField="programnamecertify" caption="*ชื่อแสดงใบรับรอง (ไทย)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+      <dxi-validation-rule type="required" message="ชื่อแสดงใบรับรอง (ไทย)"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="programnamecertifyeng" caption="*ชื่อแสดงใบรับรอง (อังกฤษ)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+      <dxi-validation-rule type="required" message="ชื่อแสดงใบรับรอง (อังกฤษ)"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="programnamecertifyabb" caption="ชื่อย่อแสดงใบรับรอง" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+      <!-- <dxi-validation-rule type="required" message="ชื่อแสดงใบรับรอง (ไทย)"></dxi-validation-rule> -->
+    </dxi-column>
+    <dxi-column dataField="programnamecertifyabbeng" caption="ชื่อย่อแสดงใบรับรอง (อังกฤษ)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+      <!-- <dxi-validation-rule type="required" message="ชื่อแสดงใบรับรอง (ไทย)"></dxi-validation-rule> -->
+    </dxi-column>
+
+    <dxi-column dataField="programtype" caption="*ประเภท" [visible]="true" [width]="120">
+      <dxo-lookup [dataSource]="protyp" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="studyyear" caption="จำนวนปีปกติ" dataType="number" format="#0.#"
+      editCellTemplate="studyyearedit" [width]="100"></dxi-column>
+    <dxi-column dataField="studyyearmax" caption="จำนวนปีสูงสุด" dataType="number" format="#0.#"
+      editCellTemplate="studyyearmaxedit" [width]="100"></dxi-column>
+    <dxi-column dataField="offsetyear" caption="+/-ชั้นปี" dataType="number" [visible]="false"></dxi-column>
+    <dxi-column dataField="gradepointmin" caption="เกรดต่ำสุด" [visible]="false" dataType="number"></dxi-column>
+    <dxi-column dataField="programabb" caption="ชื่อย่อ" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="100" message="ความยาวไม่เกิน 100 ตัวอักษร"> </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="programabbeng" caption="ชื่อย่อ (อังกฤษ)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="100" message="ความยาวไม่เกิน 100 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+ 
+    <dxi-column dataField="credittotal" caption="หน่วยกิตรวม" dataType="number" [width]="100"></dxi-column>
+    <dxi-column dataField="semesterperyear" caption="ภาค/ปี" dataType="number" [visible]="false"></dxi-column>
+   
+    <dxi-column dataField="passcondition" caption="การผ่าน" [visible]="false"></dxi-column>
+    <dxi-column dataField="programgroup" caption="ประเภทสาขา" [visible]="false" [width]="100">
+      <dxo-lookup [dataSource]="progroshow" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="webstatus" caption="แสดงบน WEB" [visible]="false">
+      <dxi-validation-rule type="required" message="กรุณากรอกแสดงบน WEB"></dxi-validation-rule>
+      <dxo-lookup [dataSource]="showyn" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="showtranscript" caption="แสดงชื่อบน Transcript" [visible]="false">
+      <dxo-lookup [dataSource]="showyn" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+      </dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="description" caption="คำอธิบาย (ไทย)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="100" message="ความยาวไม่เกิน 100 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="descriptioneng" caption="คำอธิบาย (อังกฤษ)" [visible]="false">
+      <dxi-validation-rule type="stringLength" [max]="100" message="ความยาวไม่เกิน 100 ตัวอักษร">
+      </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="controllername" caption="ผู้รับรอง" [visible]="false"></dxi-column>
+    <dxi-column dataField="controllerposition" caption="ตำแหน่ง" [visible]="false"></dxi-column>
+    <dxi-column dataField="versiondate" caption="วันที่ปรับปรุง" dataType="date" [visible]="false"
+      editCellTemplate="dateboxcustom"></dxi-column>
+    <dxi-column dataField="opendate" caption="วันที่สภาอนุมัติ" dataType="date" [visible]="false"
+      editCellTemplate="dateboxcustom"></dxi-column>
+    <dxi-column dataField="kopendate" caption="วันที่ กพ.รับรอง" dataType="date" [visible]="false"
+      editCellTemplate="dateboxcustom"></dxi-column>
+    
+    <dxi-column dataField="closedate" caption="ว/ด/ป เลิก" dataType="date" [visible]="false"
+      editCellTemplate="dateboxcustom"></dxi-column>
+    <dxi-column dataField="semesterindexf" caption="ปีอ้างอิงหลักสูตรจาก" [visible]="false" dataType="number"></dxi-column>
+    <dxi-column dataField="semesterindext" caption="ปีอ้างอิงหลักสูตรถึง" [visible]="false" dataType="number"></dxi-column>
+    <dxi-column dataField="studyperiod" caption="เวลาเรียน" [visible]="false">
+      <dxo-lookup [dataSource]="studyperiod" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+    </dxi-column>
+    <dxi-column dataField="createdatetime" dataType="datetime" caption="สร้างเมื่อ" [visible]="false"></dxi-column>
+    <dxi-column dataField="createuserid" caption="โดย" [visible]="false"></dxi-column>
+    <dxi-column dataField="lastupdatedatetime" dataType="datetime" caption="แก้ไขล่าสุด" [visible]="false"></dxi-column>
+    <dxi-column dataField="lastupdateuserid" caption="โดย" [visible]="false"></dxi-column>
+    <!-- <dxi-column dataField="uocisec" caption="รหัสISEC" [visible]="false">
+      <dxo-lookup [dataSource]="combouocisec" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+
+    </dxi-column> -->
+   
+    <div *dxTemplate="let cellInfo of 'studyyearmaxedit'">
+      <dx-number-box format="#0.#" [value]="cellInfo.value" (onValueChanged)="cellInfo.setValue($event.value)">
+      </dx-number-box>
+    </div>
+    <div *dxTemplate="let cellInfo of 'studyyearedit'">
+      <dx-number-box format="#0.#" [value]="cellInfo.value" (onValueChanged)="cellInfo.setValue($event.value)">
+      </dx-number-box>
+    </div>
+
+    <div *dxTemplate="let cellInfo of 'dateboxcustom'">
+      <dx-date-box-custom [date]="cellInfo.value"
+        (onValueChanged)="updatedataform($event, cellInfo)"></dx-date-box-custom>
+    </div>
+
+  </dx-data-grid>
+  <br />
+</div>
+
+<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกสาขาวิชา" [dragEnabled]="false" [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+  รหัสสาขาวิชา
+  <dx-select-box [dataSource]="programlist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="old_program"></dx-select-box>
+  รหัสสาขาวิชาใหม่
+  <!-- <div style="width: 50%;"> -->
+  <dx-text-box [(ngModel)]="new_program" placeholder="ระบุรหัสสาขาวิชาใหม่..." [showClearButton]="true"></dx-text-box>
+  <!-- Version -->
+  <!-- <div style="width: 50%;"> -->
+  <!-- <dx-number-box [(ngModel)]="versionnew" placeholder="ระบุ Version ใหม่..."></dx-number-box> -->
+  <br />
+  <dx-button class="button" (onClick)="onCopy()" text="คัดลอก" icon="todo" type="success" stylingMode="outlined">
+  </dx-button>
+</dx-popup>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)"  [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

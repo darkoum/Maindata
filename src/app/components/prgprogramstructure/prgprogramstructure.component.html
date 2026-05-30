@@ -1,0 +1,371 @@
+<div class="row">
+
+    <!-- <div class="col-4">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="facshow" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getDepcombo();getprocombo()" [(ngModel)]="facid"> </dx-select-box>
+    </div>
+     -->
+
+     <div class="col-4">
+        ระดับ
+        <dx-select-box [dataSource]="levshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="levid" (onValueChanged)="getprocombo()"> </dx-select-box>
+     </div>
+
+    <div class="col-4">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="facshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="facid" (onValueChanged)="getprocombo();getDepcombo()"> </dx-select-box>
+     </div>
+
+     <div class="col-4">
+        ภาค/สาขา
+        <dx-select-box [dataSource]="depcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="depid" (onValueChanged)="getprocombo()"> </dx-select-box>
+    </div>
+
+   <div class="col-4">
+        <!-- สาขาวิชาเอก -->
+        สาขาวิชา
+        <dx-select-box [dataSource]="procombolist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="proid"> </dx-select-box>
+    </div>
+
+    <div class="col-4" style="align-self: flex-end; text-align: left ;">
+        <br />
+        <dx-button class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา">
+        </dx-button>
+        &nbsp;&nbsp;
+
+        <dx-button class="button" (onClick)="showCopy2()" icon="copy" type="default" text="คัดลอกโครงสร้างหลักสูตร">
+        </dx-button>
+    </div>
+   
+</div>
+<br />
+<dx-popup [width]="550" [height]="520" [showTitle]="true" title="คัดลอกโครงสร้างหลักสูตร" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible2">
+    วิทยาลัย/คณะ/สถาบัน
+    <dx-select-box [dataSource]="faccopyshow" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getDepcopycombo();getprocopycombo()" [(ngModel)]="faccopyid" placeholder="เลือกวิทยาลัย/วิทยาลัย/คณะ/สถาบัน/สถาบัน ต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
+    ภาค/สาขา
+    <dx-select-box [dataSource]="depcopyshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getprocopycombo()" [(ngModel)]="depcopyid" placeholder="เลือกภาค/สาขา ต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
+    ระดับ
+    <dx-select-box [dataSource]="levshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" (onValueChanged)="getprocopycombo()" [(ngModel)]="levcopyid" placeholder="เลือกระดับต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
+    
+    สาขาวิชา
+    <dx-select-box [dataSource]="procombocopylist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getcurcopylist()" [(ngModel)]="procopyid" placeholder="เลือกสาขาวิชาต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
+    ลำดับที่หลักสูตร <span style="color: #880a15;font-weight: bold;">ไม่ต้องระบุ หากต้องการทั้งหมด</span>
+    <dx-select-box [dataSource]="prostrcopylist" displayExpr="programstructureshow" valueExpr="conditionid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="proconcopyid"  placeholder="เลือกลำดับที่หลักสูตรต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
+
+    <br />
+    <dx-button class="button" (onClick)="onCopy2()" text="คัดลอก" icon="todo" type="success" stylingMode="outlined">
+    </dx-button>
+
+</dx-popup>
+
+<div id="data-grid-demo">
+    <dx-data-grid id="prgprogramstructure1" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="vprolist" rowTemplate="rowTemplateName" [height]="'auto'">
+        <dxo-paging [pageSize]="1"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true" [visible]="false"> </dxo-pager>
+
+        <dxo-selection mode="single"></dxo-selection>
+        <dxi-column caption="ข้อมูลสาขาวิชา" headerCellTemplate="HeaderKeyTemplate"></dxi-column>
+
+        <div  *dxTemplate="let vprolist of 'rowTemplateName'" >
+            <div style="padding: 15px 15px 0px 15px;">
+            <table style="width: 100%;">
+            <tr >
+                <td>
+                    <p style="color: #1b4461"><b>ปีหลักสูตร : </b>{{ vprolist.data.programyear }}</p>
+                </td>
+                <td>
+                    <p style="color: #1b4461"><b>แก้ไขที่ : </b>{{ vprolist.data.revisioncode }}</p>
+                </td>
+                <td>
+                    <p style="color: #1b4461"><b>ประเภท : </b>{{ vprolist.data.programtypename }}</p>
+                </td>
+                <td colspan="2">
+                    <p style="color: #1b4461">
+                        <b>วุฒิ : </b>{{ vprolist.data.degreeid }} : {{ vprolist.data.degreename }}
+                    </p>
+                </td>
+            </tr>
+            <tr >
+                <td>
+                    <p style="color: #1b4461"><b>รหัสสาขาวิชาเอก : </b>{{ vprolist.data.program }}</p>
+                </td>
+                <td colspan="2">
+                    <p style="color: #1b4461"><b>ชื่อสาขาวิชาเอก : </b>{{ vprolist.data.programname }}</p>
+                </td>
+                <td>
+                    <p style="color: #1b4461">
+                        <b>ระดับ : </b>{{ vprolist.data.levelid }} : {{ vprolist.data.levelname }}
+                    </p>
+                </td>
+                <td>
+                    <p style="color: #1b4461"><b>เกรดต่ำสุด :</b>{{ vprolist.data.gradepointmin | number : "0.1-2" }}</p>
+                </td>
+            </tr>
+            </table>
+            </div>
+        </div>
+        <div *dxTemplate="let info of 'HeaderKeyTemplate'">
+            <div class="tableheader">ข้อมูลสาขาวิชาเอก</div>
+        </div>
+    </dx-data-grid>
+    <br>
+
+
+    <div class="row">
+        <div class="col-12">
+            <dx-tab-panel>
+                <dxi-item title="1. หน่วยกิตและรายวิชา">
+                    <div id="data-grid-demo">
+                        <dx-data-grid id="gridContainer" (onInitNewRow)="getDefault($event)" [columnAutoWidth]="true" (onSelectionChanged)="selectionChanged($event)" (onSaving)="dataSave($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true"
+                            [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="prostrlist" (onRowPrepared)="onRowPrepared($event)" (onToolbarPreparing)="onToolbarPreparing($event)">
+                            <dxo-paging [pageSize]="10"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10,15,20,0]" [showInfo]="true" [visible]="true">
+                            </dxo-pager>
+                            <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                            <dxo-popup [title]="pronameheader" [showTitle]="true" [height]="'auto'"> </dxo-popup>
+                                <dxo-form>
+                                    <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                                        <dxi-item dataField="conditionid" [label]="{ text: 'ที่' }" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="conditiondes" [label]="{ text: 'กลุ่มวิชา' }" [editorOptions]="{showClearButton: true }" [colSpan]="2"></dxi-item>
+                                        <!-- <div *dxTemplate="let cellInfo of 'changeCourse'">
+                                            <dx-lookup [dataSource]="coulist" [items]="cellInfo.data.courseid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="0" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสวิชา" wrapItemText="true"
+                                                (onValueChanged)="updateCourse($event, cellInfo)">
+                                            </dx-lookup>
+                                        </div> -->
+
+                                        <dxi-item [colSpan]="2"> </dxi-item>
+                                        <!-- <dxi-item dataField="conditiondes" [label]="{ text: 'กลุ่มวิชา' }" [editorOptions]="{showClearButton: true }" [colSpan]="2"></dxi-item> -->
+                                        <dxi-item dataField="description" [label]="{ text: 'คำอธิบาย (ไทย)' }" editorType="dxTextBox" [colSpan]="2" [editorOptions]="{ maxLength: 255}"  ></dxi-item>
+                                        <dxi-item dataField="descriptioneng" editorType="dxTextBox" [editorOptions]="{ maxLength: 255}" [colSpan]="2" ></dxi-item>
+                                        <dxi-item dataField="conditiontype" [label]="{ text: 'เงื่อนไข' }" ></dxi-item>
+                                        <dxi-item dataField="credittotal" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="masterconditionid" [colSpan]="2" [editorOptions]="{showClearButton: true }"></dxi-item>
+                                        <dxi-item dataField="maxcredit" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="mingpa" [colSpan]="2" [editorOptions]="{format: { type: 'fixedPoint', precision: 2 }}"></dxi-item>
+                                        <dxi-item dataField="gpamajorflag" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="passtype" [colSpan]="2" [editorOptions]="{showClearButton: true }"></dxi-item>
+                                        <dxi-item dataField="movetotype" [colSpan]="2" [editorOptions]="{showClearButton: true }"></dxi-item>
+                                        <dxi-item dataField="movetoconditionid"  [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="regradegrade" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="mincourse" [colSpan]="2"></dxi-item>
+                                        <dxi-item dataField="regrademax" [colSpan]="2"></dxi-item>
+                                    </dxi-item>
+                                </dxo-form>
+                            </dxo-editing>
+                            <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                            <dxo-selection mode="single"></dxo-selection>
+                          
+                            <dxi-column dataField="programid" caption="PROGRAMID" [visible]="false"></dxi-column>
+                            <dxi-column dataField="conid" caption="" [groupIndex]="0">
+                                <dxo-lookup [dataSource]="condeshead" valueExpr="comboid" displayExpr="keystr1id"> </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="conditionid" caption="*ที่" [fixed]="true" >
+                                <dxi-validation-rule type="required" message="กรุณากรอกที่"></dxi-validation-rule>
+                            </dxi-column>
+                            <dxi-column dataField="conditiondes" caption="กลุ่มวิชา" [visible]="true" [fixed]="true" [setCellValue]="groupchange" >
+                                 <dxo-lookup [dataSource]="condes" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                             </dxi-column>
+                             <dxi-column dataField="description" caption="*คำอธิบาย (ไทย)" [width]="500" [fixed]="true">
+                                <dxi-validation-rule type="required" message="กรุณากรอก คำอธิบาย"></dxi-validation-rule>
+                                <dxi-validation-rule type="stringLength" [max]="255" message="ความยาวไม่เกิน 255 ตัวอักษร"> </dxi-validation-rule>
+                            </dxi-column>
+
+                            <dxi-column dataField="conditiontype" caption="*เงื่อนไข" [width]="250">
+                                <dxi-validation-rule type="required" message="กรุณากรอกเงื่อนไข"></dxi-validation-rule>
+                                <dxo-lookup [dataSource]="contyp" valueExpr="comboid" displayExpr="comboshow" >
+                                </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="masterconditionid" caption="ตรวจสอบร่วมกับ">
+                                <dxo-lookup [dataSource]="prostrlist" valueExpr="conditionid" displayExpr="programstructureshow">
+                                </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="credittotal" caption="หน่วยกิต">
+                                <dxi-validation-rule type="required" message="กรุณากรอกหน่วยกิต"></dxi-validation-rule>
+                            </dxi-column>
+                            <dxi-column dataField="mingpa" caption="Min GPA" [visible]="true">
+                                <dxo-format type="fixedPoint" [precision]="2"></dxo-format>
+                            </dxi-column>
+                            <dxi-column dataField="gpamajorflag" caption="GPA สาขาวิชา" [visible]="true">
+                                <dxo-lookup [dataSource]="combogpaflag" valueExpr="comboid" displayExpr="comboshow" > </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="passtype" caption="ตรวจ" [visible]="false">
+                                <dxo-lookup [dataSource]="passtyp" valueExpr="comboid" displayExpr="comboshow" > </dxo-lookup>
+                              </dxi-column>
+                            <dxi-column dataField="regradegrade" caption="เกรดต่ำกว่า" [visible]="true"></dxi-column>
+                            <dxi-column dataField="maxcredit" caption="Max Credit" [visible]="true"></dxi-column>
+                           <dxi-column dataField="descriptioneng" caption="คำอธิบาย (อังกฤษ)" [visible]="true"></dxi-column>
+
+                           <dxi-column dataField="movetoconditionid" caption="ปัดไปที่"> </dxi-column>
+                           <dxi-column dataField="movetotype" caption="ปัดแบบ">
+                               <dxo-lookup [dataSource]="movtyp" valueExpr="comboid" displayExpr="comboshow" >
+                               </dxo-lookup>
+                           </dxi-column>
+
+                           <dxi-column dataField="regrademax" caption="ลงซ้ำ(ครั้ง)" [visible]="true"></dxi-column>
+                           
+                           <dxi-column dataField="mincourse" caption="จำนวนวิชา" [visible]="true">
+                           </dxi-column>
+                        
+                        </dx-data-grid>
+
+                        <div style="padding: 10px;text-align: right;font-weight: bold;color: #ffffff;background-color: #2A5B72;">
+                            
+                                หน่วยกิตรวม: {{ credittotalall }} หน่วยกิต
+                    
+                        </div>
+                    </div>
+                </dxi-item>
+
+                <dxi-item title="2. เงื่อนไขตรวจสอบ">
+                    <dx-data-grid id="gridContainer" (onInitNewRow)="getDefault4($event)" (onSaving)="dataSave4($event)" (onToolbarPreparing)="onToolbarPreparing4($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                        [showBorders]="true" [dataSource]="prostrexalist">
+                        <dxo-paging [pageSize]="5"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5,10,0]" [showInfo]="true" [visible]="true">
+                        </dxo-pager>
+                        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                            <dxo-popup [title]="pronameheader" [showTitle]="true"> </dxo-popup>
+                        </dxo-editing>
+                        <!-- <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel> -->
+                        <dxo-selection mode="single"></dxo-selection>
+                        <!-- <dxi-column type="buttons" [buttons]="['edit', 'delete']"></dxi-column> -->
+                        <dxi-column dataField="programid" caption="PROGRAMID" [visible]="false"></dxi-column>
+                        <dxi-column dataField="graduateexamcode" caption="การสอบ" [width]="50 + '%'">
+                            <dxi-validation-rule type="required"></dxi-validation-rule>
+                            <dxo-lookup [dataSource]="graexalist" valueExpr="graduateexamgroupcode" displayExpr="graduateexamgroupshow"> </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="finishdatetype" caption="กำหนดวันที่จบ" [width]="30 + '%'">
+                            <dxo-lookup [dataSource]="finishdatetypelist" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                        </dxi-column>
+                        <dxi-column dataField="showtranscript" caption="แสดง Transcript" [width]="20 + '%'">
+                            <dxo-lookup [dataSource]="comboyesno" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                        </dxi-column>
+                    </dx-data-grid>
+                </dxi-item>
+            </dx-tab-panel>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-{{subwidth}}">
+            <dx-tab-panel>
+                <dxi-item title="บันทึกรายวิชา">
+                    <div id="data-grid-demo">
+                        <dx-data-grid id="prgprogramstructure2" (onInitNewRow)="getDefault2($event)" (onSelectionChanged)="selectionChanged2($event)" (onSaving)="dataSave2($event)" [allowColumnReordering]="true" [allowColumnResizing]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                            [showBorders]="true" [dataSource]="couinprolist" [columnAutoWidth]="true" (onToolbarPreparing)="onToolbarPreparing2($event)">
+                            <dxo-paging [pageSize]="5"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5,10,0]" [showInfo]="true" [visible]="true">
+                            </dxo-pager>
+                            <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                                <dxo-popup [title]="tmpconid" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                                </dxo-popup>
+                            </dxo-editing>
+                            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+                            <dxo-selection mode="single"></dxo-selection>
+                            <dxi-column dataField="programid" caption="PROGRAMID" [visible]="false"></dxi-column>
+                            <!-- <dxi-column dataField="courseid" alignment="left" caption="*รายวิชา" [allowEditing]="true" [fixed]="true" editCellTemplate="changeCourse" cellTemplate="Course" [width]="70 + '%'">
+                                <dxi-validation-rule type="required" message="กรุณากรอกรหัสวิชา"></dxi-validation-rule>
+                                <div *dxTemplate="let cellInfo of 'Course'" style="text-align: left;">
+                                    {{cellInfo.data.courseshow}}
+                                </div>
+                            </dxi-column> -->
+                            <dxi-column dataField="courseid" alignment="left" caption="*รายวิชา" [allowEditing]="true" [fixed]="true" editCellTemplate="changeCourse" cellTemplate="Course">
+                                <dxi-validation-rule type="required" message="กรุณากรอกรหัสวิชา"></dxi-validation-rule>
+                                <div *dxTemplate="let cellInfo of 'Course'" style="text-align: left;">
+                                    {{cellInfo.data.courseshow}}
+                                </div>
+                            </dxi-column>
+                            <!-- <dxi-column dataField="courseunit" caption="หน่วยกิต" [fixed]="true" readonly="true" [allowEditing]="false" [width]="30 + '%'">
+                            </dxi-column> -->
+                            <dxi-column dataField="conditionid" caption="*ที่" [fixed]="true" [visible]="true">
+                                <dxi-validation-rule type="required" message="กรุณากรอกที่"></dxi-validation-rule>
+                                <dxo-lookup [dataSource]="getseq" valueExpr="conditionid" displayExpr="conditionid"> </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="courseunit" caption="หน่วยกิต" [fixed]="true" readonly="true" [allowEditing]="false">
+                            </dxi-column>
+                            <dxi-column dataField="gradepointmin" caption="คะแนนต่ำสุด" [fixed]="true"></dxi-column>
+                            <dxi-column dataField="grademode" caption="ระบบเกรด" [fixed]="true">
+                                <dxo-lookup [dataSource]="gm" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+                                </dxo-lookup>
+                            </dxi-column>
+                            <dxi-column dataField="credittotal" caption="credittotal" [visible]="false"> </dxi-column>
+                            <div *dxTemplate="let cellInfo of 'changeCourse'">
+                                <dx-lookup [dataSource]="coulist" [items]="cellInfo.data.courseid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="0" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสวิชา" wrapItemText="true"
+                                    (onValueChanged)="updateCourse($event, cellInfo)">
+                                </dx-lookup>
+                            </div>
+                            <dxo-summary>
+                                <dxi-total-item column="credittotal" summaryType="sum" displayFormat="รวมหน่วยกิต: {0}" showInColumn="courseunit">
+                                </dxi-total-item>
+                            </dxo-summary>
+
+                            <!-- <div *dxTemplate="let data of 'heddershow2'">
+                                <div class="gridheaderremark2">
+                                    <dx-check-box [(value)]="checkBoxValue" text="แสดงข้อมูลเต็มจอ" (onValueChanged)="checkBoxChanged($event)"></dx-check-box>
+                                </div>
+                            </div> -->
+                            <div *dxTemplate="let data of 'selectedvalue'">
+                                <div class="tablelabel">
+                                    <span>{{prostructcurrent}} </span>
+                                </div>
+                            </div>
+                        </dx-data-grid>
+                    </div>
+                </dxi-item>
+            </dx-tab-panel>
+        </div>
+        <div class="col-{{subwidth}}">
+            <dx-tab-panel>
+               
+                <dxi-item title="บันทึกรายวิชาเทียบแทน">
+                    <dx-data-grid id="prgprogramstructure3" (onInitNewRow)="getDefault3($event)" (onSaving)="dataSave3($event)" (onToolbarPreparing)="onToolbarPreparing3($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="couequlist">
+                        <dxo-paging [pageSize]="5"></dxo-paging>
+                        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5,10,0]" [showInfo]="true" [visible]="true">
+                        </dxo-pager>
+                        <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                            <dxo-popup [title]="tmpcouid" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                            </dxo-popup>
+                        </dxo-editing>
+                        <dxo-selection mode="single"></dxo-selection>
+
+                        <dxi-column dataField="programid" caption="PROGRAMID" [visible]="false"></dxi-column>
+
+                        <dxi-column dataField="courseid" caption="COURSEID" [visible]="false"></dxi-column>
+                     
+                        <dxi-column dataField="courseequivalentid" alignment="left" caption="*รายวิชาเทียบแทน" cellTemplate="Courseequivalent" editCellTemplate="changeCourse2" [width]="70 + '%'">
+                            <dxi-validation-rule type="required" message="กรุณากรอกรหัสวิชาเทียบแทน"></dxi-validation-rule>
+                            <div *dxTemplate="let cellInfo of 'Courseequivalent'" style="text-align: left;">
+                                {{cellInfo.data.courseshow}}
+                            </div>
+
+                        </dxi-column>
+                        <dxi-column dataField="semesterfrom" caption="SEMESTERFROM" [visible]="false"></dxi-column>
+                        <dxi-column dataField="semesterto" caption="SEMESTERTO" [visible]="false"></dxi-column>
+                        <dxi-column dataField="courseunit" caption="หน่วยกิต" [visible]="true" [allowEditing]="false" [width]="30 + '%'"></dxi-column>
+                        <dxi-column dataField="credittotal" caption="credittotal" [visible]="false"> </dxi-column>
+                   
+
+                        <div *dxTemplate="let cellInfo of 'changeCourse2'">
+                            <dx-lookup [dataSource]="coulist" [items]="cellInfo.data.courseid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" [minSearchLength]="0" [searchTimeout]="500" [searchEnabled]="true" searchPlaceholder="กรุณาระบุรหัสวิชา" wrapItemText="true"
+                                (onValueChanged)="updateCourse($event, cellInfo)">
+                            </dx-lookup>
+                        </div>
+                        <dxo-summary>
+                            <dxi-total-item column="credittotal" summaryType="sum" displayFormat="รวมหน่วยกิต: {0}" showInColumn="courseunit">
+                            </dxi-total-item>
+                        </dxo-summary>
+
+                        <div *dxTemplate="let data of 'selectedvalue'">
+                            <div class="tablelabel">
+                                <span>{{couinprocurrent}} </span>
+                            </div>
+                        </div>
+                    </dx-data-grid>
+                </dxi-item>
+            </dx-tab-panel>
+        </div>
+    </div>
+
+
+</div>

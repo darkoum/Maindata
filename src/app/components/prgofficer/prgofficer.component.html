@@ -1,0 +1,353 @@
+<!-- <div class="row justify-content-start" style="padding: 0px 20px 5px 20px;">
+    <dx-check-box style="font-weight: bold;" [(ngModel)]="chkmis" text="สิทธิ์ผู้บริหาร"></dx-check-box>
+</div> -->
+<div class="row">
+   
+    <div class="col-3">
+        วิทยาลัย/คณะ/สถาบัน
+        <dx-select-box [dataSource]="facshow2" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"  [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="facid" (onValueChanged)="getDept()">
+        </dx-select-box>
+    </div>
+    <div class="col-3">
+        ภาค/สาขา
+        <dx-select-box [dataSource]="lstDept" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"  [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="deptid">
+        </dx-select-box>
+
+    </div>
+    <div class="col-2">
+        เลขประจำตัวประชาชน
+
+        <dx-text-box [(ngModel)]="offcode"> </dx-text-box>
+    </div>
+    <div class="col-2">
+        ประเภทบุคลากร
+        <dx-select-box [dataSource]="officertypeshow" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="offtypecode">
+        </dx-select-box>
+    </div>
+    <div class="col-2">
+        <br />
+        <!-- <dx-button class="button" (onClick)="onSearch();showLoadPanel();" icon="find" type="default" text="ค้นหา" [width]="150"> -->
+        <dx-button class="button" (onClick)="onSearch()" icon="find" type="default" text="ค้นหา" style="width: 100%;">
+        </dx-button>
+    </div>
+</div>
+
+<br>
+<!-- <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel> -->
+<div id="data-grid-demo">
+    <!-- (onEditingStart)="onEditstart($event)" -->
+    <dx-data-grid id="prgofficer" (onInitNewRow)="getDefault($event)" (onSelectionChanged)="selectionChanged($event)" (onSaving)="dataSave($event)" (onEditCanceling)="onCancelEditmode()" (onEditingStart)="onEditstart($event)" 
+     [dataSource]="offlist" (onContentReady)="onContentReadyHandler($event)" (onToolbarPreparing)="gridofficerToolbarPreparing($event)" >
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[5, 10, 20]" [showInfo]="true"> </dxo-pager>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+
+        <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+            <dxo-popup title="บันทึกข้อมูลอาจารย์" [showTitle]="true" [height]="'auto'"> </dxo-popup>
+            <dxo-form>
+                         
+                <dxi-item itemType="group" [colCount]="12" [colSpan]="2">
+                    <dxi-item itemType="group" [colSpan]="10">
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2" >
+                            <dxi-item dataField="officercode"   [label]="{ text: 'รหัสบุคลากร' }" [colSpan]="2"  ></dxi-item>
+                            <dxi-item dataField="citizenid" [colSpan]="2" [label]="{ text: 'เลขประจำตัวประชาชน' }" [editorOptions]="citizeneditorOptions"></dxi-item>
+                        </dxi-item>   
+                        <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+                            <!-- <dxi-item dataField="officercode" [label]="{ text: 'รหัส' }" [colSpan]="1"></dxi-item> -->
+                            <!-- <dxi-item dataField="citizenid" [label]="{ text: 'เลขประจำตัวประชาชน' }" [colSpan]="2" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase'} }"> </dxi-item> -->
+                            
+                            
+
+                        </dxi-item>
+                        <dxi-item itemType="group" [colCount]="12" [colSpan]="2">
+                            <dxi-item dataField="prefixid" [label]="{ text: 'คำนำหน้า' }" [colSpan]="4" prgofficer-routing.module.ts>
+                            </dxi-item>
+                            <dxi-item dataField="officername" [label]="{ text: 'ชื่อ (ไทย)' }" [colSpan]="4"> </dxi-item>
+                            <dxi-item dataField="officersurname" [label]="{ text: 'นามสกุล (ไทย)' }" [colSpan]="4"> </dxi-item>
+                            <dxi-item itemType="group" [colCount]="4" [colSpan]="4"></dxi-item>
+                            <dxi-item dataField="officernameeng" [label]="{ text: 'ชื่อ (อังกฤษ)' }" [colSpan]="4" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase'} }"> </dxi-item>
+                            <dxi-item dataField="officersurnameeng" [label]="{ text: 'นามสกุล (อังกฤษ)' }" [colSpan]="4" [editorOptions]="{ inputAttr: {'style': 'text-transform: uppercase'} }"> </dxi-item>
+                        </dxi-item>
+                        <dxi-item itemType="group" [colCount]="6" [colSpan]="2">
+                            <dxi-item dataField="campusid" [label]="{ text: 'ศูนย์/วิทยาเขต' }" [colSpan]="2"> </dxi-item>
+                            <dxi-item dataField="facultyid" [label]="{ text: 'วิทยาลัย/คณะ/สถาบัน' }" [colSpan]="2"> </dxi-item>
+                            <dxi-item dataField="departmentid" [label]="{ text: 'ภาค/สาขา' }" [colSpan]="2"> </dxi-item>
+                        </dxi-item>
+                    </dxi-item>
+                    <dxi-item itemType="group" [colSpan]="2">
+                        <dxi-item [colSpan]="2" align="center">
+
+                            <img class="img-crop" [src]="getofficerimg()" alt="Officer Image" height="180px" width="150px" style="border: solid 1px #707070;" />
+
+                        </dxi-item>
+                    </dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="4" [colSpan]="2">
+
+                    <dxi-item dataField="officerstatus" [label]="{ text: 'สถานะ' }" [colSpan]="2"> </dxi-item>
+                    <dxi-item dataField="webfeedback" [label]="{ text: 'ตอบคำถามทางเว็บ' }" [colSpan]="2"> </dxi-item>
+                    <dxi-item dataField="officertype" [label]="{ text: 'ประเภทบุคลากร' }" [colSpan]="2"> </dxi-item>
+                    <!-- <dxi-item dataField="positiontype" [colSpan]="2"> </dxi-item> -->
+
+                    <dxi-item dataField="officerposition" [label]="{ text: 'ตำแหน่งบริหาร' }" [colSpan]="2"> </dxi-item>
+                    <dxi-item dataField="workposition" [label]="{ text: 'ตำแหน่งทางวิชาการ' }" [colSpan]="2"> </dxi-item>
+                    <dxi-item dataField="officeremail" [label]="{ text: 'อีเมล' }" [colSpan]="2"> </dxi-item>
+                </dxi-item>
+                <dxi-item itemType="group" [colCount]="8" [colSpan]="2">
+
+                    <dxi-item itemType="group" [colSpan]="4">
+                        <!--  <dxi-item dataField="citizenid" [label]="{ text: 'เลขประจำตัวประชาชน' }" [colSpan]="1"> </dxi-item> -->
+                        <!-- <dxi-item dataField="officerlogin" [label]="{ text: 'ICIT Account' }" [colSpan]="1"> </dxi-item> -->
+                        <dxi-item dataField="officerlogin" [label]="{ text: 'Login' }" [colSpan]="1"> </dxi-item>
+                        <dxi-item dataField="contactphoneno" [colSpan]="2" [label]="{ text: 'โทรศัพท์มือถือ' }"  [editorOptions]="phoneeditorOptions"></dxi-item>
+                        
+                        <!-- <dxi-item dataField="contactphoneno" [label]="{ text: 'เบอร์โทร' }" [colSpan]="2"> </dxi-item> -->
+
+                        <dxi-item dataField="contactaddress1" [label]="{ text: 'ห้องทำงาน' }" [colSpan]="2"> </dxi-item>
+                        <dxi-item dataField="officehour" [label]="{ text: 'เวลาติดต่อ' }"> </dxi-item>
+
+                    </dxi-item>
+                    <!-- <dxi-item itemType="group" [colSpan]="2">
+            <dxi-item dataField="contactphoneno" [label]="{ text: 'เบอร์โทร' }" [colSpan]="2"> </dxi-item>       
+
+
+          </dxi-item> -->
+                    <dxi-item itemType="group" [colSpan]="4" caption="สิทธิ์การเข้าใช้งานระบบ REG">
+
+                        <dxi-item dataField="webinstructor" [label]="{ text: 'อาจารย์' }"></dxi-item>
+                        <!-- <dxi-item dataField="webregistra" [label]="{ text: 'เจ้าหน้าที่' }"></dxi-item> -->
+                        <dxi-item dataField="webmis" [label]="{ text: 'ผู้บริหาร' }"></dxi-item>
+
+                    </dxi-item>
+                    
+                    <dxi-item dataField="remark" [label]="{ text: 'หมายเหตุ' }" [colSpan]="8"> </dxi-item>
+
+                </dxi-item>
+
+                
+
+            </dxo-form>
+        </dxo-editing>
+
+        <dxo-selection mode="single"></dxo-selection>
+
+       <dxi-column dataField="officercode" caption="*รหัสบุคลากร" [allowEditing]="editstate"  width="100" [fixed]="true" >
+            <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+        </dxi-column> 
+
+        <dxi-column dataField="citizenid" caption="เลขประจำตัวประชาชน" [fixed]="true" >
+            <!-- <dxi-validation-rule type="required" message="กรุณากรอกเลขประจำตัวประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="pattern" pattern="^[0-9a-zA-Z]+$" message="กรุณาระบุเป็นตัวพิมพ์ใหญ่และตัวเลขเท่านั้น"></dxi-validation-rule> -->
+            <dxi-validation-rule type="required" message="กรุณากรอกเลขบัตรประชาชน"></dxi-validation-rule>
+            <dxi-validation-rule type="async" message="เลขบัตรประชาชนไม่ถูกต้อง" [validationCallback]="assertThaiId"></dxi-validation-rule>
+        </dxi-column>
+
+        <!-- <dxi-column dataField="offimg" caption="stuimg" dataType="img" [visible]="false"></dxi-column> -->
+
+        <dxi-column dataField="offimg" caption="รูป" [allowFiltering]="false" [allowSorting]="false" [visible]="st" cellTemplate="cellTemplate"></dxi-column>
+        <!-- <dxi-column [calculateCellValue]="getofficerimg" caption="รูป" [allowFiltering]="false" [allowSorting]="false" [visible]="st" cellTemplate="cellTemplate"></dxi-column> -->
+
+        <dxi-column dataField="prefixid" caption="*คำนำหน้า" [visible]="true" [fixed]="true" >
+            <dxi-validation-rule type="required" message="กรุณากรอกคำนำหน้า" ></dxi-validation-rule>
+            <dxo-lookup [dataSource]="preshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="officername" caption="*ชื่อ (ไทย)" [fixed]="true">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อ (ไทย)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="officersurname" caption="*นามสกุล (ไทย)" [fixed]="true">
+            <dxi-validation-rule type="required" message="กรุณากรอกนามสกุล (ไทย)"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="officernameeng" caption="*ชื่อ (อังกฤษ)">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+            <dxi-validation-rule type="pattern" pattern="^[a-zA-Z_ -.]+$" message="กรุณาระบุเป็นตัวพิมพ์ใหญ่เท่านั้น"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="officersurnameeng" caption="*นามสกุล (อังกฤษ)">
+            <dxi-validation-rule type="required" message="กรุณากรอกชื่อ (อังกฤษ)"></dxi-validation-rule>
+            <dxi-validation-rule type="pattern" pattern="^[a-zA-Z_ -.]+$" message="กรุณาระบุเป็นตัวพิมพ์ใหญ่เท่านั้น"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="officertype" caption="*ประเภท" [visible]="true">
+            <dxi-validation-rule type="required" message="กรุณากรอกประเภท"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="officertypeshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน" [visible]="false" [setCellValue]="setdepid">
+            <dxi-validation-rule type="required" message="กรุณากรอกวิทยาลัย/คณะ/สถาบัน"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="facshow2" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="false" [setCellValue]="setdepsubid">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="getFilteredDep" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column> -->
+        <dxi-column dataField="departmentid" caption="ภาค/สาขา" [visible]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="getFilteredDep" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="departmentsubid" caption="สาขาวิชา" [visible]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกสาขาวิชา"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="getFilteredDepsub" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+        </dxi-column> -->
+        <dxi-column dataField="campusid" caption="ศูนย์/วิทยาเขต" [visible]="false">
+            <dxi-validation-rule type="required" message="กรุณากรอกศูนย์/วิทยาเขต"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="camshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerstatus" caption="สถานะ" [visible]="false">
+            <dxo-lookup [dataSource]="officerstatusshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="positiontype" caption="ประเภทสายงาน" [visible]="false" editCellTemplate="editpositiontype">
+            <dxo-lookup [dataSource]="positiontypelist" valueExpr="comboid" displayExpr="comboshow" showClearButton="true">
+            </dxo-lookup>
+        </dxi-column> -->
+        <dxi-column dataField="webfeedback" caption="ตอบคำถามทางเว็บ" [visible]="false">
+            <dxo-lookup [dataSource]="flag1" valueExpr="key" displayExpr="value"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officerposition" caption="ตำแหน่งบริหาร" [visible]="false"></dxi-column>
+        <dxi-column dataField="workposition" caption="ตำแหน่งทางวิชาการ" [visible]="false" editCellTemplate="editworkposition">
+            <dxi-validation-rule type="required" message="กรุณากรอกตำแหน่งทางวิชาการ"></dxi-validation-rule>
+            <dxo-lookup [dataSource]="workpositionshow" valueExpr="keystr2id" displayExpr="comboshow"> </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="officeremail" caption="*อีเมล">
+            <dxi-validation-rule type="required" message="กรุณากรอกอีเมล"></dxi-validation-rule>
+            <dxi-validation-rule type="pattern" [pattern]="emailPattern" message="กรุณากรอกอีเมลให้ถูกต้อง"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="webinstructor" caption="อาจารย์" [visible]="false">
+            <dxo-lookup [dataSource]="flag1" valueExpr="key" displayExpr="value"> </dxo-lookup>
+        </dxi-column>
+        <!-- <dxi-column dataField="webregistra" caption="เจ้าหน้าที่" [visible]="false">
+            <dxo-lookup [dataSource]="flag1" valueExpr="key" displayExpr="value"> </dxo-lookup>
+        </dxi-column> -->
+        <dxi-column dataField="webmis" caption="WEB-MIS" [visible]="false">
+            <dxo-lookup [dataSource]="flag1" valueExpr="key" displayExpr="value"> </dxo-lookup>
+        </dxi-column>
+
+        <dxi-column dataField="contactphoneno" caption="contactphoneno" [visible]="false"></dxi-column>
+        <dxi-column dataField="contactaddress1" caption="contactaddress1" [visible]="false"></dxi-column>
+        <dxi-column dataField="officehour" caption="officehour" [visible]="false"></dxi-column>
+
+        <!-- <dxi-column dataField="officerlogin" caption="ICIT Account" [visible]="false"> -->
+        <dxi-column dataField="officerlogin" caption="Login" [visible]="false">
+            <dxi-validation-rule type="required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="remark" caption="remark" [visible]="false"></dxi-column>
+
+        <div *dxTemplate="let data of 'cellTemplate'">
+            <img class="img-crop" [src]="data.value" alt="Officer Image" height="120px" width="100px" />
+        </div>
+
+        <div *dxTemplate="let cellInfo of 'editsenddate'">
+            <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)" [showClearButton]="true"></dx-date-box-custom>
+        </div>
+        <div *dxTemplate="let cellInfo of 'editpositiontype'">
+            <dx-select-box [dataSource]="positiontypelist" [items]="cellInfo.data.comboid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="comboid" (onValueChanged)="updatedatafrom($event, cellInfo)" showClearButton="true">
+            </dx-select-box>
+        </div>
+
+        <div *dxTemplate="let cellInfo of 'editworkposition'">
+
+            <dx-select-box [dataSource]="workpositionshow" [items]="cellInfo.data.comboid" [value]="cellInfo.value" displayExpr="comboshow" valueExpr="keystr2id" (onValueChanged)="updatedatafrom($event, cellInfo)" showClearButton="true">
+            </dx-select-box>
+        </div>
+
+    </dx-data-grid>
+    <br />
+
+    <dx-tab-panel [animationEnabled]="true" [swipeEnabled]="true" (onSelectionChanged)="Changedpanel($event)">
+        <dxi-item title="สิทธิ์ในการดูข้อมูล" style="padding-top: 10px;">
+            <!-- <dx-data-grid id="prgofficer2" (onInitNewRow)="getDefaultoffaut($event)" [rowAlternationEnabled]="true" (onSaving)="dataSavex($event)" [dataSource]="offautlist" (onToolbarPreparing)="onToolbarPreparing($event)" (onEditingStart)="onEditstart2($event)"
+                (onEditCanceling)="onCancelEditmode2()" (onSelectionChanged)="selectionChangedoffaut($event)" [showBorders]="true" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [allowColumnResizing]="true" [columnHidingEnabled]="true">
+                <dxo-paging [pageSize]="5"></dxo-paging> -->
+            <!-- (onEditingStart)="onEditstart2($event)" -->
+            <dx-data-grid id="prgofficer2" (onInitNewRow)="getDefaultoffaut($event)" (onSelectionChanged)="selectionChangedoffaut($event)" (onSaving)="dataSavex($event)" (onEditCanceling)="onCancelEditmode2()" [rowAlternationEnabled]="true" [hoverStateEnabled]="true"
+                [showBorders]="true" [dataSource]="offautlist" [allowColumnReordering]="true" [allowColumnResizing]="true" [columnHidingEnabled]="true" (onToolbarPreparing)="onToolbarPreparing($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-editing mode="single" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpOfficerid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+
+                <dxo-selection mode="single"></dxo-selection>
+
+                <dxi-column dataField="officerid" caption="รหัส" [visible]="false"></dxi-column>
+                <dxi-column dataField="sequence" caption="*ลำดับ" [width]="60">
+                    <dxi-validation-rule type="required" message="กรุณากรอกลำดับ"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="campusid" caption="*ศูนย์/วิทยาเขต" [visible]="true">
+                    <dxi-validation-rule type="required" message="กรุณากรอกศูนย์/วิทยาเขต"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="camshow2" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="levelid" caption="*ระดับ" [visible]="true">
+                    <dxi-validation-rule type="required" message="กรุณากรอกระดับ"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="levshow2" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="facultyid" caption="*วิทยาลัย/คณะ/สถาบัน" [visible]="true" [setCellValue]="setdepid2">
+                    <dxi-validation-rule type="required" message="กรุณากรอกวิทยาลัย/คณะ/สถาบัน"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="facshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>
+                <!-- <dxi-column dataField="departmentid" caption="*ภาค/สาขา" [visible]="true" [setCellValue]="setdepsubid2">
+                    <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="getFilteredDep2" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+                </dxi-column> -->
+                <dxi-column dataField="departmentid" caption="*ภาค/สาขา" [visible]="true">
+                    <dxi-validation-rule type="required" message="กรุณากรอกภาค/สาขา"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="getFilteredDep2" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+                </dxi-column>
+                <!-- <dxi-column dataField="departmentsubid" caption="*สาขาวิชา" [visible]="true">
+                    <dxi-validation-rule type="required" message="กรุณากรอกสาขาวิชา"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="getFilteredDepsub2" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+                </dxi-column> -->
+            </dx-data-grid>
+        </dxi-item>
+        <dxi-item title="ตำแหน่งบริหาร" style="padding-top: 10px;">
+
+            <dx-data-grid id="prgofficer3" (onInitNewRow)="getDefaultoffpos($event)" (onSaving)="dataSavexx($event)" (onEditCanceling)="onCancelEditmode3()" [dataSource]="offposlist" (onToolbarPreparing)="onToolbarPreparing2($event)">
+                <dxo-paging [pageSize]="5"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 30]" [showInfo]="true">
+                </dxo-pager>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-editing mode="single" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="true" [useIcons]="true">
+                    <dxo-popup [title]="tmpOfficerid" [showTitle]="true" [width]="700" [height]="525" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="officerid" caption="รหัส" [visible]="false"></dxi-column>
+                <dxi-column dataField="acadyear" caption="ปีการศึกษา" [width]="90" [fixed]="true">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="semester" caption="ภาคที่" [width]="60" [fixed]="true">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="positioncode" caption="ตำแหน่ง" [fixed]="true">
+                    <dxi-validation-rule type="required"></dxi-validation-rule>
+                    <dxo-lookup [dataSource]="positioncodeshow" valueExpr="comboid" displayExpr="comboshow" showClearButton="true"></dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="facultyid" caption="วิทยาลัย/คณะ/สถาบัน"  [setCellValue]="setdepid3">
+                    <dxo-lookup [dataSource]="facshow" valueExpr="comboid" displayExpr="comboshow"> </dxo-lookup>
+                </dxi-column>
+                <dxi-column dataField="departmentid" caption="ภาค/สาขา" >
+                    <dxo-lookup [dataSource]="getFilteredDep2" valueExpr="comboid" displayExpr="comboshow"></dxo-lookup>
+                </dxi-column>
+                <!-- <dxi-column dataField="datefrom" caption="วันที่เริ่ม" dataType="date" editCellTemplate="editdatefrom"></dxi-column>
+                <dxi-column dataField="dateto" caption="วันสิ้นสุด" dataType="date" editCellTemplate="editdateto"></dxi-column> -->
+
+                <div *dxTemplate="let cellInfo of 'editdatefrom'">
+                    <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+                </div>
+        
+                <div *dxTemplate="let cellInfo of 'editdateto'">
+                    <dx-date-box-custom [date]="cellInfo.value" (onValueChanged)="updatedatafrom($event, cellInfo)"></dx-date-box-custom>
+                </div>
+            </dx-data-grid>
+        </dxi-item>
+    </dx-tab-panel>
+</div>
+
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+</dx-load-panel>

@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-12">
+        <div id="data-grid-demo">
+            <dx-data-grid id="prgcampus" [columnAutoWidth]="true" (onInitNewRow)="getDefault($event)" (onSaving)="dataSave($event)" [rowAlternationEnabled]="true" [hoverStateEnabled]="true" [showBorders]="true" [dataSource]="campuslist" [allowColumnReordering]="true"
+                [allowColumnResizing]="true" [columnHidingEnabled]="false">
+                <dxo-paging [pageSize]="15"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 20, 0]" [showInfo]="true"> </dxo-pager>
+                <dxo-editing mode="row" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+                    <dxo-popup title="Campus Info" [showTitle]="true" [position]="{ my: 'top', at: 'top', of: 'window' }">
+                    </dxo-popup>
+                </dxo-editing>
+                <dxo-search-panel [visible]="true" [width]="240" placeholder="ค้นหา..."></dxo-search-panel>
+                <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxi-column dataField="campusid" caption="*รหัส" sortOrder="asc" [width]="80">
+                    <dxi-validation-rule type="required" message="กรุณากรอกรหัส"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="campusname" caption="*ชื่อศูนย์/วิทยาเขต (ไทย)">
+                    <dxi-validation-rule type="required" message="กรุณากรอกชื่อศูนย์/วิทยาเขต (ไทย)"></dxi-validation-rule>
+                </dxi-column>
+                <dxi-column dataField="campusnameeng" caption="ชื่อศูนย์/วิทยาเขต (อังกฤษ)"></dxi-column>
+                <dxi-column dataField="campusabb" caption="ชื่อย่อ"></dxi-column>
+                <dxi-column dataField="campusabbeng" caption="ชื่อย่อ (อังกฤษ)"></dxi-column>
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
