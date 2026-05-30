@@ -1,0 +1,88 @@
+<dx-text-box  [inputAttr]="{ 'style': 'text-transform: uppercase' }" [(ngModel)]="tmpCoursecode" [disabled]="disabled" [showClearButton]="stateClear" (onValueChanged)="onChanged()">
+    <dxi-button
+      name="today"
+      location="after"
+      [options]="searchBtn"
+  ></dxi-button>
+</dx-text-box>
+<!-- <dx-select-box 
+  [showClearButton]="stateClear"
+  [dataSource]="lstCourse" 
+  [(ngModel)]="tmpCoursecode"
+  (onValueChanged)="onChanged()"
+  searchMode=""
+  displayExpr="comboshow" 
+  valueExpr="comboshow">
+</dx-select-box> -->
+<dx-popup
+  [(visible)]="showSelector"
+  [width]="850"
+  [height]="430"
+  title="ค้นหารายวิชา"
+  [showTitle]="true"
+>
+  <!-- <div class="row mb-2">
+    <div class="col-5">
+        วิทยาลัย/คณะ/สถาบัน
+    <dx-select-box 
+      [showClearButton]="true"
+      [dataSource]="facultylist" 
+      [(ngModel)]="facultyid"
+      (onValueChanged)="getdeplst()"
+      searchMode="StartsWith"
+      displayExpr="comboshow" 
+      valueExpr="comboid">
+    </dx-select-box>
+    </div>
+    <div class="col-5">
+        ภาค/สาขา
+    <dx-select-box 
+      [showClearButton]="true"
+      [dataSource]="departmentlist" 
+      [(ngModel)]="departmentid"
+      searchMode="StartsWith"
+      displayExpr="comboshow" 
+      valueExpr="comboid">
+    </dx-select-box>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-3">
+        รหัสวิชา
+        <dx-text-box [(ngModel)]="tmpCoursecode" [showClearButton]="true" [inputAttr]="{ 'style': 'text-transform: uppercase' }">
+        </dx-text-box>
+    </div>
+    <div class="col-7">
+        ชื่อวิชา
+        <dx-text-box [(ngModel)]="coursename" [showClearButton]="true">
+        </dx-text-box>
+    </div>
+    <!-- <div class="col-2">
+      สถานะนักศึกษา
+      <dx-select-box [dataSource]="stdstatuslist" displayExpr="comboshow" valueExpr="comboid" [(ngModel)]="studentstatus" [searchEnabled]="true" [showClearButton]="false"></dx-select-box>
+    </div> -->
+    <div class="col-2">
+        <br />
+        <dx-button class="button" (onClick)="getCourse()" icon="find" type="default" text="ค้นหา" width="100%"></dx-button>
+    </div>
+  </div>
+  <div class="tablelabel">การค้นหาบางส่วนใช้ *</div>
+  <dx-data-grid
+    [dataSource]="courses"
+    [hoverStateEnabled]="true"
+    [showBorders]="true"
+    (onRowDblClick)="onRowDblClick($event)"
+    height="250"
+  >
+    <dxo-paging [pageSize]="0"></dxo-paging>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="false" [allowedPageSizes]="[5, 10, 15,0]" [showInfo]="true"> </dxo-pager>
+
+    <dxo-search-panel [visible]="false" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxi-column dataField="coursecode" caption="รหัสรายวิชา" [width]="90"></dxi-column>
+    <dxi-column dataField="revisioncode" caption="Revision" [width]="90"></dxi-column>
+    <dxi-column dataField="coursename" caption="ชื่อรายวิชา" [width]="250"></dxi-column>
+    <dxi-column dataField="coursestatusabb" caption="สถานะ"></dxi-column>
+    <dxi-column dataField="courseunit" caption="หน่วยกิต"></dxi-column>
+  </dx-data-grid>
+</dx-popup>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
