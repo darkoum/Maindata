@@ -1,0 +1,19 @@
+.abreadcrumb {
+    color: #343a40 !important;
+    text-decoration: none;
+}
+
+.abreadcrumb:hover {
+    text-decoration: underline !important;
+}
+
+.breadcrumb {
+    /* display: flex;
+    flex-wrap: wrap;
+    padding: .75rem 1rem;
+    margin-bottom: 1rem;
+    list-style: none; */
+    background-color: #fff !important;
+    margin: 5rem 0rem 1rem 0rem;
+    padding-left: 0;
+}
