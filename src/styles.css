@@ -1,0 +1,267 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+/* You can add global styles to this file, and also import other style files */
+
+
+/* @import url(https://fonts.googleapis.com/css?family=Noto Sans Thai:300,400,400i,700&subset=thai); */
+
+
+/* @import url(https://fonts.googleapis.com/css?family=Sarabun:300,400,400i,700&subset=thai);
+ */
+
+ @import url(https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap&subset=thai);
+
+ /* @import url(https://fonts.googleapis.com/css?family=Prompt:300,400,400i,700&subset=thai); */
+ 
+ body,
+ .dx-datagrid,
+ .dx-texteditor-input,
+ .dx-button,
+ .dx-item,
+ .dx-widget {
+     font-family: 'Prompt', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Sarabun', Kanit, 'Helvetica Neue', Arial, sans-serif !important;
+     /* font-size: 0.875rem;
+     font-weight: 400;
+     line-height: 1.5;
+     color: #212529;
+     text-align: left; */
+     /* background: #fafafa; */
+ }
+ 
+ 
+ /* .dx-datagrid .dx-row-alt>td,
+ .dx-datagrid .dx-row-alt>tr>td {
+     background-color: #65e8ff !important;
+     border-top: 1px solid #f5f5f5 !important;
+     border-bottom: 1px solid #f5f5f5 !important;
+ } */
+ 
+ .dx-error-row {
+     display: none
+ }
+ 
+ 
+ /* .dx-header-row {
+     background-color: #3e5876 !important;
+     color: white;
+ }
+ 
+ .requiredField {
+     color: red !important;
+ } */
+ 
+ 
+ /* @media screen and (min-width: 601px) {
+     body {
+         font-size: 15px;
+     }
+ }
+ 
+ @media screen and (max-width: 600px) {
+     body {
+         font-size: .8rem;
+     }
+ } */
+ 
+ @media screen and (min-width: 1621px) {
+     body,
+     .dx-datagrid,
+     .dx-texteditor-input,
+     .dx-button,
+     .dx-item,
+     .dx-widget,
+     .dx-datagrid-nodata {
+         font-size: 0.875rem
+         /*  font-size: 0.875rem */
+         /*       font-size: 14px;  */
+     }
+     /* .dx-widget {
+         font-size: clamp (14px, 2.5vw, 16px)
+     } */
+     span {
+         font-size: 0.875rem !important;
+     }
+ }
+ 
+ @media screen and (max-width: 1620px) {
+     body,
+     .dx-datagrid,
+     .dx-texteditor-input,
+     .dx-button,
+     .dx-item,
+     .dx-widget,
+     .dx-datagrid-nodata {
+         font-size: 0.8125rem;
+         /*   font-size: clamp (10px, 2.5vw, 14px) */
+         /* font-size: .7rem; */
+     }
+     span {
+         font-size: 0.8125rem !important;
+     }
+     /* {
+         font-size: clamp (10px, 2.5vw, 14px)
+     } */
+ }
+ 
+ .dx-datagrid .dx-row-alt>td,
+ .dx-datagrid .dx-row-alt>tr>td {
+     /*  background-color: #65e8ff !important; */
+     border-top: 1px solid #f5f5f5 !important;
+     border-bottom: 1px solid #f5f5f5 !important;
+     background-color: #eff5fa!important;
+     /* Color row Grid */
+     /* background-color: #e3ebff!important;  #e3ebff #C0D9F0 */
+     color: black!important;
+ }
+ 
+ 
+ /* .dx-popup-title.dx-toolbar {
+     padding: 6px 20px;
+     overflow: visible;
+     box-shadow: none;
+     background: #f7f7f7;
+ } */
+ 
+ .dx-datagrid-headers .dx-datagrid-table .dx-row>td {
+     border-bottom: 1px solid #ddd;
+     background-color: #2A5B72 !important;/* rgba(64, 86, 141)!important; */
+     color: rgba(255, 255, 255)!important;
+     font-weight: 500;
+     /* #e3ebff /#F2F2F2 */
+     /*  background-color: #F2F2F2!important; 
+     color: rgba(0, 0, 0, 0.678)!important;
+     font-weight: bold;*/
+ }
+ 
+ .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused).dx-column-lines>td,
+ .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused).dx-column-lines>tr>td,
+ .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover.dx-column-lines>td,
+ .dx-datagrid-rowsview .dx-selection.dx-row:not(.dx-row-focused):hover.dx-column-lines>tr>td {
+     border-left-color: #ddd;
+     border-right-color: #ddd;
+     background-color: #b8cee0 !important;
+     font-weight: bold;
+     /* background-color: #b8cee0 !important; */
+     /*  background-color: #d0e2f2 !important; */
+     /*  background-color: #bf4e6a !important; */
+     /* Click Current Row*/
+     /* background-color: #8eb4e3 !important;  */
+ }
+ 
+ 
+ /* ลาก mouse บน Grid */
+ 
+ .dx-datagrid-table .dx-data-row.dx-state-hover:not(.dx-selection):not(.dx-row-inserted):not(.dx-row-removed):not(.dx-edit-row)>td:not(.dx-focused) {
+     background-color: transparent;
+     background-color: #d0e2f2 !important;
+ }
+ 
+ 
+ /* ลาก mouse บน Grid */
+ 
+ 
+ /* ปุ่มเพิ่มรายการ Grid */
+ 
+ .dx-datagrid-addrow-button {
+     color: blue;
+     font-weight: 500;
+ }
+ 
+ .dx-datagrid-addrow-button .dx-icon {
+     color: blue;
+ }
+ 
+ .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item .dx-icon,
+ .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-active .dx-button .dx-icon,
+ .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused .dx-button .dx-icon {
+     color: blue;
+ }
+ 
+ 
+ /*
+ .dx-toolbar .dx-button .dx-icon {
+     color: red;
+ } */
+ 
+ 
+ /* .dx-datagrid-addrow-button.dx-state-hover {
+     background-color: blue;
+ } */
+ 
+ 
+ /* ปุ่มเพิ่มรายการ Grid */
+ 
+ 
+ /* Error invalid กรอบใหญ่ ใน Grid */
+ 
+ .dx-datagrid-rowsview .dx-data-row .dx-validator.dx-datagrid-invalid.dx-cell-modified:after,
+ .dx-datagrid-rowsview .dx-data-row .dx-validator.dx-datagrid-invalid.dx-datagrid-invalid:after {
+     border: 2px solid red;
+ }
+ 
+ 
+ /* .dx-datagrid-rowsview .dx-data-row .dx-validator.dx-datagrid-invalid.dx-focused.dx-cell-modified::after,
+ .dx-datagrid-rowsview .dx-data-row .dx-validator.dx-datagrid-invalid.dx-focused.dx-datagrid-invalid::after {
+     border: 4px solid red;
+ } */
+ 
+ 
+ /* Error invalid กรอบใหญ่ ใน Grid */
+ 
+ .dx-popup-title.dx-toolbar {
+     padding: 6px 20px;
+     overflow: visible;
+     box-shadow: none;
+     /*  background-color: #f5f5f5 !important; */
+     background-color: #2A5B72 !important;/* rgba(64, 86, 141)!important; */
+     color: rgba(255, 255, 255)!important;
+ }
+ 
+ .dx-icon-close::before {
+     color: white;
+ }
+ 
+ .dx-popup-bottom.dx-toolbar {
+     background-color: #eff5fa!important;
+ }
+ 
+ .card-body {
+     background-color: #eff5fa!important;
+ }
+ 
+ .card-header {
+     background-color: #2A5B72 !important;/* rgba(64, 86, 141)!important; */
+     color: rgba(255, 255, 255)!important;
+ }
+ 
+ .dx-popup-content {
+     background-color: #eff5fa!important;
+ }
+ 
+ .dx-checkbox-text {
+     margin-left: 0px;
+ }
+ 
+  .dx-radiobutton-checked .dx-radiobutton-icon .dx-radiobutton-icon-dot {
+     margin-left: 0px;
+     margin-top: -20px;
+ } 
+ 
+ .dx-button-text {
+     line-height: 1.25rem;
+ }
+ 
+ tr.dx-header-row>td.dx-datagrid-action {
+     text-align: center !important;
+ }
+ 
+ .dx-datagrid-headers .dx-datagrid-table .dx-row>td {
+     text-align: center !important;
+ }
+ 
+ .dx-tabs .dx-tab-text-span, .dx-tabs .dx-tab-text-span-pseudo{
+     padding: 3px !important;
+ }
+ 
+ 
