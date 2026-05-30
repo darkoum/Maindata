@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>คู่มือ Migrate Angular 17 → 21</title>
+  <style>
+    :root {
+      --primary: #dd0031;
+      --primary-dark: #a50025;
+      --secondary: #1976d2;
+      --success: #2e7d32;
+      --warning: #e65100;
+      --danger: #c62828;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --text: #212121;
+      --text-muted: #616161;
+      --border: #e0e0e0;
+      --code-bg: #1e1e1e;
+      --code-text: #d4d4d4;
+      --step-bg: #fce4ec;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Sarabun, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #ff6f00 100%);
+      color: white;
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; }
+    header .subtitle { margin-top: 8px; opacity: 0.88; font-size: 1rem; }
+    .badge-row { margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 1000px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ── Overview ── */
+    .overview {
+      background: var(--code-bg);
+      color: #a8d1f0;
+      border-radius: 12px;
+      padding: 24px 28px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.9;
+      margin-bottom: 36px;
+      border-left: 4px solid var(--primary);
+    }
+    .overview .arrow { color: #f48fb1; font-weight: bold; }
+    .overview .label-old { color: #ef9a9a; }
+    .overview .label-new { color: #a5d6a7; }
+
+    /* ── Steps ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .step-pill {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: box-shadow .18s, transform .18s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .step-pill:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-2px); }
+    .step-num {
+      background: var(--primary);
+      color: white;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .step-pill .step-label { font-weight: 600; font-size: 0.9rem; }
+    .step-pill .step-desc { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── Section ── */
+    .section {
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .section-header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .section-header .num {
+      background: rgba(255,255,255,0.25);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.05rem; font-weight: 600; }
+    .section-body { padding: 24px; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 8px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 0.84rem;
+      line-height: 1.7;
+      margin: 12px 0;
+    }
+    code:not(pre code) {
+      background: #f3e5f5;
+      color: #6a1b9a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      font-family: 'Consolas', monospace;
+    }
+    .comment { color: #6a9955; }
+    .kw { color: #569cd6; }
+    .str { color: #ce9178; }
+    .fn { color: #dcdcaa; }
+    .num-lit { color: #b5cea8; }
+
+    /* ── Notes ── */
+    .note {
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 12px 0;
+      font-size: 0.88rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .note-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .note.info { background: #e3f2fd; border-left: 4px solid #1976d2; color: #0d47a1; }
+    .note.warn { background: #fff8e1; border-left: 4px solid #f9a825; color: #e65100; }
+    .note.tip  { background: #e8f5e9; border-left: 4px solid #388e3c; color: #1b5e20; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.88rem; }
+    th {
+      background: #f5f5f5;
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    td { border: 1px solid var(--border); padding: 9px 14px; }
+    tr:hover td { background: #fafafa; }
+    .del { color: var(--danger); font-weight: 600; }
+    .add { color: var(--success); font-weight: 600; }
+
+    /* ── File copy steps ── */
+    .copy-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .copy-item-header {
+      background: #f5f5f5;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .copy-item-body { padding: 14px 16px; }
+    .path-row { display: flex; gap: 10px; align-items: flex-start; margin: 6px 0; font-size: 0.86rem; }
+    .path-label {
+      font-weight: 700;
+      min-width: 80px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+    }
+    .from { background: #ffcdd2; color: #b71c1c; }
+    .to   { background: #c8e6c9; color: #1b5e20; }
+    .path-value { font-family: 'Consolas', monospace; color: #333; word-break: break-all; }
+
+    /* ── No-copy table ── */
+    .no-copy td:first-child { font-family: 'Consolas', monospace; font-size: 0.85rem; color: var(--danger); }
+
+    /* ── Error cards ── */
+    .error-card {
+      border: 1px solid #ffcdd2;
+      border-radius: 10px;
+      margin: 16px 0;
+      overflow: hidden;
+    }
+    .error-header {
+      background: #ffebee;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--danger);
+      border-bottom: 1px solid #ffcdd2;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .error-body { padding: 14px 16px; }
+    .fix-label {
+      display: inline-block;
+      background: var(--success);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .cause-label {
+      display: inline-block;
+      background: #e65100;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+
+    /* ── Checklist ── */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.9rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li input[type="checkbox"] {
+      width: 18px; height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--success);
+      cursor: pointer;
+    }
+
+    /* ── Time table ── */
+    .time-table td:last-child { font-weight: 600; color: var(--secondary); text-align: right; }
+    .time-table tr:last-child td { background: #e8f5e9; font-weight: 700; color: var(--success); }
+
+    /* ── Build commands ── */
+    .cmd-block {
+      background: var(--code-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .cmd-header {
+      background: #2d2d2d;
+      padding: 8px 16px;
+      font-size: 0.78rem;
+      color: #aaa;
+      font-family: 'Consolas', monospace;
+    }
+    .cmd-body { padding: 14px 18px; font-family: 'Consolas', monospace; font-size: 0.86rem; color: #d4d4d4; line-height: 1.9; }
+    .cmd-comment { color: #6a9955; }
+    .cmd-prompt { color: #569cd6; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.4rem; }
+      .section-header h2 { font-size: 0.95rem; }
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>คู่มือ Migrate Angular 17 → 21</h1>
+  <p class="subtitle">จากประสบการณ์จริงของโปรเจ็ค Maindata · สรุปทุกปัญหาและวิธีแก้ที่พบระหว่าง migration</p>
+  <div class="badge-row">
+    <span class="badge">Angular CLI 21.2.13</span>
+    <span class="badge">TypeScript 5.9</span>
+    <span class="badge">DevExtreme 24.2</span>
+    <span class="badge">ngx-bootstrap</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ภาพรวม -->
+  <div class="overview">
+    <div style="color:#f48fb1;font-weight:700;margin-bottom:10px;font-size:0.95rem;">ภาพรวมสิ่งที่เปลี่ยน</div>
+    <div><span class="label-old">app.module.ts</span>             <span class="arrow">→</span>  <span class="label-new">app.config.ts</span></div>
+    <div><span class="label-old">app-routing.module.ts</span>     <span class="arrow">→</span>  <span class="label-new">app.routes.ts</span></div>
+    <div><span class="label-old">app.component.ts</span>          <span class="arrow">→</span>  <span class="label-new">app.ts (standalone: true)</span></div>
+    <div><span class="label-old">Class AuthGuard</span>           <span class="arrow">→</span>  <span class="label-new">functional authGuard (CanActivateFn)</span></div>
+    <div><span class="label-old">templates/ (3 components)</span> <span class="arrow">→</span>  <span class="label-new">standalone: true + imports[]</span></div>
+    <div><span class="label-old">feature components ทั้งหมด</span><span class="arrow">→</span>  <span class="label-new">เพิ่ม standalone: false</span></div>
+  </div>
+
+  <!-- Quick nav -->
+  <div class="steps-grid">
+    <a href="#s1"  class="step-pill"><span class="step-num">1</span><div><div class="step-label">สร้างโปรเจ็คใหม่</div><div class="step-desc">ng new + Angular CLI 21</div></div></a>
+    <a href="#s2"  class="step-pill"><span class="step-num">2</span><div><div class="step-label">ติดตั้ง Packages</div><div class="step-desc">npm install --legacy-peer-deps</div></div></a>
+    <a href="#s3"  class="step-pill"><span class="step-num">3</span><div><div class="step-label">แก้ tsconfig.json</div><div class="step-desc">baseUrl, allowJs, moduleResolution</div></div></a>
+    <a href="#s4"  class="step-pill"><span class="step-num">4</span><div><div class="step-label">แก้ tsconfig.app.json</div><div class="step-desc">types: [node, jquery]</div></div></a>
+    <a href="#s5"  class="step-pill"><span class="step-num">5</span><div><div class="step-label">สร้าง app.config.ts</div><div class="step-desc">แทน app.module.ts</div></div></a>
+    <a href="#s6"  class="step-pill"><span class="step-num">6</span><div><div class="step-label">สร้าง app.routes.ts</div><div class="step-desc">ย้าย routes ทั้งหมด</div></div></a>
+    <a href="#s7"  class="step-pill"><span class="step-num">7</span><div><div class="step-label">Functional Guard</div><div class="step-desc">แปลง Class → CanActivateFn</div></div></a>
+    <a href="#s8"  class="step-pill"><span class="step-num">8</span><div><div class="step-label">Copy ไฟล์จาก v17</div><div class="step-desc">ใช้ File Explorer ได้เลย</div></div></a>
+    <a href="#s9"  class="step-pill"><span class="step-num">9</span><div><div class="step-label">แก้ app.ts</div><div class="step-desc">standalone: true + imports</div></div></a>
+    <a href="#s10" class="step-pill"><span class="step-num">10</span><div><div class="step-label">Template Components</div><div class="step-desc">sidebar, navbar, breadcrumb</div></div></a>
+    <a href="#s11" class="step-pill"><span class="step-num">11</span><div><div class="step-label">Feature Components</div><div class="step-desc">เพิ่ม standalone: false ทุกตัว</div></div></a>
+    <a href="#s12" class="step-pill"><span class="step-num">12</span><div><div class="step-label">แก้ angular.json</div><div class="step-desc">assets + styles</div></div></a>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="section" id="s1">
+    <div class="section-header"><span class="num">1</span><h2>สร้างโปรเจ็ค Angular 21 ใหม่</h2></div>
+    <div class="section-body">
+      <pre><span class="comment"># ติดตั้ง Angular CLI 21</span>
+npm install -g @angular/cli@21
+
+<span class="comment"># สร้างโปรเจ็ค</span>
+ng new ชื่อโปรเจ็ค --routing --style=scss --skip-git
+
+<span class="comment"># วาง code เก่า (v17) ไว้ใน src-v17/ เพื่อใช้อ้างอิง</span></pre>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="section" id="s2">
+    <div class="section-header"><span class="num">2</span><h2>ติดตั้ง Packages</h2></div>
+    <div class="section-body">
+      <pre>npm install --legacy-peer-deps \
+  @angular/animations@^21.2.0 \
+  @exalif/ngx-breadcrumbs \
+  @fortawesome/angular-fontawesome \
+  @fortawesome/fontawesome-svg-core \
+  @fortawesome/free-solid-svg-icons \
+  ngx-bootstrap \
+  crypto-js \
+  devextreme@^24.2.0 \
+  devextreme-angular@^24.2.0 \
+  jwt-decode \
+  jquery \
+  @types/jquery \
+  bootstrap \
+  buffer \
+  zone.js \
+  xlsx \
+  exceljs \
+  file-saver \
+  file-saver-es</pre>
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div>ต้องใช้ <code>--legacy-peer-deps</code> เพราะบางแพ็กเกจ เช่น <code>@exalif/ngx-breadcrumbs</code> ยังไม่รองรับ Angular 21 อย่างเป็นทางการ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="section" id="s3">
+    <div class="section-header"><span class="num">3</span><h2>แก้ tsconfig.json</h2></div>
+    <div class="section-body">
+      <pre>{
+  <span class="str">"compilerOptions"</span>: {
+    <span class="str">"baseUrl"</span>: <span class="str">"./"</span>,           <span class="comment">// ← สำคัญมาก: ทำให้ "src/app/..." imports ทำงานได้</span>
+    <span class="str">"strict"</span>: <span class="kw">false</span>,           <span class="comment">// ← ปิด strict เพราะ code v17 ไม่ได้เขียนแบบ strict</span>
+    <span class="str">"skipLibCheck"</span>: <span class="kw">true</span>,
+    <span class="str">"isolatedModules"</span>: <span class="kw">true</span>,
+    <span class="str">"experimentalDecorators"</span>: <span class="kw">true</span>,
+    <span class="str">"importHelpers"</span>: <span class="kw">true</span>,
+    <span class="str">"target"</span>: <span class="str">"ES2022"</span>,
+    <span class="str">"module"</span>: <span class="str">"ES2022"</span>,
+    <span class="str">"moduleResolution"</span>: <span class="str">"bundler"</span>,  <span class="comment">// ← ต้องใช้คู่กับ module: ES2022</span>
+    <span class="str">"allowJs"</span>: <span class="kw">true</span>,                <span class="comment">// ← จำเป็นถ้ามีไฟล์ .js (เช่น node-zlib.js)</span>
+    <span class="str">"resolveJsonModule"</span>: <span class="kw">true</span>
+  },
+  <span class="str">"angularCompilerOptions"</span>: {
+    <span class="str">"enableI18nLegacyMessageIdFormat"</span>: <span class="kw">false</span>,
+    <span class="str">"strictInjectionParameters"</span>: <span class="kw">false</span>,
+    <span class="str">"strictInputAccessModifiers"</span>: <span class="kw">false</span>,
+    <span class="str">"strictTemplates"</span>: <span class="kw">false</span>
+  }
+}</pre>
+      <div class="note info">
+        <span class="note-icon">💡</span>
+        <div><strong>ทำไม baseUrl: "./" สำคัญ?</strong><br>v17 ใช้ <code>"baseUrl": "./"</code> ทำให้ import แบบ <code>import ... from 'src/app/services/...'</code> ทำงานได้ ถ้าไม่ใส่จะ error ทุก component</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="section" id="s4">
+    <div class="section-header"><span class="num">4</span><h2>แก้ tsconfig.app.json</h2></div>
+    <div class="section-body">
+      <pre>{
+  <span class="str">"extends"</span>: <span class="str">"./tsconfig.json"</span>,
+  <span class="str">"compilerOptions"</span>: {
+    <span class="str">"outDir"</span>: <span class="str">"./out-tsc/app"</span>,
+    <span class="str">"types"</span>: [<span class="str">"node"</span>, <span class="str">"jquery"</span>]   <span class="comment">// ← เพิ่ม node และ jquery</span>
+  },
+  <span class="str">"include"</span>: [<span class="str">"src/**/*.ts"</span>],
+  <span class="str">"exclude"</span>: [<span class="str">"src/**/*.spec.ts"</span>]
+}</pre>
+      <div class="note tip">
+        <span class="note-icon">✅</span>
+        <div>
+          <strong>"node"</strong> — แก้ error <code>Cannot find name 'require' / 'Buffer'</code> ที่ใช้ใน service<br>
+          <strong>"jquery"</strong> — แก้ error <code>Cannot find name '$'</code> ที่ใช้ใน component
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="section" id="s5">
+    <div class="section-header"><span class="num">5</span><h2>สร้าง app.config.ts (แทน app.module.ts)</h2></div>
+    <div class="section-body">
+      <pre><span class="kw">import</span> { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { provideRouter } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { provideHttpClient } <span class="kw">from</span> <span class="str">'@angular/common/http'</span>;
+<span class="kw">import</span> { provideAnimationsAsync } <span class="kw">from</span> <span class="str">'@angular/platform-browser/animations/async'</span>;
+<span class="kw">import</span> { routes } <span class="kw">from</span> <span class="str">'./app.routes'</span>;
+<span class="kw">import</span> { BreadcrumbsModule } <span class="kw">from</span> <span class="str">'@exalif/ngx-breadcrumbs'</span>;
+<span class="kw">import</span> { ModalModule } <span class="kw">from</span> <span class="str">'ngx-bootstrap/modal'</span>;
+<span class="kw">import</span> { Encrypt } <span class="kw">from</span> <span class="str">'./shareds/encrypt'</span>;
+
+<span class="kw">export const</span> appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    <span class="fn">provideRouter</span>(routes),
+    <span class="fn">provideHttpClient</span>(),
+    <span class="fn">provideAnimationsAsync</span>(),
+    <span class="fn">importProvidersFrom</span>(BreadcrumbsModule.<span class="fn">forRoot</span>()),
+    <span class="fn">importProvidersFrom</span>(ModalModule),  <span class="comment">// ← ไม่มี .forRoot() แล้วในเวอร์ชันใหม่</span>
+    Encrypt,
+  ]
+};</pre>
+
+      <p style="margin:16px 0 8px;font-weight:600;">ตารางแปลง Module → Provider</p>
+      <table>
+        <tr><th>Module เดิม (v17)</th><th>Provider ใหม่ (v21)</th></tr>
+        <tr><td><code>BrowserModule</code></td><td><span class="del">ลบออก</span> (ไม่ต้องใช้)</td></tr>
+        <tr><td><code>HttpClientModule</code></td><td><code>provideHttpClient()</code></td></tr>
+        <tr><td><code>RouterModule.forRoot(routes)</code></td><td><code>provideRouter(routes)</code></td></tr>
+        <tr><td><code>BrowserAnimationsModule</code></td><td><code>provideAnimationsAsync()</code></td></tr>
+        <tr><td><code>BreadcrumbsModule.forRoot()</code></td><td><code>importProvidersFrom(BreadcrumbsModule.forRoot())</code></td></tr>
+        <tr><td><code>ModalModule.forRoot()</code></td><td><code>importProvidersFrom(ModalModule)</code></td></tr>
+        <tr><td>custom providers เดิม</td><td>ใส่ตรงๆ ใน providers array</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="section" id="s6">
+    <div class="section-header"><span class="num">6</span><h2>สร้าง app.routes.ts</h2></div>
+    <div class="section-body">
+      <p style="margin-bottom:10px;">ย้าย routes จาก <code>app-routing.module.ts</code> มา เปลี่ยนแค่ชื่อ guard เป็น camelCase:</p>
+      <pre><span class="kw">import</span> { Routes } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+<span class="kw">import</span> { authGuard } <span class="kw">from</span> <span class="str">'./guards/auth.guard'</span>;  <span class="comment">// ← functional guard</span>
+
+<span class="kw">export const</span> routes: Routes = [
+  { path: <span class="str">''</span>, pathMatch: <span class="str">'full'</span>, redirectTo: <span class="str">'home'</span> },
+  {
+    path: <span class="str">'home'</span>,
+    canActivate: [authGuard],      <span class="comment">// ← ใช้ชื่อ camelCase แทน class</span>
+    data: { breadcrumbs: <span class="kw">true</span> },
+    loadChildren: () => <span class="kw">import</span>(<span class="str">'./components/home/home.module'</span>).<span class="fn">then</span>(m => m.HomeModule)
+  },
+  <span class="comment">// ... routes อื่นๆ เหมือนเดิมทุกอย่าง</span>
+];</pre>
+    </div>
+  </div>
+
+  <!-- Step 7 -->
+  <div class="section" id="s7">
+    <div class="section-header"><span class="num">7</span><h2>สร้าง Functional Guard</h2></div>
+    <div class="section-body">
+      <div class="note warn"><span class="note-icon">⚠️</span><div>Angular 21 ยังรองรับ Class Guard แต่จะ <strong>warning</strong> — แนะนำให้เปลี่ยนเป็น functional</div></div>
+      <pre><span class="comment">// ก่อน (v17) — Class Guard</span>
+<span class="comment">// @Injectable({ providedIn: 'root' })</span>
+<span class="comment">// export class AuthGuard implements CanActivate { ... }</span>
+
+<span class="comment">// หลัง (v21) — Functional Guard</span>
+<span class="kw">import</span> { inject } <span class="kw">from</span> <span class="str">'@angular/core'</span>;
+<span class="kw">import</span> { CanActivateFn, Router } <span class="kw">from</span> <span class="str">'@angular/router'</span>;
+
+<span class="kw">export const</span> authGuard: CanActivateFn = <span class="kw">async</span> () => {
+  <span class="kw">const</span> router = <span class="fn">inject</span>(Router);
+  <span class="kw">const</span> http = <span class="fn">inject</span>(HttpService);
+
+  <span class="kw">if</span> (!sessionStorage.<span class="fn">getItem</span>(<span class="str">'token'</span>)) {
+    router.<span class="fn">navigate</span>([<span class="str">'/'</span>]);
+    <span class="kw">return false</span>;
+  }
+  <span class="kw">return true</span>;
+};</pre>
+    </div>
+  </div>
+
+  <!-- Step 8 -->
+  <div class="section" id="s8">
+    <div class="section-header"><span class="num">8</span><h2>Copy ไฟล์จาก v17 (ใช้ File Explorer ได้เลย)</h2></div>
+    <div class="section-body">
+      <div class="note tip"><span class="note-icon">📂</span><div>เปิด <strong>File Explorer 2 หน้าต่าง</strong> — ซ้าย: โปรเจ็คเก่า (v17) &nbsp;|&nbsp; ขวา: โปรเจ็คใหม่ (v21) แล้ว copy ตามรายการนี้</div></div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📁 1. โฟลเดอร์ components/ ทั้งโฟลเดอร์</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\components\</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\components\</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📁 2. โฟลเดอร์ services/ ทั้งโฟลเดอร์</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\services\</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\services\</span></div>
+          <div class="note info" style="margin-top:8px;"><span class="note-icon">💡</span><div>ถ้ามีไฟล์ <code>node-zlib.js</code> ใน services/ ให้ copy มาด้วย</div></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📁 3. โฟลเดอร์ shareds/ ทั้งโฟลเดอร์</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\shareds\</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\shareds\</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📄 4. ไฟล์ HTML และ CSS ของ templates (ทีละไฟล์)</div>
+        <div class="copy-item-body">
+          <p style="margin-bottom:8px;font-size:0.85rem;color:#555;">⚠️ สร้างโฟลเดอร์ใน โปรเจ็คใหม่\src\app\templates\ ก่อน แล้วค่อย copy</p>
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\templates\sidebar\sidebar.component.html<br>โปรเจ็คเก่า\src\app\templates\sidebar\sidebar.component.css</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\templates\sidebar\</span></div>
+          <hr style="border:none;border-top:1px solid #eee;margin:10px 0">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\templates\navbar\navbar.component.html<br>โปรเจ็คเก่า\src\app\templates\navbar\navbar.component.css</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\templates\navbar\</span></div>
+          <hr style="border:none;border-top:1px solid #eee;margin:10px 0">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\templates\breadcrumb\breadcrumb.component.html<br>โปรเจ็คเก่า\src\app\templates\breadcrumb\breadcrumb.component.css</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\templates\breadcrumb\</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📄 5. ไฟล์ template ของ AppComponent</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\app.component.html</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\<strong>app.html</strong> &nbsp;← ชื่อไฟล์เปลี่ยน!</span></div>
+          <hr style="border:none;border-top:1px solid #eee;margin:10px 0">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\app\app.component.css</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\app\app.scss (วางรวมกันหรือ copy เนื้อหาไปต่อท้าย)</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📁 6. โฟลเดอร์ assets/</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\assets\</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\assets\ (สร้างโฟลเดอร์ถ้ายังไม่มี)</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📁 7. โฟลเดอร์ environments/</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\environments\</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\environments\ (สร้างโฟลเดอร์ถ้ายังไม่มี)</span></div>
+        </div>
+      </div>
+
+      <div class="copy-item">
+        <div class="copy-item-header">📄 8. ไฟล์ styles.css</div>
+        <div class="copy-item-body">
+          <div class="path-row"><span class="path-label from">จาก</span><span class="path-value">โปรเจ็คเก่า\src\styles.css</span></div>
+          <div class="path-row"><span class="path-label to">ไปที่</span><span class="path-value">โปรเจ็คใหม่\src\styles.css</span></div>
+        </div>
+      </div>
+
+      <p style="margin:20px 0 10px;font-weight:700;color:var(--danger);">❌ ไฟล์ที่ไม่ต้อง copy (ใช้ของใหม่แทน)</p>
+      <table class="no-copy">
+        <tr><th>ไฟล์เก่า (v17)</th><th>เหตุผล</th></tr>
+        <tr><td>app.module.ts</td><td>แทนที่ด้วย app.config.ts (Step 5)</td></tr>
+        <tr><td>app-routing.module.ts</td><td>แทนที่ด้วย app.routes.ts (Step 6)</td></tr>
+        <tr><td>app.component.ts</td><td>แทนที่ด้วย app.ts (Step 9)</td></tr>
+        <tr><td>guards/auth.guard.ts</td><td>เขียนใหม่เป็น functional (Step 7)</td></tr>
+        <tr><td>polyfills.ts</td><td>Angular 21 ไม่ใช้แล้ว</td></tr>
+        <tr><td>test.ts</td><td>Angular 21 ไม่ใช้แล้ว</td></tr>
+        <tr><td>main.ts (เก่า)</td><td>ใช้ของโปรเจ็คใหม่ที่สร้างไว้แล้ว</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Step 9 -->
+  <div class="section" id="s9">
+    <div class="section-header"><span class="num">9</span><h2>แก้ app.ts (AppComponent)</h2></div>
+    <div class="section-body">
+      <p style="margin-bottom:10px;">เพิ่ม <code>standalone: true</code> และ import components ที่ใช้ใน template:</p>
+      <pre>@<span class="fn">Component</span>({
+  standalone: <span class="kw">true</span>,                 <span class="comment">// ← เพิ่ม</span>
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    SidebarComponent,               <span class="comment">// ← เพิ่ม</span>
+    NavbarComponent,                <span class="comment">// ← เพิ่ม</span>
+    BreadcrumbComponent,            <span class="comment">// ← เพิ่ม</span>
+  ],
+  selector: <span class="str">'app-root'</span>,
+  templateUrl: <span class="str">'./app.html'</span>,       <span class="comment">// ← ชื่อใหม่</span>
+  styleUrl: <span class="str">'./app.scss'</span>,
+})
+<span class="kw">export class</span> App {
+  <span class="comment">// logic เดิมทั้งหมด — ไม่เปลี่ยน</span>
+}</pre>
+    </div>
+  </div>
+
+  <!-- Step 10 -->
+  <div class="section" id="s10">
+    <div class="section-header"><span class="num">10</span><h2>แก้ Template Components (standalone: true)</h2></div>
+    <div class="section-body">
+      <pre><span class="comment">// sidebar.component.ts</span>
+@<span class="fn">Component</span>({
+  standalone: <span class="kw">true</span>,
+  imports: [CommonModule, RouterModule],
+  selector: <span class="str">'app-sidebar'</span>,
+  <span class="comment">// ... เหมือนเดิม</span>
+})
+
+<span class="comment">// navbar.component.ts</span>
+@<span class="fn">Component</span>({
+  standalone: <span class="kw">true</span>,
+  imports: [CommonModule, FormsModule, ModalModule],
+  selector: <span class="str">'app-navbar'</span>,
+  <span class="comment">// ... เหมือนเดิม</span>
+})
+
+<span class="comment">// breadcrumb.component.ts</span>
+@<span class="fn">Component</span>({
+  standalone: <span class="kw">true</span>,
+  imports: [CommonModule, BreadcrumbsModule],
+  selector: <span class="str">'app-breadcrumb'</span>,
+  <span class="comment">// ... เหมือนเดิม</span>
+})</pre>
+    </div>
+  </div>
+
+  <!-- Step 11 -->
+  <div class="section" id="s11">
+    <div class="section-header"><span class="num">11</span><h2>แก้ Feature Components (standalone: false)</h2></div>
+    <div class="section-body">
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div><strong>Angular 21 เปลี่ยน default!</strong><br>Component ที่ไม่ระบุ <code>standalone</code> จะถือว่าเป็น <code>standalone: true</code> อัตโนมัติ ทำให้ NgModule ไม่สามารถ declare ได้</div>
+      </div>
+      <p style="margin:14px 0 8px;">ต้องเพิ่ม <code>standalone: false</code> ใน <strong>ทุก component ที่อยู่ใน NgModule declarations</strong></p>
+      <pre><span class="comment">// ก่อน</span>
+@<span class="fn">Component</span>({
+  selector: <span class="str">'app-prgacad'</span>, ...
+})
+
+<span class="comment">// หลัง</span>
+@<span class="fn">Component</span>({
+  standalone: <span class="kw">false</span>,   <span class="comment">// ← เพิ่มบรรทัดนี้</span>
+  selector: <span class="str">'app-prgacad'</span>, ...
+})</pre>
+      <div class="note info" style="margin-top:12px;">
+        <span class="note-icon">💡</span>
+        <div>ทำเช่นเดียวกันกับ <code>@Pipe</code> ที่อยู่ใน NgModule:<br><code>@Pipe({ name: "myPipe", standalone: false })</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 12 -->
+  <div class="section" id="s12">
+    <div class="section-header"><span class="num">12</span><h2>แก้ angular.json</h2></div>
+    <div class="section-body">
+      <p style="margin-bottom:10px;">เพิ่ม assets, <strong>scripts</strong> และ <strong>styles ให้ครบ</strong> — หายไปทั้งหมดนี้ทำให้ CSS พัง:</p>
+      <pre>{
+  <span class="str">"assets"</span>: [
+    { <span class="str">"glob"</span>: <span class="str">"**/*"</span>, <span class="str">"input"</span>: <span class="str">"public"</span> },
+    { <span class="str">"glob"</span>: <span class="str">"**/*"</span>, <span class="str">"input"</span>: <span class="str">"src/assets"</span>, <span class="str">"output"</span>: <span class="str">"assets"</span> }
+  ],
+  <span class="str">"scripts"</span>: [
+    <span class="str">"node_modules/jquery/dist/jquery.min.js"</span>,
+    <span class="str">"node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"</span>
+  ],
+  <span class="str">"styles"</span>: [
+    <span class="str">"node_modules/devextreme/dist/css/dx.common.css"</span>,
+    <span class="str">"node_modules/devextreme/dist/css/dx.light.css"</span>,
+    <span class="str">"node_modules/bootstrap/dist/css/bootstrap.min.css"</span>,
+    <span class="str">"node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"</span>,
+    <span class="str">"node_modules/@fortawesome/fontawesome-free/css/all.min.css"</span>,
+    <span class="str">"src/styles.scss"</span>,
+    <span class="str">"src/styles.css"</span>
+  ]
+}</pre>
+      <div class="note warn">
+        <span class="note-icon">⚠️</span>
+        <div>ต้องติดตั้งก่อน: <code>npm install @fortawesome/fontawesome-free --legacy-peer-deps</code><br>และต้อง <strong>restart ng serve</strong> หลังแก้ angular.json — watch mode ไม่ตรวจจับไฟล์นี้อัตโนมัติ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Errors -->
+  <h2 style="margin:40px 0 16px;font-size:1.2rem;">🚨 ปัญหาที่พบบ่อย + วิธีแก้</h2>
+
+  <div class="error-card">
+    <div class="error-header">❌ 1. TypeScript Internal Error: Cannot destructure property 'pos'</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] Cannot destructure property 'pos' of 'file.referencedFiles[index]' as it is undefined.</pre>
+      <div><span class="cause-label">สาเหตุ</span> มีการ import ไฟล์ <code>.js</code> (เช่น <code>node-zlib.js</code>) โดยไม่มี <code>allowJs: true</code> ใน tsconfig</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เพิ่ม <code>"allowJs": true</code> และ <code>"moduleResolution": "bundler"</code> ใน tsconfig.json</div>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 2. NG6008: Component is standalone, cannot be declared in NgModule</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] NG6008: Component XxxComponent is standalone, and cannot be declared in an NgModule.</pre>
+      <div><span class="cause-label">สาเหตุ</span> Angular 21 ทำให้ <code>standalone: true</code> เป็น default</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เพิ่ม <code>standalone: false</code> ใน <code>@Component</code> / <code>@Pipe</code> / <code>@Directive</code> ทุกตัวที่อยู่ใน NgModule</div>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 3. ModalModule.forRoot() ไม่มีแล้ว</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] TS2339: Property 'forRoot' does not exist on type 'typeof ModalModule'.</pre>
+      <div><span class="cause-label">สาเหตุ</span> ngx-bootstrap เวอร์ชันใหม่ลบ <code>.forRoot()</code> ออก</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เปลี่ยน <code>ModalModule.forRoot()</code> → <code>ModalModule</code></div>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 4. jwt-decode ไม่มี default export</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] TS1192: Module 'jwt-decode' has no default export.</pre>
+      <div><span class="cause-label">สาเหตุ</span> jwt-decode v4+ เปลี่ยน API ไม่มี default export แล้ว</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span></div>
+      <pre style="margin-top:8px;"><span class="comment">// ก่อน</span>
+<span class="kw">import</span> decode <span class="kw">from</span> <span class="str">'jwt-decode'</span>;
+
+<span class="comment">// หลัง</span>
+<span class="kw">import</span> { jwtDecode <span class="kw">as</span> decode } <span class="kw">from</span> <span class="str">'jwt-decode'</span>;</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 5. window.Buffer ไม่มีใน TypeScript</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] TS2339: Property 'Buffer' does not exist on type 'Window & typeof globalThis'.</pre>
+      <div><span class="fix-label">วิธีแก้</span> ใช้ type assertion</div>
+      <pre style="margin-top:8px;"><span class="comment">// ก่อน</span>
+window.Buffer = window.Buffer || <span class="fn">require</span>(<span class="str">'buffer'</span>).Buffer;
+
+<span class="comment">// หลัง</span>
+(window <span class="kw">as any</span>).Buffer = (window <span class="kw">as any</span>).Buffer || <span class="fn">require</span>(<span class="str">'buffer'</span>).Buffer;</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 6. Cannot find name '$' / 'require' / 'Buffer'</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] TS2592: Cannot find name '$'. Try `npm i --save-dev @types/jquery`
+✘ [ERROR] TS2591: Cannot find name 'require'. Try `npm i --save-dev @types/node`</pre>
+      <div><span class="fix-label">วิธีแก้</span> เพิ่ม types ใน <code>tsconfig.app.json</code></div>
+      <pre style="margin-top:8px;">{ <span class="str">"types"</span>: [<span class="str">"node"</span>, <span class="str">"jquery"</span>] }</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 7. DevExtreme sub-components ไม่รู้จัก</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">✘ [ERROR] NG8001: 'dxi-toolbar-item' is not a known element</pre>
+      <div><span class="cause-label">สาเหตุ</span> module ไม่ได้ import <code>DxToolbarModule</code></div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เปิด <code>.module.ts</code> ของ component นั้น แล้วเพิ่ม</div>
+      <pre style="margin-top:8px;"><span class="kw">import</span> { DxToolbarModule } <span class="kw">from</span> <span class="str">'devextreme-angular'</span>;
+<span class="comment">// แล้วใส่ใน imports[]</span></pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 8. Case-sensitivity ของ file path</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">▲ [WARNING] Use "home.component.ts" instead of "Home.component.ts"</pre>
+      <div><span class="cause-label">สาเหตุ</span> import ใช้ชื่อไฟล์ตัวใหญ่-เล็กผิด</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span></div>
+      <pre style="margin-top:8px;"><span class="comment">// ก่อน</span>
+<span class="kw">import</span> { HomeComponent } <span class="kw">from</span> <span class="str">'./Home.component'</span>;
+<span class="comment">// หลัง</span>
+<span class="kw">import</span> { HomeComponent } <span class="kw">from</span> <span class="str">'./home.component'</span>;</pre>
+    </div>
+  </div>
+
+  <h2 style="margin:40px 0 16px;font-size:1.2rem;">⚡ ปัญหา Runtime (หลัง build ผ่าน)</h2>
+
+  <div class="error-card">
+    <div class="error-header">❌ 9. Dynamic require of "buffer" is not supported</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">Uncaught Error: Dynamic require of "buffer" is not supported at http.service.ts:12</pre>
+      <div><span class="cause-label">สาเหตุ</span> Angular 21 ใช้ esbuild ไม่รองรับ <code>require()</code> แบบ dynamic ใน browser</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เปลี่ยนทุก <code>require()</code> เป็น ES static import</div>
+      <pre style="margin-top:8px;"><span class="comment">// ก่อน</span>
+<span class="kw">const</span> zlib = <span class="fn">require</span>(<span class="str">'./node-zlib.js'</span>);
+window.Buffer = window.Buffer || <span class="fn">require</span>(<span class="str">'buffer'</span>).Buffer;
+
+<span class="comment">// หลัง</span>
+<span class="kw">import</span> { Buffer } <span class="kw">from</span> <span class="str">'buffer'</span>;
+<span class="kw">import</span> * <span class="kw">as</span> zlib <span class="kw">from</span> <span class="str">'./node-zlib.js'</span>;
+(globalThis <span class="kw">as any</span>).Buffer = Buffer;
+(window <span class="kw">as any</span>).Buffer = Buffer;</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 10. $ is not defined</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">ERROR ReferenceError: $ is not defined at NavbarComponent.ngOnInit</pre>
+      <div><span class="cause-label">สาเหตุ</span> jQuery ไม่ได้โหลดเป็น global script</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เพิ่มใน <code>angular.json</code> → <code>scripts</code></div>
+      <pre style="margin-top:8px;">{ <span class="str">"scripts"</span>: [<span class="str">"node_modules/jquery/dist/jquery.min.js"</span>] }</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 11. CSS ไม่โหลด — Bootstrap / FontAwesome / DevExtreme ไม่แสดง</div>
+    <div class="error-body">
+      <div><span class="cause-label">อาการ</span> sidebar ไม่มี style, icon ไม่แสดง, layout พัง</div>
+      <div style="margin-top:8px;"><span class="cause-label">สาเหตุ</span> ไม่ได้เพิ่ม CSS และ JS ใน <code>angular.json</code></div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> ดู <strong>Step 12</strong> — เพิ่ม styles และ scripts ให้ครบ (DevExtreme, Bootstrap, FontAwesome)</div>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 12. http.get() Promise ค้างตลอด — route ไม่โหลด, sidebar ว่าง</div>
+    <div class="error-body">
+      <div><span class="cause-label">สาเหตุ</span> error callback ของ <code>http.get()</code> ไม่มี <code>resolve()</code> → <code>await</code> แขวนตลอดเมื่อ API timeout</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> เพิ่ม <code>resolve(null)</code> ท้าย error callback ทุก Promise ใน <code>http.service.ts</code></div>
+      <pre style="margin-top:8px;"><span class="comment">// เพิ่มบรรทัดนี้ท้าย error callback ของ get() และ getcombo()</span>
+(error: any) => {
+  <span class="comment">// ... error handling เดิม ...</span>
+  <span class="fn">resolve</span>(<span class="kw">null</span>); <span class="comment">// ← เพิ่ม</span>
+}</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">❌ 13. NG0100: ExpressionChangedAfterItHasBeenChecked</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">ERROR NG0100: Previous value: 'undefined'. Current value: '{"editcell1 editcell2 editcell3":false}'</pre>
+      <div><span class="cause-label">สาเหตุ</span> method ใน template สร้าง object ใหม่ทุกครั้ง → Angular เห็น reference เปลี่ยน</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> Cache object ไว้ใน property แทนสร้างใหม่</div>
+      <pre style="margin-top:8px;"><span class="comment">// ก่อน</span>
+<span class="fn">getclassgrid</span>() { <span class="kw">return</span> { <span class="str">'editcell1...'</span>: ... }; }
+
+<span class="comment">// หลัง — return same reference</span>
+<span class="kw">private</span> _classgrid = { <span class="str">'editcell1 editcell2 editcell3'</span>: <span class="kw">false</span> };
+<span class="fn">getclassgrid</span>() {
+  <span class="kw">this</span>._classgrid[<span class="str">'editcell1 editcell2 editcell3'</span>] = <span class="kw">this</span>.<span class="fn">geteditmodeopen</span>() == <span class="str">'true'</span>;
+  <span class="kw">return this</span>._classgrid;
+}</pre>
+    </div>
+  </div>
+
+  <div class="error-card">
+    <div class="error-header">⚠️ 14. DevExtreme Evaluation Banner (ต้องซื้อ license)</div>
+    <div class="error-body">
+      <pre style="margin-bottom:12px;">For evaluation purposes only... (v24.2.xx)</pre>
+      <div><span class="cause-label">สาเหตุ</span> DevExtreme 23.2 (v17) ไม่บังคับ license แต่ 24.2 (v21) บังคับ — ต้องใช้ 24.2 เพราะ 23.2 ไม่รองรับ Angular 21</div>
+      <div style="margin-top:8px;"><span class="fix-label">วิธีแก้</span> ใส่ license key ใน <code>src/main.ts</code></div>
+      <pre style="margin-top:8px;"><span class="kw">import</span> config <span class="kw">from</span> <span class="str">'devextreme/core/config'</span>;
+<span class="fn">config</span>({ licenseKey: <span class="str">'YOUR_DEVEXTREME_LICENSE_KEY'</span> });</pre>
+    </div>
+  </div>
+
+  <!-- Localhost Testing -->
+  <div class="section" style="margin-top:40px;border:2px solid #e65100;">
+    <div class="section-header" style="background:#e65100;"><span class="num" style="background:rgba(255,255,255,0.2);">🖥</span><h2>ทดสอบบน Localhost (DEV MODE)</h2></div>
+    <div class="section-body">
+      <div class="note warn"><span class="note-icon">⚠️</span><div>API อยู่บน server จริง — เมื่อรัน localhost ต้องเพิ่ม mock data เพื่อดู UI</div></div>
+
+      <p style="margin:16px 0 8px;font-weight:700;">1. Mock Token — ข้าม Login dialog</p>
+      <pre><span class="comment">// app.ts constructor — ใส่ก่อน if (localStorage.getItem('token'))</span>
+<span class="kw">if</span> (window.location.hostname === <span class="str">'localhost'</span> && !sessionStorage.<span class="fn">getItem</span>(<span class="str">'token'</span>)) {
+  sessionStorage.<span class="fn">setItem</span>(<span class="str">'token'</span>, <span class="str">'dev-mock-token'</span>);
+  sessionStorage.<span class="fn">setItem</span>(<span class="str">'fullname'</span>, <span class="str">'Dev User'</span>);
+  sessionStorage.<span class="fn">setItem</span>(<span class="str">'repclientid'</span>, <span class="str">'dev-session'</span>);
+  <span class="comment">// ... ค่า session อื่นๆ ...</span>
+}</pre>
+
+      <p style="margin:16px 0 8px;font-weight:700;">2. Bypass Auth Guard บน Localhost</p>
+      <pre><span class="comment">// auth.guard.ts — เพิ่มก่อน API call</span>
+<span class="kw">if</span> (window.location.hostname === <span class="str">'localhost'</span>) {
+  <span class="kw">return true</span>; <span class="comment">// ข้าม permission check</span>
+}</pre>
+
+      <p style="margin:16px 0 8px;font-weight:700;">3. Mock Sidebar Menu</p>
+      <pre><span class="comment">// sidebar.component.ts</span>
+<span class="fn">getmenulist</span>(): <span class="kw">void</span> {
+  <span class="kw">if</span> (window.location.hostname === <span class="str">'localhost'</span>) {
+    <span class="kw">this</span>.menudata = <span class="kw">this</span>.mockMenuData; <span class="comment">// ใช้ทันที ไม่รอ API</span>
+    <span class="kw">return</span>;
+  }
+  <span class="kw">this</span>.http.<span class="fn">get</span>(<span class="str">'Sysmen/get/10'</span>).<span class="fn">then</span>(r => { <span class="kw">if</span> (r) <span class="kw">this</span>.menudata = r; });
+}</pre>
+      <div class="note tip"><span class="note-icon">✅</span><div>สิ่งเหล่านี้มีผลบน localhost เท่านั้น — deploy ขึ้น server จริงใช้ data จาก API อัตโนมัติ</div></div>
+    </div>
+  </div>
+
+  <!-- Checklist -->
+  <div class="section" style="margin-top:40px;">
+    <div class="section-header" style="background:#1976d2;"><span class="num" style="background:rgba(255,255,255,0.2);">✓</span><h2>Checklist ก่อน Build</h2></div>
+    <div class="section-body" style="padding:8px;">
+      <ul class="checklist">
+        <li><input type="checkbox"><span><code>tsconfig.json</code> มี <code>baseUrl: "./"</code>, <code>allowJs: true</code>, <code>moduleResolution: "bundler"</code></span></li>
+        <li><input type="checkbox"><span><code>tsconfig.app.json</code> มี <code>types: ["node", "jquery"]</code></span></li>
+        <li><input type="checkbox"><span><code>app.config.ts</code> มี <code>provideRouter</code>, <code>provideHttpClient</code>, <code>provideAnimationsAsync</code></span></li>
+        <li><input type="checkbox"><span><code>ModalModule.forRoot()</code> → <code>ModalModule</code></span></li>
+        <li><input type="checkbox"><span>jwt-decode ใช้ named import <code>{ jwtDecode as decode }</code></span></li>
+        <li><input type="checkbox"><span>ทุก feature component มี <code>standalone: false</code></span></li>
+        <li><input type="checkbox"><span>ทุก Pipe ใน NgModule มี <code>standalone: false</code></span></li>
+        <li><input type="checkbox"><span>Guard เปลี่ยนเป็น functional (<code>CanActivateFn</code>)</span></li>
+        <li><input type="checkbox"><span>Copy <code>assets/</code>, <code>environments/</code>, <code>styles.css</code>, <code>node-zlib.js</code> (ถ้ามี)</span></li>
+        <li><input type="checkbox"><span><code>angular.json</code> เพิ่ม CSS ครบ (DevExtreme, Bootstrap, FontAwesome, ngx-bootstrap)</span></li>
+        <li><input type="checkbox"><span><code>angular.json</code> เพิ่ม scripts: jQuery + Bootstrap JS</span></li>
+        <li><input type="checkbox"><span>ติดตั้ง <code>@fortawesome/fontawesome-free --legacy-peer-deps</code></span></li>
+        <li><input type="checkbox"><span><code>require()</code> → ES static <code>import</code> ในทุก service file</span></li>
+        <li><input type="checkbox"><span><code>http.get()</code> error callback มี <code>resolve(null)</code></span></li>
+        <li><input type="checkbox"><span>Localhost: เพิ่ม mock token, bypass auth guard, mock sidebar menu</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Build commands -->
+  <div class="section">
+    <div class="section-header" style="background:#2e7d32;"><span class="num" style="background:rgba(255,255,255,0.2);">▶</span><h2>Build &amp; Run Commands</h2></div>
+    <div class="section-body">
+      <div class="cmd-block">
+        <div class="cmd-header">terminal</div>
+        <div class="cmd-body">
+          <div><span class="cmd-comment"># ตรวจสอบ errors เฉพาะ</span></div>
+          <div><span class="cmd-prompt">$</span> ng build --configuration development 2&gt;&amp;1 | grep "ERROR" | sort -u</div>
+          <div style="margin-top:12px;"><span class="cmd-comment"># Build เต็ม</span></div>
+          <div><span class="cmd-prompt">$</span> ng build --configuration development</div>
+          <div style="margin-top:12px;"><span class="cmd-comment"># Run dev server</span></div>
+          <div><span class="cmd-prompt">$</span> ng serve</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time estimate -->
+  <div class="section">
+    <div class="section-header" style="background:#455a64;"><span class="num" style="background:rgba(255,255,255,0.2);">⏱</span><h2>เวลาที่ใช้ (อ้างอิง)</h2></div>
+    <div class="section-body">
+      <table class="time-table">
+        <tr><th>ขั้นตอน</th><th>เวลาโดยประมาณ</th></tr>
+        <tr><td>ติดตั้ง packages</td><td>5 นาที</td></tr>
+        <tr><td>แก้ config files (tsconfig, angular.json)</td><td>15 นาที</td></tr>
+        <tr><td>Copy + แก้ไฟล์หลัก</td><td>15 นาที</td></tr>
+        <tr><td>แก้ build-time errors</td><td>20–40 นาที</td></tr>
+        <tr><td>แก้ runtime errors (CSS, require, Promise)</td><td>20–30 นาที</td></tr>
+        <tr><td>ทดสอบ localhost + mock data</td><td>10 นาที</td></tr>
+        <tr><td><strong>รวม</strong></td><td><strong>~1.5–2 ชั่วโมง</strong></td></tr>
+      </table>
+      <div class="note info" style="margin-top:12px;">
+        <span class="note-icon">💡</span>
+        <div>เวลาอาจแตกต่างกันตามจำนวน components และ dependencies ของแต่ละโปรเจ็ค</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
