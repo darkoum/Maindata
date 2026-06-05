@@ -42,3 +42,7 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Exclude v17 source and editor settings
+/src-v17
+/.vscode
