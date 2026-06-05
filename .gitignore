@@ -46,3 +46,7 @@ Thumbs.db
 # Exclude v17 source and editor settings
 /src-v17
 /.vscode
+
+# License key — ห้าม commit
+.env
+src/license.ts
