@@ -39,7 +39,7 @@
    
 </div>
 <br />
-<dx-popup [width]="550" [height]="520" [showTitle]="true" title="คัดลอกโครงสร้างหลักสูตร" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible2">
+<dx-popup [width]="550" [height]="520" [showTitle]="true" title="คัดลอกโครงสร้างหลักสูตร" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible2">
     วิทยาลัย/คณะ/สถาบัน
     <dx-select-box [dataSource]="faccopyshow" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" (onValueChanged)="getDepcopycombo();getprocopycombo()" [(ngModel)]="faccopyid" placeholder="เลือกวิทยาลัย/วิทยาลัย/คณะ/สถาบัน/สถาบัน ต้นแบบที่ต้องการคัดลอก..."> </dx-select-box>
     ภาค/สาขา

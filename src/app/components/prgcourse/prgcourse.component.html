@@ -22,10 +22,10 @@
 </div>
 <!-- [position]="{ of: '#prgcourse' }" -->
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)"  [(visible)]="loadingVisible"
-  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+  [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#prgcoursefee' }" [(visible)]="loadingVisiblefee"
-  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+  [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>
 
 <div id="data-grid-demo" style="padding:7px;">
@@ -352,7 +352,7 @@
 </div> -->
 
 
-<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกรายวิชา" [dragEnabled]="false" [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible" (onHidden)="popup_hidden($event)">
+<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกรายวิชา" [dragEnabled]="false" [resizeEnabled]="true" [hideOnOutsideClick]="true" [(visible)]="popupVisible" (onHidden)="popup_hidden($event)">
   รหัสรายวิชา
   <dx-select-box [dataSource]="coulist2" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="couoldid"></dx-select-box>
   รหัสรายวิชาใหม่

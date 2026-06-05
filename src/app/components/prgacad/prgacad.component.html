@@ -3,7 +3,7 @@
     <dx-button stylingMode="contained" text="คัดลอกผังประเมินผล" icon="copy" type="default" [width]="200" (onClick)="oncopy()" [disabled]="!tmpacadid">
     </dx-button>
 </div>
-<dx-popup [width]="30 + '%'" [height]="'auto'" [showTitle]="true" title="คัดลอกผังประเมินผล" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+<dx-popup [width]="30 + '%'" [height]="'auto'" [showTitle]="true" title="คัดลอกผังประเมินผล" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
     คัดลอกผังประเมินผลจาก
     <dx-select-box [dataSource]="acadlistcombo" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="acadidfrom">
     </dx-select-box>
@@ -140,5 +140,5 @@
     </dx-tab-panel>
 </div>
 
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>

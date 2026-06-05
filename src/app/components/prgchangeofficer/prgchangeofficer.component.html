@@ -99,7 +99,7 @@
 </div>
 
 
-<dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible1">
+<dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible1">
     <div class="card">
         <!-- <div class="card-header">
             <div class="card-title">
@@ -120,7 +120,7 @@
 </dx-popup>
 
 <!-- <dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา2" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupVisible2">
+    [hideOnOutsideClick]="true" [(visible)]="popupVisible2">
     ที่ปรึกษา
     <dx-select-box [dataSource]="offNlist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
         [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="officerid2"></dx-select-box>
@@ -130,7 +130,7 @@
 </dx-popup>
 
 <dx-popup [width]="40 + '%'" [height]="'auto'" [showTitle]="true" title="ระบุอาจารย์ที่ปรึกษา3" [dragEnabled]="false"
-    [closeOnOutsideClick]="true" [(visible)]="popupVisible3">
+    [hideOnOutsideClick]="true" [(visible)]="popupVisible3">
     ที่ปรึกษา
     <dx-select-box [dataSource]="offNlist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid"
         [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="officerid3"></dx-select-box>
@@ -203,6 +203,6 @@
     </dx-data-grid>
 
     <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true"
-        [shading]="true" [closeOnOutsideClick]="false">
+        [shading]="true" [hideOnOutsideClick]="false">
     </dx-load-panel>
 </div>

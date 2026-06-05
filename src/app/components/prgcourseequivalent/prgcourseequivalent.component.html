@@ -37,7 +37,7 @@
         </div> -->
     </dx-data-grid>
 
-    <dx-popup [width]="200" [height]="150" [showTitle]="true" title="Message" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    <dx-popup [width]="200" [height]="150" [showTitle]="true" title="Message" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
         <div style="text-align: center">
             {{ notification }}
            
@@ -47,5 +47,5 @@
 
 
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
-  [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+  [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>

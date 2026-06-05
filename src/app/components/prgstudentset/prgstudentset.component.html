@@ -59,7 +59,7 @@
     </div>
 
 <dx-popup [width]="30+'%'" [height]="'auto'" [showTitle]="true" title="คัดลอกกลุ่มนักศึกษา" [dragEnabled]="false"
-    [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+    [resizeEnabled]="true" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
     ศูนย์/วิทยาเขต
     <dx-select-box [dataSource]="camdata" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true"
         [showClearButton]="false" [(ngModel)]="campusidcopy">
@@ -94,7 +94,7 @@
 
 
 <dx-popup [width]="30+'%'" [height]="'auto'" [showTitle]="true" title="ปรับข้อมูลกลุ่มนักศึกษาเป็นชุด" [dragEnabled]="false"
-    [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible2">
+    [resizeEnabled]="true" [hideOnOutsideClick]="true" [(visible)]="popupVisible2">
     <div class="row">
         <div class="col-12">
             การประเมินผล
@@ -340,5 +340,5 @@
     </dx-data-grid>
 </div>
 <dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible"
-    [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+    [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>

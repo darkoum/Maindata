@@ -307,7 +307,7 @@
   <br />
 </div>
 
-<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกสาขาวิชา" [dragEnabled]="false" [resizeEnabled]="true" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+<dx-popup [width]="550" [height]="320" [showTitle]="true" title="คัดลอกสาขาวิชา" [dragEnabled]="false" [resizeEnabled]="true" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
   รหัสสาขาวิชา
   <dx-select-box [dataSource]="programlist" displayExpr="comboshow" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="true" [(ngModel)]="old_program"></dx-select-box>
   รหัสสาขาวิชาใหม่
@@ -321,5 +321,5 @@
   </dx-button>
 </dx-popup>
 
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)"  [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)"  [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>

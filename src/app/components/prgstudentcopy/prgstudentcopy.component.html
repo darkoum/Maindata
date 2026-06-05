@@ -281,7 +281,7 @@
         </div>
     </div>
 </div>
-<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="ตรวจสอบการโอนย้าย" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="ตรวจสอบการโอนย้าย" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
     <div class="card">
         <div class="card-body">
             <div class="row mb-1">
@@ -330,4 +330,4 @@
         </div>
     </div>
 </dx-popup>
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false"></dx-load-panel>

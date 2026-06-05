@@ -63,7 +63,7 @@
         </dxi-item>
     </dx-accordion>
 </div>
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [position]="{ of: '#course' }" [(visible)]="loadingVisible" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false"></dx-load-panel>
 <div *ngIf="itemcount == 0; then Showtemplatenull; else Showtemplate"></div>
 <ng-template #Showtemplatenull>
     <div id="studenttranfernull"></div>
@@ -243,7 +243,7 @@
     </dx-data-grid>
 </div>
 <!---------------------------------------------------------------------------------------------------------------- -->
-<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="แก้ไขหลักสูตร/สถานะ" [dragEnabled]="true" [closeOnOutsideClick]="false" [(visible)]="popupVisible">
+<dx-popup [width]="80 + '%'" [height]="'auto'" [showTitle]="true" title="แก้ไขหลักสูตร/สถานะ" [dragEnabled]="true" [hideOnOutsideClick]="false" [(visible)]="popupVisible">
     <dxo-position at="center center" my="center center" of="window"> </dxo-position>
     <dx-scroll-view width="100%" height="100%">
         <div class="card card-body" style="padding: 5px;">

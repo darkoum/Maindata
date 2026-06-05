@@ -206,7 +206,7 @@
         </dx-data-grid>
     </div> -->
 </div>
-<!-- <dx-popup [width]="20 + '%'" [height]="'auto'" [showTitle]="true" title="ย้ายรอบข้อมูลตรวจสอบ" [dragEnabled]="false" [closeOnOutsideClick]="true" [(visible)]="popupVisible">
+<!-- <dx-popup [width]="20 + '%'" [height]="'auto'" [showTitle]="true" title="ย้ายรอบข้อมูลตรวจสอบ" [dragEnabled]="false" [hideOnOutsideClick]="true" [(visible)]="popupVisible">
     <div class="col-12">
         ย้ายจากสถานะตรวจสอบวุฒิ
         <dx-select-box [dataSource]="documenttatuslist" displayExpr="comboshow" searchMode="StartsWith" valueExpr="comboid" [searchEnabled]="true" [showClearButton]="false" [(ngModel)]="documentstatuscopy"> </dx-select-box>
@@ -220,5 +220,5 @@
     </dx-button>
 </dx-popup> -->
 
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>

@@ -295,7 +295,7 @@
 </dx-tab-panel>
 
 
-<dx-popup [width]="300" [height]="200" [showTitle]="true" title="กรุณาระบุวันที่จบ/พ้นสภาพ" [dragEnabled]="false" [closeOnOutsideClick]="false" [showCloseButton]="false" [(visible)]="popupVisible">
+<dx-popup [width]="300" [height]="200" [showTitle]="true" title="กรุณาระบุวันที่จบ/พ้นสภาพ" [dragEnabled]="false" [hideOnOutsideClick]="false" [showCloseButton]="false" [(visible)]="popupVisible">
     <dxi-toolbar-item widget="dxButton" toolbar="bottom" location="after" [options]="emailButtonOptions">
     </dxi-toolbar-item>
     <div>
@@ -367,5 +367,5 @@
     </tr>
     </table>
 </div> -->
-<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [closeOnOutsideClick]="false">
+<dx-load-panel #loadPanel shadingColor="rgba(0,0,0,0.4)" [(visible)]="load" [showIndicator]="true" [showPane]="true" [shading]="true" [hideOnOutsideClick]="false">
 </dx-load-panel>
