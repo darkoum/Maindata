@@ -50,3 +50,6 @@ Thumbs.db
 # License key — ห้าม commit
 .env
 src/license.ts
+
+# Netlify local cache
+.netlify/
