@@ -16,8 +16,9 @@ export const authGuard: CanActivateFn = async () => {
     return false;
   }
 
-  // ── บน localhost ข้าม API check เพื่อพัฒนา ──
-  if (window.location.hostname === 'localhost') {
+  // ── บน localhost / GitHub Pages ข้าม API check ──
+  const isDemo = window.location.hostname === 'localhost' || window.location.hostname.includes('github.io');
+  if (isDemo) {
     return true;
   }
 

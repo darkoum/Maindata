@@ -73,7 +73,8 @@ export class SidebarComponent implements OnInit {
 
   getmenulist(): void {
     // DEV ONLY: ใช้ mock data ทันที ไม่รอ API
-    if (window.location.hostname === 'localhost') {
+    const isDemo = window.location.hostname === 'localhost' || window.location.hostname.includes('github.io');
+    if (isDemo) {
       this.menudata = this.mockMenuData;
       return;
     }

@@ -36,8 +36,9 @@ export class App {
     sessionStorage.setItem('syspreapp', this.syspreapp);
     sessionStorage.setItem('editmodeopen', 'false');
 
-    // ── DEV ONLY: mock session บน localhost เพื่อข้าม login dialog ──
-    if (window.location.hostname === 'localhost' && !sessionStorage.getItem('token')) {
+    // ── DEV ONLY: mock session บน localhost / GitHub Pages เพื่อข้าม login dialog ──
+    const isDemo = window.location.hostname === 'localhost' || window.location.hostname.includes('github.io');
+    if (isDemo && !sessionStorage.getItem('token')) {
       sessionStorage.setItem('token', 'dev-mock-token');
       sessionStorage.setItem('fullname', 'Dev User');
       sessionStorage.setItem('repclientid', 'dev-session');
